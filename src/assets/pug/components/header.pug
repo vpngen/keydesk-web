@@ -1,0 +1,21 @@
++b.HEADER.header(data-animate="fade-down")
+	+e.container
+		+e.logo
+			+svg('logo-iedn')
+		+e.content
+			+e.NAV.nav
+				+e.list
+					each link in data.header.link
+						+e.A.link(href=link.href)
+							!=link.text
+				+e.button--nav
+					+button(data.intro.button, '#helper', 'nav')
+			+e.language
+				+e.BUTTON.lang(type="button")
+					+svg('lang-de')
+			+e.button--header
+				+button(data.header.button, '#helper', 'header')
+			+e.BUTTON.burger(type="button")
+				+e.SPAN
+				+e.SPAN
+				+e.SPAN

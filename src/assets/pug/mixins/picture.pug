@@ -1,0 +1,11 @@
+mixin picture(path, ext, mobile, tablet, name = 'Picture')
+	picture&attributes(attributes)
+		if mobile
+			source(media="(max-width: 767px)" srcset=`${baseDir}images/${path}-mobile.webp, ${baseDir}images/${path}-mobile@2x.webp 2x` type='image/webp')
+			source(media="(max-width: 767px)" srcset=`${baseDir}images/${path}-mobile.${ext}, ${baseDir}images/${path}-mobile@2x.${ext} 2x` type=`image/${ext}`)
+		if tablet
+			source(media="(min-width: 768px) and (max-width: 1024px)" srcset=`${baseDir}images/${path}-tablet.webp, ${baseDir}images/${path}-tablet@2x.webp 2x` type='image/webp')
+			source(media="(min-width: 768px) and (max-width: 1024px)" srcset=`${baseDir}images/${path}-tablet.${ext}, ${baseDir}images/${path}-tablet@2x.${ext} 2x` type=`image/${ext}`)
+
+		source(srcset=`${baseDir}images/${path}.webp, ${baseDir}images/${path}@2x.webp 2x` type='image/webp')
+		img(srcset=`${baseDir}images/${path}.${ext}, ${baseDir}images/${path}@2x.${ext} 2x` alt=name)

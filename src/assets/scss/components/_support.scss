@@ -1,0 +1,80 @@
+.support {
+	$p: &;
+
+	padding: vc(40) vc(30);
+
+	&__title {
+		margin: 0 0 vc(16);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 0 vc(24);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(24);
+		}
+	}
+
+	&__cards {
+		display: grid;
+		row-gap: vc(10);
+		column-gap: vc(20);
+		grid-auto-flow: dense;
+		grid-template-columns: repeat(3, 1fr);
+		grid-auto-rows: vc(38);
+
+		@include tablet {
+			row-gap: vc(15);
+			column-gap: vc(15);
+			grid-template-columns: repeat(4, 1fr);
+			grid-auto-rows: vc(75);
+		}
+
+		@include desktop {
+			row-gap: vc(20);
+			grid-template-columns: repeat(6, 1fr);
+			grid-auto-rows: vc(85);
+		}
+	}
+
+	&__card {
+		border: 1px solid $color-malibu;
+		border-radius: vc(5);
+		transition: background-color $duration-normal;
+
+		&:active {
+			background-color: $color-white;
+		}
+
+		picture,
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			font-family: "object-fit:cover";
+		}
+
+		@include tablet {
+			border-radius: vc(10);
+		}
+
+		@include desktop {
+			border-radius: vc(10);
+
+			&:hover {
+				background-color: $color-white;
+			}
+		}
+	}
+
+	@include tablet {
+		padding: vc(56) vc(25);
+	}
+
+	@include desktop {
+		margin: 0 auto;
+		padding: vc(100) vc(40);
+		max-width: vc(1440);
+	}
+}

@@ -1,0 +1,8 @@
+mixin pictureSvg(path, mobile, tablet, name = 'Element')
+	picture&attributes(attributes)
+		if mobile
+			source(media="(max-width: 739px)" srcset=`${baseDir}images/${path}-mobile.svg` type="image/svg+xml")
+		if tablet
+			source(media="(min-width: 740px) and (max-width: 1024px)" srcset=`${baseDir}images/${path}-tablet.svg` type="image/svg+xml")
+
+		img(srcset=`${baseDir}images/${path}.svg` alt=name)

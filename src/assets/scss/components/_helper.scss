@@ -1,0 +1,152 @@
+.helper {
+	$p: &;
+
+	position: relative;
+	z-index: 3;
+	padding: vc(32) vc(30) vc(56);
+
+	&__description {
+		margin: 0 0 vc(24);
+
+		@include tablet {
+			margin: 0 vc(20) 0 0;
+		}
+
+		@include desktop {
+			margin: 0 vc(115) 0 0;
+		}
+	}
+
+	&__title {
+		margin: 0 0 vc(8);
+
+		@include tablet {
+			margin: 0 0 vc(12);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(16);
+		}
+	}
+
+	&__text {
+		@include desktop {
+			max-width: vc(555);
+		}
+	}
+
+	&__form {
+		border-radius: vc(20);
+		padding: vc(24) vc(16);
+		background-color: $color-white;
+
+		@include tablet {
+			padding: vc(32) vc(16);
+		}
+
+		@include desktop {
+			padding: vc(32);
+		}
+	}
+
+	&__label {
+		display: block;
+		margin: 0 0 vc(8);
+	}
+
+	&__input {
+		border: 1px solid $color-malibu;
+		border-radius: vc(6);
+		padding: 0 vc(16);
+		width: 100%;
+		height: vc(45);
+		font-size: (12);
+		color: $color-black;
+		transition: border-color $duration-normal;
+
+		&.is-error {
+			border-color: $color-razzmatazz;
+		}
+
+		@include tablet {
+			width: vc(293);
+			font-size: vc(14);
+		}
+
+		@include desktop {
+			width: vc(376);
+			font-size: vc(14);
+		}
+	}
+
+	&__accept {
+		display: flex;
+		align-items: center;
+		margin: 0 0 vc(24);
+		font-size: vc(8);
+		line-height: (10 / 8);
+		color: $color-black;
+
+		input {
+			display: none;
+
+			&:checked + span {
+				background: url($url-image + 'sprites/svg/icon-checkbox.svg') no-repeat center center;
+				background-size: cover;
+			}
+		}
+
+		span {
+			margin: 0 vc(8) 0 0;
+			border: 1px solid $color-malibu;
+			border-radius: vc(2);
+			width: vc(10);
+			height: vc(10);
+		}
+
+		& .is-error + span {
+			border-color: #ed0b70;
+		}
+
+		@include desktop {
+			a {
+				text-decoration: underline;
+
+				&:hover {
+					color: $color-azure-radiance;
+				}
+			}
+		}
+	}
+
+	&__button {
+		width: vc(170);
+		height: vc(40);
+
+		@include tablet {
+			width: vc(209);
+			height: vc(44);
+		}
+
+		@include desktop {
+			width: vc(209);
+			height: vc(44);
+		}
+	}
+
+	@include tablet {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: vc(32) vc(24);
+	}
+
+	@include desktop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 auto;
+		padding: vc(32) vc(155) vc(32) vc(41);
+		max-width: vc(1440);
+	}
+}

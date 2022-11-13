@@ -1,0 +1,137 @@
+.popup {
+	$p: &;
+
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 100%;
+
+	&__overlay {
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+		background: rgba($color-biscay, 0.1);
+		backdrop-filter: blur(vc(4));
+	}
+
+	&__alert {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border-radius: vc(20);
+		padding: vc(32) vc(28);
+		width: calc(100% - #{vc(60)});
+		background-color: $color-catskill-white;
+		backdrop-filter: blur(vc(34));
+
+		@include tablet {
+			padding: vc(54) vc(113);
+			width: vc(670);
+		}
+
+		@include desktop {
+			padding: vc(54) vc(113);
+			width: vc(670);
+		}
+	}
+
+	&__icon {
+		margin: 0 0 vc(24);
+		border: 1px solid $color-razzmatazz;
+		border-radius: 50%;
+		width: vc(94);
+		height: vc(94);
+
+		svg {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			font-family: "object-fit:cover";
+		}
+	}
+
+	&__title {
+		margin: 0 0 vc(16);
+		font-weight: 700;
+		font-size: vc(16);
+		line-height: (19 / 16);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 0 vc(24);
+			max-width: vc(357);
+			font-size: vc(24);
+			line-height: (28 / 24);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(24);
+			max-width: vc(357);
+			font-size: vc(24);
+			line-height: (28 / 24);
+		}
+	}
+
+	&__text {
+		margin: 0 0 vc(12);
+		font-size: vc(16);
+		line-height: (24 / 16)
+	}
+
+	&__timer {
+		margin: 0 0 vc(24);
+		font-feature-settings: 'pnum' on, 'lnum' on, 'liga' off;
+		font-weight: 700;
+		font-size: vc(32);
+		line-height: (38 / 32);
+
+		@include tablet {
+			margin: 0 0 vc(32);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(32);
+		}
+	}
+
+	&__buttons {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+
+	&__button {
+		width: vc(125);
+		height: vc(40);
+
+		@include tablet {
+			width: vc(211);
+		}
+
+		@include desktop {
+			width: vc(211);
+		}
+	}
+
+	@include mobile {
+		overflow-y: scroll;
+	}
+
+	@include tablet {
+
+	}
+
+	@include desktop {
+
+	}
+}

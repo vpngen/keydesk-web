@@ -1,0 +1,116 @@
++b.profile
+	+e.headline
+		+e.H2.title
+			!=data.profile.headline.title
+		+e.search
+			+e.search-label
+				+e.INPUT.search-input(type="text" placeholder="Search")
+			+e.search-button
+				+button(data.profile.headline.button, 'search')
+	+e.cards
+		+e.card.is-problem
+			+e.card-headline
+				+e.card-logo
+					+e.SPAN.card-icon
+						+svg('icon-card')
+				+e.P.card-name
+					| Красивый#[br]Иван Павлов
+			+e.UL.card-features
+				+e.LI.card-feature
+					| #[b Last visit:]#[span 01.12.2022, 15:32]
+				+e.LI.card-feature
+					| #[b Traffic limits:]#[span 100 000Gb]
+				+e.LI.card-feature
+					| #[b Status:]#[span Problem]
+				+e.LI.card-feature
+					| #[b AS:]#[+svg('icon-de')]#[span 192.112.12.12 — 192.112 12.13]
+			+e.BUTTON.card-button(type="button")
+				| Delete
+		+e.card.is-active
+			+e.card-headline
+				+e.card-logo
+					+e.SPAN.card-icon
+						+svg('icon-card')
+				+e.P.card-name
+					| Умный#[br] Ильич Мечников
+			+e.UL.card-features
+				+e.LI.card-feature
+					| #[b Last visit:]#[span 01.12.2022, 15:32]
+				+e.LI.card-feature
+					| #[b Traffic limits:]#[span 100 000Gb]
+				+e.LI.card-feature
+					| #[b Status:]#[span Active]
+				+e.LI.card-feature
+					| #[b AS:]#[+svg('icon-de')]#[span 192.112.12.12 — 192.112 12.13]
+			+e.BUTTON.card-button(type="button")
+				| Delete
+		+e.card.is-deactive
+			+e.card-headline
+				+e.card-logo
+					+e.SPAN.card-icon
+						+svg('icon-card')
+				+e.P.card-name
+					| Разный#[br] Лев Давидович
+			+e.UL.card-features
+				+e.LI.card-feature
+					| #[b Last visit:]#[span 01.12.2022, 15:32]
+				+e.LI.card-feature
+					| #[b Traffic limits:]#[span 100 000Gb]
+				+e.LI.card-feature
+					| #[b Status:]#[span Deactive]
+				+e.LI.card-feature
+					| #[b AS:]#[+svg('icon-de')]#[span 192.112.12.12 — 192.112 12.13]
+			+e.BUTTON.card-button(type="button")
+				| Delete
+
+		+e.add
+			+e.add-icon
+				+svg('icon-add')
+			+e.P.add-text
+				| Add new
+	+e.data
+		+e.H2.title
+			!=data.profile.title
+		+e.select
+			+e.option
+				+button('What data we collect?', 'button', 'option1', 'is-select', 1)
+			+e.option
+				+button('FAQ', 'button', 'option2', false, 2)
+		+e.tabs
+			+e.tab(data-tab="1")
+				+e.table
+					+e.table
+						+e.table-head
+							+e.table-title
+								| Date type
+							+e.table-column
+								| Brigadir
+							+e.table-column
+								| User
+						each line, index in Array(5)
+							+e.table-line
+								+e.table-title
+									| Date type #[=index + 1]
+								+e.table-column
+									+svg(`icon-status-${index != 1 ? 'on' : 'off'}`)
+								+e.table-column
+									+svg(`icon-status-${index != 1 ? 'off' : 'on'}`)
+			+e.tab.is-hidden(data-tab="2")
+				+e.accordion
+					+e.accordion-column
+						each line, index in Array(3)
+							+e.accordion-line
+								+e.accordion-question
+									| Question №#[=index + 1]
+								+e.accordion-responsion
+									+e.accordion-content
+										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
+										| #[br]#[br]Odio posuere molestie aliquam, faucibus lacus, pharetra, ut non. Posuere turpis elementum egestas turpis nulla. Justo mauris pulvinar rhoncus habitant proin consectetur.
+					+e.accordion-column
+						each line, index in Array(3)
+							+e.accordion-line
+								+e.accordion-question
+									| Question №#[=index + 4]
+								+e.accordion-responsion
+									+e.accordion-content
+										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.

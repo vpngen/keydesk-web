@@ -1,0 +1,10 @@
+// Manrope
+@include font-face($url-font + "Manrope/Manrope-400", "Manrope", 400, normal);
+@include font-face($url-font + "Manrope/Manrope-500", "Manrope", 500, normal);
+
+// Raleway
+@include font-face($url-font + "Raleway/Raleway-300", "Raleway", 300, normal);
+@include font-face($url-font + "Raleway/Raleway-400", "Raleway", 400, normal);
+@include font-face($url-font + "Raleway/Raleway-500", "Raleway", 500, normal);
+@include font-face($url-font + "Raleway/Raleway-700", "Raleway", 700, normal);
+@include font-face($url-font + "Raleway/Raleway-800", "Raleway", 800, normal);

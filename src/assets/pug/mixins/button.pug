@@ -1,0 +1,9 @@
+mixin button(name, type, modifier, extra, data)
+	+b({tag: type === 'button' ? type : 'a'})(
+		class=modifier ? `button--${modifier}` : 'button'
+		class=data ? extra : ''
+		data-button=data ? data : ''
+		type=type === 'button' ? 'submit' : false
+		href=type !== 'button' ? type : false
+		)&attributes(attributes)
+		!=name

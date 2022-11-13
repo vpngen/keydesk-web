@@ -1,0 +1,220 @@
+:root {
+	--width-base: 385;
+	--width-current: 100vw;
+	--width-multiplier: var(--width-current) / var(--width-base);
+
+	@include tablet {
+		--width-base: 835;
+	}
+
+	@include desktop-w {
+		--width-base: 1440;
+	}
+
+	@include desktop-xl {
+		--width-base: 1440;
+		--width-current: 1440px;
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: inherit;
+}
+
+html {
+	min-height: 100vh;
+	box-sizing: border-box;
+}
+
+#app {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 100vh;
+	font-family: $font-raleway;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	text-decoration-skip: objects;
+	text-rendering: optimizeLegibility;
+	text-size-adjust: 100%;
+	-webkit-tap-highlight-color: transparent;
+	color: $color-biscay;
+	background-color: $color-catskill-white;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+	margin: 0;
+}
+
+h1 {
+	font-weight: 700;
+	font-size: vc(24);
+	line-height: (28 / 24);
+
+	@include tablet {
+		font-size: vc(40);
+		line-height: (47 / 40);
+	}
+
+	@include desktop {
+		font-size: vc(40);
+		line-height: (47 / 40);
+	}
+}
+
+h2 {
+	font-weight: 800;
+	font-size: vc(24);
+	line-height: (28 / 24);
+
+	@include tablet {
+		font-size: vc(40);
+		line-height: (47 / 40);
+	}
+
+	@include desktop {
+		font-size: vc(40);
+		line-height: (47 / 40);
+	}
+}
+
+h3 {
+	font-weight: 700;
+	font-size: vc(18);
+	line-height: (21 / 18);
+
+	@include tablet {
+		font-weight: 500;
+		font-size: vc(41);
+		line-height: (48 / 41);
+	}
+
+	@include desktop {
+		font-weight: 500;
+		font-size: vc(48);
+		line-height: (56 / 48);
+	}
+}
+
+p {
+	font-size: vc(14);
+	line-height: (21 / 14);
+
+	@include tablet {
+		font-size: vc(16);
+		line-height: (22 / 16);
+	}
+
+	@include desktop {
+		font-size: vc(18);
+		line-height: (24 / 18);
+	}
+}
+
+li,
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+a,
+button {
+	outline: none;
+	text-decoration: none;
+	color: currentColor;
+	cursor: pointer;
+}
+
+a {
+	color: currentColor;
+	transition: color $duration-normal;
+
+	&:active {
+
+	}
+
+	@include desktop {
+		&:hover {
+
+		}
+
+		&:active {
+
+		}
+	}
+}
+
+input,
+select,
+button,
+textarea {
+	display: block;
+	appearance: none;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	box-shadow: none;
+	background: none;
+}
+
+img {
+	display: block;
+	max-width: 100%;
+}
+
+svg {
+	width: 100%;
+	height: 100%;
+}
+
+menu {
+	margin: 0;
+	padding: 0;
+}
+
+.select2-selection:focus,
+.select2-selection:visited,
+.select2-selection:active,
+.select2-selection:hover,
+a:focus,
+a:visited,
+a:active,
+a:hover,
+textarea:focus,
+textarea:visited,
+textarea:active,
+textarea:hover,
+input:focus,
+input:visited,
+input:active,
+input:hover,
+select:focus,
+select:visited,
+select:active,
+select:hover,
+button:focus,
+button:visited,
+button:active,
+button:hover {
+	outline: 0;
+	outline-style: none;
+}
+
+.no-scroll {
+	overflow: hidden;
+
+	main {
+		pointer-events: none;
+	}
+}

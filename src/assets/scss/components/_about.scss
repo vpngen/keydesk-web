@@ -1,0 +1,128 @@
+.about {
+	$p: &;
+
+	padding: vc(40) vc(30) vc(56);
+
+	&__description {
+		margin: 0 0 vc(16);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 0 vc(24);
+			text-align: left;
+		}
+
+		@include desktop {
+			margin: 0 0 vc(23);
+			text-align: left;
+		}
+	}
+
+	&__title {
+		margin: 0 0 vc(8);
+
+		@include tablet {
+			margin: 0 0 vc(12);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(16);
+		}
+	}
+
+	&__text {
+		@include tablet {
+			max-width: vc(440);
+		}
+
+		@include desktop {
+			max-width: vc(555);
+		}
+	}
+
+	&__cards {
+		display: flex;
+		flex-direction: column;
+
+		@include tablet {
+			flex-direction: row;
+			margin: 0 vc(-10);
+		}
+
+		@include desktop {
+			flex-direction: row;
+			margin: 0 vc(-10);
+		}
+	}
+
+	&__card {
+		margin: 0 0 vc(16);
+
+		@include tablet {
+			margin: 0 vc(10);
+		}
+
+		@include desktop {
+			margin: 0 vc(10);
+		}
+	}
+
+	&__card-image {
+		border-radius: vc(30);
+		margin: 0 0 vc(8);
+		padding: vc(15);
+		width: 100%;
+		height: vc(207);
+		background-color: $color-white;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			font-family: "object-fit:contain";
+		}
+
+		@include tablet {
+			padding: vc(25) vc(12);
+			width: vc(210);
+			height: vc(227);
+		}
+
+		@include desktop {
+			padding: vc(25) vc(12);
+			width: vc(210);
+			height: vc(227);
+		}
+	}
+
+	&__card-link {
+		display: block;
+		margin: 0 auto;
+		text-align: center;
+		text-decoration: underline;
+		transition: color $duration-normal;
+
+		&:active {
+			color: $color-azure-radiance;
+		}
+
+		@include desktop {
+			&:hover {
+				color: $color-azure-radiance;
+			}
+		}
+	}
+
+	@include tablet {
+		padding: vc(56) vc(24) vc(57);
+	}
+
+	@include desktop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 auto;
+		padding: vc(100) vc(40) vc(80);
+		max-width: vc(1440);
+	}
+}

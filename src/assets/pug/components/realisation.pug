@@ -1,0 +1,19 @@
++b.realisation
+	+e.H2.title(data-animate="fade-down")
+		!=data.realisation.title
+	+e.P.text(data-animate="fade-down")
+		!=data.realisation.text
+	+e.cards
+		each card, index in data.realisation.card
+			+e.card(data-animate="fade-down")
+				+e.card-check
+					+e.SPAN.card-icon
+						+svg('icon-check')
+				+e.card-description
+					+e.H3.card-title
+						!=card.title
+					+e.P.card-text
+						!=card.text
+	+e.vignette(data-animate="fade-down")
+		+e.P.vignette-text
+			!=data.realisation.vignette

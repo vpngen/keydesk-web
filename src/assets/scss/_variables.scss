@@ -1,0 +1,32 @@
+// COLORS
+$color-black: #000;
+$color-white: #fff;
+$color-catskill-white: #eff7f8;
+$color-gill-gray: #a1aebb;
+$color-silver-chalice: #b1b1b1;
+$color-french-pass: #bef8fc;
+$color-onahau: #c7e4ff;
+$color-malibu: #57c3ff;
+$color-azure-radiance: #0085ff;
+$color-biscay: #1d4365;
+$color-shark: #292d32;
+$color-corn: #d4d900;
+$color-red: #ff0000;
+$color-razzmatazz: #ed0b70;
+$color-puerto-rico: #4cbfa6;
+
+// FONTS
+$font-manrope: "Manrope", sans-serif;
+$font-raleway: "Raleway", sans-serif;
+
+// EASING TRANSITIONS
+$duration-normal: 0.3s;
+$easing-back-out: cubic-bezier(0.25, 0.74, 0.22, 1.1); // http://cubic-bezier.com/#.25,.74,.22,1.1
+$easing-back-in: cubic-bezier(0.47, -0.1, 0.5, -0.06); // http://cubic-bezier.com/#.47,-0.1,.5,-.06
+$easing-in-out: ease-in-out;
+$easing-out: ease-out;
+$easing-in: ease-in;
+
+// URL
+$url-font: "../fonts/";
+$url-image: "../images/";

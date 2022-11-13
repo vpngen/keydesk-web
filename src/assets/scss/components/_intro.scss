@@ -1,0 +1,55 @@
+.intro {
+	$p: &;
+
+	position: relative;
+	z-index: 3;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding: vc(39) vc(16) 0 vc(30);
+	width: 100%;
+	height: vc(471);
+
+	&__title {
+		margin: 0 0 vc(8);
+
+		@include tablet {
+			margin: 0 0 vc(16);
+			max-width: vc(653);
+		}
+
+		@include desktop {
+			margin: 0 0 vc(16);
+			max-width: vc(653);
+		}
+	}
+
+	&__text {
+		margin: 0 0 vc(24);
+
+		@include tablet {
+			max-width: vc(555);
+		}
+
+		@include desktop {
+			max-width: vc(555);
+		}
+	}
+
+	&__button {
+		width: vc(210);
+		height: vc(50);
+	}
+
+	@include tablet {
+		padding: vc(115) vc(25) 0;
+		height: vc(476);
+	}
+
+	@include desktop {
+		margin: 0 auto;
+		padding: 0 vc(40) vc(1);
+		height: vc(720);
+		max-width: vc(1440);
+	}
+}

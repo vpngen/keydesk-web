@@ -1,0 +1,9 @@
++b.generator--2(data-animate="fade")
+	+e.description
+		+e.H2.title(data-animate="fade-down" data-animate-delay="0.4")
+			!=data.generator2.title
+		each text, index in data.generator2.text
+			+e.P.text(data-animate="fade-down" data-animate-delay=index / 10 + 0.6)
+				!=text
+	+e.decor(data-animate="fade" data-animate-delay="0.8")
+		+picture('generator/decor', 'png', false, false, 'decor')

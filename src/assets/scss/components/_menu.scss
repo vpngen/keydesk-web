@@ -1,0 +1,102 @@
+.menu {
+	$p: &;
+
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	z-index: 10;
+	height: 100%;
+
+	&__overlay {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: -1;
+		background: rgba($color-cinder, 0.6);
+		backdrop-filter: blur(vc(8));
+	}
+
+	&__container {
+		overflow-y: scroll;
+		padding: vc(10) vc(30);
+		width: 100%;
+		height: 100%;
+
+		@include tablet {
+			margin: 0 0 0 auto;
+			padding: vc(28) vc(50);
+			width: vc(313);
+			background-color: $color-shark;
+		}
+	}
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 0 vc(40);
+
+		@include tablet {
+			justify-content: flex-end;
+			margin: 0 0 vc(58);
+		}
+	}
+
+	&__logo {
+		width: vc(81);
+		height: vc(40);
+
+		@include tablet {
+			display: none;
+		}
+	}
+
+	&__close {
+		width: vc(30);
+		height: vc(30);
+		transition: transform $duration-normal;
+
+		&:active {
+			transform: rotate(180deg);
+		}
+
+		svg {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			font-family: "object-fit:cover";
+		}
+
+		@include tablet {
+			width: vc(40);
+			height: vc(40);
+		}
+	}
+
+	&__link {
+		position: relative;
+		z-index: 2;
+		display: block;
+		margin: 0 0 vc(16);
+		font-weight: 700;
+		font-size: vc(16);
+		line-height: (18 / 16);
+
+		@include tablet {
+			margin: 0 0 vc(24);
+			font-size: vc(20);
+			line-height: (22 / 20);
+		}
+	}
+
+	&__button {
+		position: relative;
+		z-index: 1;
+		margin: vc(30) 0 0;
+		width: 100%;
+		height: vc(46);
+	}
+}

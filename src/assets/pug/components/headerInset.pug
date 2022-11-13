@@ -1,0 +1,16 @@
++b.HEADER.header--inset
+	+e.container
+		+e.logo
+			+svg('logo-vpn')
+		+e.content
+			+e.NAV.nav
+				each link in data.headerInset.link
+					+e.A.link(href=link.href)
+						!=link.text
+			+e.language
+				+e.BUTTON.lang(type="button")
+					+svg('lang-de')
+			+e.BUTTON.burger(type="button")
+				+e.SPAN
+				+e.SPAN
+				+e.SPAN
