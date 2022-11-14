@@ -4,14 +4,14 @@ include ../assets/pug/data
 +b.profile
 	+e.headline
 		+e.H2.title
-			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].PersonName : 'Brigadier' }}` 
+			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].UserName : 'Brigadier' }}` 
 		+e.search
 			+e.search-label
 				+e.INPUT.search-input(type="text", placeholder="Search", v-model="filterUserText")
 			+e.search-button
 				+button(data.profile.headline.button, 'button')(@click="addUser")
 	+e.cards
-		+e.card(v-for="user in filteredUsers", :key="user.UserID", :class="user.Problems ? 'is-problem' : 'is-active'")
+		+e.card(v-for="(user, index) in filteredUsers", :key="user.UserID", :class="user.Problems ? 'is-problem' : 'is-active'")
 			+e.card-headline
 				+e.card-logo
 					+e.SPAN.card-icon
@@ -27,7 +27,7 @@ include ../assets/pug/data
 					| #[b Status:]#[span(v-if="user.Problems") Problem]
 				+e.LI.card-feature
 					| #[b AS:]#[SvgIcon(name='icon-de', v-if="user.LastVisitSubnet")]#[span(v-if="user.LastVisitSubnet") {{ user.LastVisitSubnet }}]
-			+e.BUTTON.card-button(type="button", @click="openDialog(user.UserID)")
+			+e.BUTTON.card-button(type="button", v-if="index !== 0" @click="openDialog(user.UserID)")
 				| Delete
 		+e.add(@click="addUser")
 			+e.add-icon
@@ -91,59 +91,29 @@ import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
 
 const selectClass = 'is-select';
-const filterUserText = ref('')
+const apiLink = '';
+const filterUserText = ref('');
 
 const token = ref(null);
-const usersList = ref(
-	[
-		// {
-		// 	"LastVisitHour": "0001-01-01T00:00:00.000Z",
-		// 	"MonthlyQuotaRemainingGB": 100,
-		// 	"PersonDesc": "За изобретение эффективных синих светодиодов, приведших к появлению ярких и энергосберегающих источников белого света",
-		// 	"PersonDescLink": "https://ru.wikipedia.org/wiki/%D0%90%D0%BA%D0%B0%D1%81%D0%B0%D0%BA%D0%B8,_%D0%98%D1%81%D0%B0%D0%BC%D1%83",
-		// 	"PersonName": "Исаму Акасаки",
-		// 	"Problems": true,
-		// 	"ThrottlingTill": "0001-01-01T00:00:00.000Z",
-		// 	"UserID": "b3244822-0f32-439f-b9a1-07187690452d",
-		// 	"UserName": "Образцовый Исаму Акасаки"
-		// },
-		// {
-		// 	"LastVisitHour": "0001-01-01T00:00:00.000Z",
-		// 	"MonthlyQuotaRemainingGB": 100,
-		// 	"PersonDesc": "За открытие новых продуктивных форм атомной теории",
-		// 	"PersonDescLink": "https://ru.wikipedia.org/wiki/%D0%94%D0%B8%D1%80%D0%B0%D0%BA,_%D0%9F%D0%BE%D0%BB%D1%8C_%D0%90%D0%B4%D1%80%D0%B8%D0%B5%D0%BD_%D0%9C%D0%BE%D1%80%D0%B8%D1%81",
-		// 	"PersonName": "Поль Дирак",
-		// 	"Problems": null,
-		// 	"ThrottlingTill": "0001-01-01T00:00:00.000Z",
-		// 	"UserID": "ff58f9c4-7c84-46d9-8a2e-8b58b96a5aac",
-		// 	"UserName": "Пронзительный Поль Дирак"
-		// }
-	]
-);
+const usersList = ref([]);
 const getUsers = async () => {
-	usersList.value = await axios.get('/user').then((r) => r.data)
+	usersList.value = await axios.get(`${apiLink}/user`).then((r) => r.data)
 };
 
 (async function () {
-    token.value = await axios.post('/token').then((r) => r.data.Token);
+    token.value = await axios.post(`${apiLink}/token`).then((r) => r.data.Token);
 	if( token.value	) {
-		axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`
+		axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
 		getUsers();
 	}
 })();
 
-// const dec2hex = (dec) => {
-//   return dec.toString(16).padStart(2, "0")
-// }
-// const generateId = () => {
-//   var arr = new Uint8Array(20)
-//   window.crypto.getRandomValues(arr)
-//   return Array.from(arr, dec2hex).join('')
-// }
-
 const addUser = async () => {
-	await axios.post('/user', {}, {
+	await axios.post(`${apiLink}/user`,{}, {
 		responseType: 'blob',
+		headers: {
+			'accept': 'application/octet-stream'
+		}
 	}).then((r) => {
 		console.log(r);
 		const url = window.URL.createObjectURL(new Blob([r.data]));
@@ -158,35 +128,15 @@ const addUser = async () => {
 	}).catch((error) => {
         console.error(error)
       });
-	
-	// let user = {
-	// 	"LastVisitASCountry": "RU",
-	// 	"LastVisitASName": "test",
-	// 	"LastVisitHour": Date.now(),
-	// 	"LastVisitSubnet": "string",
-	// 	"MonthlyQuotaRemainingGB": Math.random(100),
-	// 	"PersonDesc": "string",
-	// 	"PersonDescLink": "string",
-	// 	"PersonName": `Test${generateId()}`,
-	// 	"Problems": [
-	// 	"no problems"
-	// 	],
-	// 	"ThrottlingTill": "2022-11-04T09:42:21.094Z",
-	// 	"UserID": generateId(),
-	// 	"UserName": `Test${Math.random(100)}`
-	// };
-	
-	// usersList.value.push(user);
 }
 
 const removeUser = async (id) => {
-	await axios.delete(`/user/${id}`).then((r) => console.log(r));
+	await axios.delete(`${apiLink}/user/${id}`)
+	.then((r) => {
+		showDialog.value = false;
+		deletedUserId.value = null;
+	});
 	getUsers()
-	// usersList.value = usersList.value.filter((item) => {
-	// 	return item.UserID !== id
-	// })
-	// showDialog.value = false;
-	// deletedUserId.value = null;
 }
 
 const filteredUsers = computed( () => {
