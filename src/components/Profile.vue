@@ -120,8 +120,8 @@ const addUser = async () => {
         const link = document.createElement('a');
         link.href = url;
 		let header = r.headers.get('content-disposition');
-		let filename =  header.split('filename*=')[1].replaceAll(`"`, ``).replace(`utf-8''`, ``);
-        link.setAttribute('download', filename);
+		let filename =  header.split('filename*=')[1].replaceAll(`"`, ``).replace(`utf-8''`, ``).replace(`.conf`, ``);
+        link.setAttribute('download', `${filename}.conf`);
         document.body.appendChild(link);
         link.click();
 		getUsers();
