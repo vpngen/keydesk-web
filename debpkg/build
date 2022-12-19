@@ -1,6 +1,6 @@
 #!/bin/sh
 
-elif [ "x$1" = "xpkg" ]; then
+if [ "x$1" = "xpkg" ]; then
         set -e
 
         export USER_UID=${USER_UID}

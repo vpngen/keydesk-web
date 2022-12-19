@@ -19,6 +19,6 @@ contents:
   type: dir
   file_info:
     mode: 0555
-- src: ./dist/*
+- src: ./dist/
   dst: /var/www/
 
