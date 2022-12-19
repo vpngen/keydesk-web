@@ -1,0 +1,24 @@
+name: "vgkeydesk-web"
+arch: "amd64"
+platform: "linux"
+version: 0.0.1
+section: "default"
+priority: "extra"
+
+provides:
+- vgkeydesk-web
+
+maintainer: "Ingmund Ollson <ingmund@proton.me>"
+description: VPNGen keydesk web frontend
+vendor: "VPNGen"
+homepage: "http://vpngen.org"
+license: "LGPL"
+
+contents:
+- dst: /var/www
+  type: dir
+  file_info:
+    mode: 0555
+- src: ./dist/*
+  dst: /var/www/
+
