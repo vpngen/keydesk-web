@@ -23,5 +23,5 @@ docker run --rm  \
         -e AUTH_KEY="${AUTH_KEY}" \
         -e USER_UID=$(id -u) \
         -v ${PWD}:"${SHARED_BASE}" \
-        node:18-buster "${SHARED_BASE}/data/build" pkg
+        node:18-buster "${SHARED_BASE}/build" pkg
 
