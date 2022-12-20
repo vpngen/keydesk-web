@@ -22,3 +22,6 @@ contents:
 - src: dist
   dst: /var/www
 
+deb:
+ compression: xz
+
