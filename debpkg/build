@@ -20,7 +20,6 @@ fi
 docker run --rm  \
         -v $(readlink -f $SSH_AUTH_SOCK):/ssh-agent \
         -e SSH_AUTH_SOCK=/ssh-agent \
-        -e AUTH_KEY="${AUTH_KEY}" \
         -e USER_UID=$(id -u) \
         -v ${PWD}:"${SHARED_BASE}" \
         node:18-buster "${SHARED_BASE}/build" pkg
