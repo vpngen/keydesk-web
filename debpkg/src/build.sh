@@ -8,8 +8,6 @@ echo 'deb [trusted=yes] https://repo.goreleaser.com/apt/ /' | tee /etc/apt/sourc
 apt update
 apt install nfpm
 
-export FORCE_COLOR=false
-
 cd keydesk-web
 yarn install
 yarn build
