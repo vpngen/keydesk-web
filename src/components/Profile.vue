@@ -4,7 +4,7 @@ include ../assets/pug/data
 +b.profile
 	+e.headline
 		+e.H2.title
-			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].UserName : 'Brigadier' }}` 
+			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].UserName : 'Brigadier' }}`
 		+e.search
 			+e.search-label
 				+e.INPUT.search-input(type="text", placeholder="Search", v-model="filterUserText")
@@ -27,7 +27,7 @@ include ../assets/pug/data
 					| #[b Status:]#[span(v-if="user.Problems") Problem]
 				+e.LI.card-feature
 					| #[b AS:]#[SvgIcon(name='icon-de', v-if="user.LastVisitSubnet")]#[span(v-if="user.LastVisitSubnet") {{ user.LastVisitSubnet }}]
-			+e.BUTTON.card-button(type="button", v-if="index !== 0" @click="openDialog(user.UserID)")
+			+e.BUTTON.card-button(type="button", v-if="index !== 0" @click="openDialogUser(user.UserID)")
 				| Delete
 		+e.add(@click="addUser")
 			+e.add-icon
@@ -80,8 +80,9 @@ include ../assets/pug/data
 								+e.accordion-responsion
 									+e.accordion-content
 										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
-  
-DialogUser(v-show="showDialog" :userId="deletedUserId" @close="closeDialog" @removeUser="removeUser")
+
+DialogUser(v-show="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
+DialogQrCode(v-show="showDialogQrCode" :file="qrCodeFile" :filename="filename" @close="closeDialogQrCode()")
 </template>
 
 <script setup>
@@ -89,18 +90,25 @@ import { computed, ref } from "vue";
 import axios from 'axios';
 import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
+import DialogQrCode from './DialogQrCode.vue';
 
 const selectClass = 'is-select';
-const apiLink = '';
+let apiLink = '';
+if (process.env.NODE_ENV === 'development') {
+	apiLink = 'http://static.140.53.88.23.clients.your-server.de';
+}
 const filterUserText = ref('');
 
 const token = ref(null);
+const qrCodeFile = ref(new Blob([]))
 const usersList = ref([]);
+const filename = ref('')
 const getUsers = async () => {
 	usersList.value = await axios.get(`${apiLink}/user`).then((r) => r.data)
 };
 
 (async function () {
+	console.log(process.env.NODE_ENV);
     token.value = await axios.post(`${apiLink}/token`).then((r) => r.data.Token);
 	if( token.value	) {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
@@ -115,15 +123,19 @@ const addUser = async () => {
 			'accept': 'application/octet-stream'
 		}
 	}).then((r) => {
-		console.log(r);
-		const url = window.URL.createObjectURL(new Blob([r.data]));
-        const link = document.createElement('a');
-        link.href = url;
-		let header = r.headers.get('content-disposition');
-		let filename =  header.split('filename*=')[1].replaceAll(`"`, ``).replace(`utf-8''`, ``).replace(`.conf`, ``);
-        link.setAttribute('download', `${filename}.conf`);
-        document.body.appendChild(link);
-        link.click();
+		const blob = new Blob([r.data])
+
+		qrCodeFile.value = blob
+		openDialogQrCode()
+
+		const header = r.headers.get('content-disposition');
+
+		if (header) {
+			filename.value = header.split('filename*=')[1].replaceAll(`"`, ``).replace(`utf-8''`, ``).replace(`.conf`, ``);
+		} else {
+			filename.value = 'config';
+		}
+
 		getUsers();
 	}).catch((error) => {
         console.error(error)
@@ -133,7 +145,7 @@ const addUser = async () => {
 const removeUser = async (id) => {
 	await axios.delete(`${apiLink}/user/${id}`)
 	.then((r) => {
-		showDialog.value = false;
+		showDialogUser.value = false;
 		deletedUserId.value = null;
 	});
 	getUsers()
@@ -142,19 +154,29 @@ const removeUser = async (id) => {
 const filteredUsers = computed( () => {
 	let filter = filterUserText.value
 	if (!filter.length) return usersList.value
-	return usersList.value.filter( user => 
+	return usersList.value.filter( user =>
 		user.PersonName.toLowerCase().includes(filter.toLowerCase())
 	)
 })
 
-const showDialog = ref(false);
+const showDialogUser = ref(false);
 const deletedUserId = ref(null);
-const closeDialog = () => {
-	showDialog.value = false;
+const closeDialogUser = () => {
+	showDialogUser.value = false;
 };
-const openDialog = (id) => {
+
+const openDialogUser = (id) => {
 	deletedUserId.value = id;
-	showDialog.value = true
+	showDialogUser.value = true
+};
+
+const showDialogQrCode = ref(false);
+const closeDialogQrCode = () => {
+	showDialogQrCode.value = false;
+};
+
+const openDialogQrCode = () => {
+	showDialogQrCode.value = true
 };
 
 const dataView = ref(true);
@@ -163,4 +185,3 @@ const changeDataView = () => {
 }
 
 </script>
-  

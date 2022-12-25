@@ -59,12 +59,31 @@
 		}
 	}
 
+	&__action {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: vc(8);
+	}
+
 	&__title {
 		margin: 0 0 vc(16);
 		font-weight: 700;
 		font-size: vc(16);
 		line-height: (19 / 16);
 		text-align: center;
+
+		&.qr-title {
+			margin: 0 0 vc(8);
+
+			@include tablet {
+				margin: 0 0 vc(8);
+			}
+
+			@include desktop {
+				margin: 0 0 vc(8);
+			}
+		}
 
 		@include tablet {
 			margin: 0 0 vc(24);
@@ -79,6 +98,10 @@
 			font-size: vc(24);
 			line-height: (28 / 24);
 		}
+	}
+
+	&__subtitle {
+		margin-bottom: vc(32);
 	}
 
 	&__text {
@@ -121,6 +144,17 @@
 		@include desktop {
 			width: vc(211);
 		}
+	}
+
+	.qr-code {
+		max-width: vc(250);
+		width: 100%;
+		margin-bottom: vc(32);
+	}
+
+	&__button-img {
+		width: vc(20);
+		height: vc(20);
 	}
 
 	@include mobile {
