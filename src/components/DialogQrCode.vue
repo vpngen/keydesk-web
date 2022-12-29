@@ -53,7 +53,7 @@ const props = defineProps({
 
 const qrCodeValue = ref('')
 
-const qrCodeBtnShare = navigator.canShare()
+const qrCodeBtnShare = !!navigator.canShare
 
 watchEffect(() => {
 	if(props.file) {

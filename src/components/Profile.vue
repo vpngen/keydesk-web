@@ -108,7 +108,6 @@ const getUsers = async () => {
 };
 
 (async function () {
-	console.log(process.env.NODE_ENV);
     token.value = await axios.post(`${apiLink}/token`).then((r) => r.data.Token);
 	if( token.value	) {
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
@@ -123,7 +122,7 @@ const addUser = async () => {
 			'accept': 'application/octet-stream'
 		}
 	}).then((r) => {
-		const blob = new Blob([r.data])
+		const blob = new Blob([r.data], {type:  r.headers.get('content-type')})
 
 		qrCodeFile.value = blob
 		openDialogQrCode()
@@ -135,6 +134,13 @@ const addUser = async () => {
 		} else {
 			filename.value = 'config';
 		}
+
+		const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${filename.value}.conf`);
+        document.body.appendChild(link);
+        link.click();
 
 		getUsers();
 	}).catch((error) => {
