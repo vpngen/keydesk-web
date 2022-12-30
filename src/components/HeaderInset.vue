@@ -5,7 +5,7 @@ include ../assets/pug/data
 	+e.container
 		+e.logo
 			SvgIcon(name="logo-vpn")
-		+e.content
+		+e.content(v-if="false")
 			+e.NAV.nav
 				each link in data.headerInset.link
 					+e.A.link(href=link.href)
@@ -41,15 +41,15 @@ const openLangMenu = () => {
 onMounted(() => {
 	const langMenu = document.querySelector('.header__lang-menu');
 
-	document.querySelector('body').addEventListener('click', (e) => {
-		if (!e.target.closest('.header__lang-menu') && !e.target.closest('.header__lang')) {
-			langMenu.classList.remove('active');
+	// document.querySelector('body').addEventListener('click', (e) => {
+	// 	if (!e.target.closest('.header__lang-menu') && !e.target.closest('.header__lang')) {
+	// 		langMenu.classList.remove('active');
 
-			if(showLangMenu.value) {
-				showLangMenu.value = !showLangMenu.value
-			}
-		}
-	});
+	// 		if(showLangMenu.value) {
+	// 			showLangMenu.value = !showLangMenu.value
+	// 		}
+	// 	}
+	// });
 })
 
 </script>

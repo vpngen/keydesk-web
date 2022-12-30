@@ -7,7 +7,7 @@ include ../assets/pug/data
 			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].UserName : 'Brigadier' }}`
 		+e.search
 			+e.search-label
-				+e.INPUT.search-input(type="text", placeholder="Search", v-model="filterUserText")
+				+e.INPUT.search-input(type="text", placeholder="Поиск", v-model="filterUserText")
 			+e.search-button
 				+button(data.profile.headline.button, 'button')(@click="addUser")
 	+e.cards
@@ -20,21 +20,21 @@ include ../assets/pug/data
 					| {{ user.UserName }}
 			+e.UL.card-features
 				+e.LI.card-feature(v-if="user.LastVisitHour")
-					| #[b Last visit:]#[span {{ new Date(user.LastVisitHour) }}]
+					| #[b Последний визит:]#[span {{ new Date(user.LastVisitHour) }}]
 				+e.LI.card-feature(v-if="user.MonthlyQuotaRemainingGB")
-					| #[b Traffic limits:]#[span {{ user.MonthlyQuotaRemainingGB }}Gb]
+					| #[b Лимит трафика:]#[span {{ user.MonthlyQuotaRemainingGB }}Gb]
 				+e.LI.card-feature
-					| #[b Status:]#[span(v-if="user.Problems") Problem]
-				+e.LI.card-feature
+					| #[b Статус:]#[span(v-if="user.Problems") Problem]
+				+e.LI.card-feature(v-if="false")
 					| #[b AS:]#[SvgIcon(name='icon-de', v-if="user.LastVisitSubnet")]#[span(v-if="user.LastVisitSubnet") {{ user.LastVisitSubnet }}]
 			+e.BUTTON.card-button(type="button", v-if="index !== 0" @click="openDialogUser(user.UserID)")
-				| Delete
+				| Удалить
 		+e.add(@click="addUser")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
-				| Add new
-	+e.data
+				| Добавить<br>пользователя
+	+e.data(v-if="false")
 		+e.H2.title
 			!=data.profile.title
 		+e.select
@@ -82,7 +82,7 @@ include ../assets/pug/data
 										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
 
 DialogUser(v-show="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
-DialogQrCode(v-show="showDialogQrCode" :file="qrCodeFile" :filename="filename" @close="closeDialogQrCode()")
+DialogQrCode(v-show="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
 </template>
 
 <script setup>
@@ -100,9 +100,10 @@ if (process.env.NODE_ENV === 'development') {
 const filterUserText = ref('');
 
 const token = ref(null);
-const qrCodeFile = ref(new Blob([]))
+const qrCodeFile = ref(new Blob([]));
+const blobLink = ref('');
 const usersList = ref([]);
-const filename = ref('')
+const filename = ref('');
 const getUsers = async () => {
 	usersList.value = await axios.get(`${apiLink}/user`).then((r) => r.data)
 };
@@ -135,12 +136,12 @@ const addUser = async () => {
 			filename.value = 'config';
 		}
 
-		const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${filename.value}.conf`);
-        document.body.appendChild(link);
-        link.click();
+		blobLink.value = window.URL.createObjectURL(blob);
+        // const link = document.createElement('a');
+        // link.href = url;
+        // link.setAttribute('download', `${filename.value}.conf`);
+        // document.body.appendChild(link);
+        // link.click();
 
 		getUsers();
 	}).catch((error) => {

@@ -102,6 +102,8 @@
 
 	&__subtitle {
 		margin-bottom: vc(32);
+		text-align: center;
+		line-height: vc(24);
 	}
 
 	&__text {
@@ -129,13 +131,34 @@
 	&__buttons {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: center;
+		gap: vc(20);
 		width: 100%;
+
+		&.qr-buttons {
+			@include mobile {
+				flex-direction: column;
+				gap: vc(0);
+			}
+		}
 	}
 
 	&__button {
 		width: vc(125);
 		height: vc(40);
+		font-family: "Raleway", sans-serif;
+
+		@include mobile {
+			.qr-buttons & {
+				width: vc(175);
+				&:nth-child(1) {
+					order: 2;
+				}
+				&:nth-child(2) {
+					order: 1;
+				}
+			}
+		}
 
 		@include tablet {
 			width: vc(211);
@@ -167,5 +190,14 @@
 
 	@include desktop {
 
+	}
+	
+	&__close {
+		position: absolute;
+		top: vc(22);
+		right: vc(22);
+		width: vc(20);
+		height: vc(20);
+		cursor: pointer;
 	}
 }

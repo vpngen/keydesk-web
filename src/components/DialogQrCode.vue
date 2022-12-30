@@ -3,6 +3,8 @@ include ../assets/pug/base
 +b.popup
 	+e.overlay(@click="close")
 	+e.alert
+		+e.close(@click="close")
+			SvgIcon(name="icon-close")
 		QRCodeVue3(
 			:width="500",
 			:height="500",
@@ -13,7 +15,6 @@ include ../assets/pug/base
 				type: 'rounded',
 				color: '#1D4365',
 			},
-			:image="image"
 			fileExt="svg"
 			myclass="qr-code"
 			:backgroundOptions="{ color: 'transparent' }",
@@ -21,20 +22,20 @@ include ../assets/pug/base
 			:cornersDotOptions="{ type: undefined, color: '#1D4365' }",
 		)
 		+e.title.qr-title
-			| QR code for easy setup on a mobile device
+			| Конфигурация готова!
 		+e.subtitle
-			| Just send it to a friend
-		+e.button(v-if="qrCodeBtnShare")
-			+e.BUTTON(class="button button--option2 popup__action", @click="share")
-				SvgIcon(name="share")
+			| Скачайте, скопируйте или<br>активируйте ее по QR-коду
+		+e.buttons.qr-buttons
+			+e.BUTTON(class="button button--option2 popup__action no-border", @click="copy", v-if="canCopy")
+				//- +e.button-img
+				//- 	SvgIcon(name="share")
 				+e.SPAN
-					| Share
-		+e.button(v-else)
-			+e.BUTTON(class="button button--option2 popup__action", @click="copy")
+					| Копировать данные
+			+e.A(class="button button--option2 popup__action", :href="fileLink", :download="`${filename}.conf`")
 				+e.button-img
-					SvgIcon(name="copy")
+					SvgIcon(name="download")
 				+e.SPAN
-					| Сopy data
+					| Скачать данные
 </template>
 
 <script setup>
@@ -46,6 +47,9 @@ const props = defineProps({
 	file: {
 		type: Object
 	},
+	fileLink: {
+		type: String
+	},
 	filename: {
 		type: String
 	},
@@ -53,7 +57,8 @@ const props = defineProps({
 
 const qrCodeValue = ref('')
 
-const qrCodeBtnShare = !!navigator.canShare
+// const qrCodeBtnShare = !!navigator.canShare
+const canCopy = !!navigator.clipboard
 
 watchEffect(() => {
 	if(props.file) {
@@ -65,20 +70,20 @@ watchEffect(() => {
 
 const image = require('@/assets/images/sprites/png/logo-vpn.png')
 
-const share = async () => {
-  if (navigator.canShare({ files: [props.file] })) {
-    try {
-      await navigator.share({
-				files: [props.file],
-				title: props.filename
-			})
-    } catch (error) {
-      alert(`Error: ${error.message}`)
-    }
-  } else {
-    alert(`Your system doesn't support sharing these files.`)
-  }
-}
+// const share = async () => {
+//   if (navigator.canShare({ files: [props.file] })) {
+//     try {
+//       await navigator.share({
+// 				files: [props.file],
+// 				title: props.filename
+// 			})
+//     } catch (error) {
+//       alert(`Error: ${error.message}`)
+//     }
+//   } else {
+//     alert(`Your system doesn't support sharing these files.`)
+//   }
+// }
 
 const copy = async () => {
 	await navigator.clipboard.writeText(qrCodeValue.value);
