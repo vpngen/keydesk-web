@@ -6,21 +6,28 @@ if [ "x$1" = "xpkg" ]; then
         set -e
 
         export USER_UID=${USER_UID}
+        export BRANCH=${BRANCH}
 
         ssh-keyscan -t rsa github.com >> /etc/ssh/ssh_known_hosts
         git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
 
         git clone ssh://git@github.com/vpngen/keydesk-web
+        if [ "x" != "x${BRANCH}" ]; then
+                git -C keydesk-web checkout ${BRANCH}
+        fi
 
         keydesk-web/debpkg/src/build.sh
 
         exit 0
 fi
 
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 docker run --rm  \
         -v $(readlink -f $SSH_AUTH_SOCK):/ssh-agent \
         -e SSH_AUTH_SOCK=/ssh-agent \
         -e USER_UID=$(id -u) \
+        -e BRANCH=${BRANCH} \
         -v ${PWD}:"${SHARED_BASE}" \
         node:18-buster "${SHARED_BASE}/build" pkg
 
