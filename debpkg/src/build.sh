@@ -12,7 +12,7 @@ cd keydesk-web
 yarn install
 yarn build
 
-nfpm package --config "keydesk-web/debpkg/nfpm.yaml" --target "${SHARED_BASE}/pkg" --packager deb
+nfpm package --config "debpkg/nfpm.yaml" --target "${SHARED_BASE}/pkg" --packager deb
 
 chown ${USER_UID}:${USER_UID} "${SHARED_BASE}/pkg/"*.deb
 
