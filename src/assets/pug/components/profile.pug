@@ -3,9 +3,10 @@
 		+e.H2.title
 			!=data.profile.headline.title
 		+e.search
-			+e.search-label
+			+e.add-label
 				+e.INPUT.search-input(type="text" placeholder="Search")
-			+e.search-button
+				+button(data.profile.headline.search, 'button', 'search-button')
+			+e.add-button
 				+button(data.profile.headline.button, 'search')
 	+e.cards
 		+e.card.is-problem
