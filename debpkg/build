@@ -3,8 +3,10 @@
 export SHARED_BASE="/data"
 
 constract_version () {
+        repo_path=$1
+
         # Get the last semver tag
-        l_tag=$(git tag --list --sort=-v:refname 'v[0-9]*\.[0-9]*\.[0-9]*' | head -n 1)
+        l_tag=$(git -C "$repo_path" tag --list --sort=-v:refname 'v[0-9]*\.[0-9]*\.[0-9]*' | head -n 1)
 
         # Check if the tag exists
         if [ -z "$l_tag" ]; then
@@ -14,13 +16,13 @@ constract_version () {
 
         # Check if the tagged commit is in the current branch
         # BRANCH=$(git branch --show-current)
-        if ! git branch --contains "$l_tag" | grep -E -q "^(\* )?$BRANCH"; then
+        if ! git -C "$repo_path" branch --contains "$l_tag" | grep -E -q "^(\* )?$BRANCH"; then
           echo "The last semver tagged commit ($l_tag) is not in the current branch ($BRANCH)."
           exit 1
         fi
 
         # Check that no code diff between tagged commit and last commit in this branch
-        if ! git diff --exit-code "$l_tag" HEAD; then
+        if ! git -C "$repo_path" diff --exit-code "$l_tag" HEAD; then
           echo "There is a code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
           exit 1
         else
@@ -60,7 +62,7 @@ if [ "x$1" = "xpkg" ]; then
                 git -C keydesk-web checkout ${BRANCH}
         fi
 
-        constract_version
+        constract_version "keydesk-web"
 
         keydesk-web/debpkg/src/build.sh
 
