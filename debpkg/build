@@ -31,9 +31,20 @@ constract_version () {
 
         # Export the new version
         if [ "$BRANCH" = "prod" ]; then
-          export PACKAGE_VERSION="${l_tag}"
+          PACKAGE_VERSION="${l_tag}"
         else
-          export PACKAGE_VERSION="${l_tag}-${BRANCH}"
+          PACKAGE_VERSION="${l_tag}-${BRANCH}"
+        fi
+
+        if [ "${VERMETADATA}" == "" ]; then
+          VERMETADATA=$(hostname)
+          VERMETADATA=${VERMETADATA%%.*}
+        fi
+
+        if [ "${VERMETADATA}" != "-" ]; then
+          export PACKAGE_VERSION="${PACKAGE_VERSION}+${VERMETADATA}"
+        else 
+          export PACKAGE_VERSION="${PACKAGE_VERSION}"
         fi
 
         # File to store the execution count for each input value.
@@ -66,6 +77,7 @@ if [ "x$1" = "xpkg" ]; then
 
         export USER_UID=${USER_UID}
         export BRANCH=${BRANCH}
+        export VERMETADATA=${VERMETADATA}
 
         ssh-keyscan -t rsa github.com >> /etc/ssh/ssh_known_hosts
         git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
@@ -90,5 +102,6 @@ docker run --rm  \
         -e SSH_AUTH_SOCK=/ssh-agent \
         -e USER_UID=$(id -u) \
         -e BRANCH=${BRANCH} \
+        -e VERMETADATA=${VERMETADATA} \
         -v ${PWD}:"${SHARED_BASE}" \
         node:18-buster "${SHARED_BASE}/build" pkg
