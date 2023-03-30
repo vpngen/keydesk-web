@@ -5,6 +5,9 @@ export SHARED_BASE="/data"
 constract_version () {
         repo_path=$1
 
+        # Check if the current branch is the same as the branch to build
+        git -C keydesk-web checkout ${BRANCH}
+
         # Get the last semver tag
         l_tag=$(git -C "$repo_path" tag --list --sort=-v:refname 'v[0-9]*\.[0-9]*\.[0-9]*' | head -n 1)
 
@@ -28,6 +31,9 @@ constract_version () {
         else
           echo "No code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
         fi
+
+        # Checkout the last semver tag.
+        git -C "$repo_path" checkout "$l_tag"
 
         # Export the new version
         if [ "$BRANCH" = "prod" ]; then
@@ -74,13 +80,18 @@ if [ "x$1" = "xpkg" ]; then
         export BRANCH=${BRANCH}
         export VERMETADATA=${VERMETADATA}
 
+        if [ -z "${BRANCH}" ]; then
+                echo "No branch specified"
+                exit 1
+        fi
+
         ssh-keyscan -t rsa github.com >> /etc/ssh/ssh_known_hosts
+        ssh-keyscan -t ecdsa github.com >> /etc/ssh/ssh_known_hosts
+        ssh-keyscan -t ed25519 github.com >> /etc/ssh/ssh_known_hosts
+
         git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
 
         git clone ssh://git@github.com/vpngen/keydesk-web
-        if [ "x" != "x${BRANCH}" ]; then
-                git -C keydesk-web checkout ${BRANCH}
-        fi
 
         constract_version "keydesk-web"
 
