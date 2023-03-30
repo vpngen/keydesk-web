@@ -25,13 +25,12 @@ constract_version () {
         fi
 
         # Check that no code diff between tagged commit and last commit in this branch
-        if ! git -C "$repo_path" diff --exit-code "$l_tag" HEAD; then
+        if ! git -C "$repo_path" diff --exit-code "$l_tag" HEAD >/dev/null 2>&1; then
           echo "There is a code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
           exit 1
         else
           echo "No code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
         fi
-
 
         # Export the new version
         if [ "$BRANCH" = "prod" ]; then
