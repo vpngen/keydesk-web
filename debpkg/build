@@ -36,12 +36,7 @@ constract_version () {
           PACKAGE_VERSION="${l_tag}-${BRANCH}"
         fi
 
-        if [ "${VERMETADATA}" == "" ]; then
-          VERMETADATA=$(hostname)
-          VERMETADATA=${VERMETADATA%%.*}
-        fi
-
-        if [ "${VERMETADATA}" != "-" ]; then
+        if [ -n "${VERMETADATA}" -a "${VERMETADATA}" != "-" ]; then
           export PACKAGE_VERSION="${PACKAGE_VERSION}+${VERMETADATA}"
         else 
           export PACKAGE_VERSION="${PACKAGE_VERSION}"
@@ -96,6 +91,11 @@ fi
 
 # Get the current branch
 BRANCH=$(git branch --show-current)
+
+if [ "${VERMETADATA}" == "" ]; then
+        VERMETADATA=$(hostname)
+        VERMETADATA=${VERMETADATA%%.*}
+fi
 
 docker run --rm  \
         -v $(readlink -f $SSH_AUTH_SOCK):/ssh-agent \
