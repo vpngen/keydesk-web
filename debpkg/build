@@ -6,7 +6,7 @@ constract_version () {
         repo_path=$1
 
         # Check if the current branch is the same as the branch to build
-        git -C keydesk-web checkout ${BRANCH}
+        git -C "$repo_path" checkout "${BRANCH}"
 
         # Get the last semver tag
         l_tag=$(git -C "$repo_path" tag --list --sort=-v:refname 'v[0-9]*\.[0-9]*\.[0-9]*' | head -n 1)
