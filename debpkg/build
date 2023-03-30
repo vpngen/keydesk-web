@@ -2,6 +2,50 @@
 
 export SHARED_BASE="/data"
 
+constract_version () {
+        # Get the last semver tag
+        l_tag=$(git tag --list --sort=-v:refname 'v[0-9]*\.[0-9]*\.[0-9]*' | head -n 1)
+
+        # Check if the tag exists
+        if [ -z "$l_tag" ]; then
+          echo "No semver tag found in this repository."
+          exit 1
+        fi
+
+        # Check if the tagged commit is in the current branch
+        # BRANCH=$(git branch --show-current)
+        if ! git branch --contains "$l_tag" | grep -E -q "^(\* )?$BRANCH"; then
+          echo "The last semver tagged commit ($l_tag) is not in the current branch ($BRANCH)."
+          exit 1
+        fi
+
+        # Check that no code diff between tagged commit and last commit in this branch
+        if ! git diff --exit-code "$l_tag" HEAD; then
+          echo "There is a code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
+          exit 1
+        else
+          echo "No code difference between the last semver tagged commit ($l_tag) and the last commit in this branch ($BRANCH)."
+        fi
+
+        # Export the new version
+        export PACKAGE_VERSION="${l_tag}-${BRANCH}"        
+
+        # File to store the execution count for each input value.
+        history_file="$SHARED_BASE/history.txt"
+
+        # Extract the execution count for the input value from the history file, defaulting to 0
+        count=$(grep -oE "^$l_tag [0-9]+" "$history_file" | awk '{print $2}')
+        count=${count:-0}
+
+        # Increment the count and write the updated history line to the file
+        new_count=$((count + 1))
+        sed -i "s/^$l_tag [0-9]\+/$l_tag $new_count/" "$history_file"
+
+        export PACKAGE_RELEASE="${new_count}" 
+}
+
+
+
 if [ "x$1" = "xpkg" ]; then
         set -e
 
@@ -16,12 +60,15 @@ if [ "x$1" = "xpkg" ]; then
                 git -C keydesk-web checkout ${BRANCH}
         fi
 
+        constract_version
+
         keydesk-web/debpkg/src/build.sh
 
         exit 0
 fi
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
+# Get the current branch
+BRANCH=$(git branch --show-current)
 
 docker run --rm  \
         -v $(readlink -f $SSH_AUTH_SOCK):/ssh-agent \
@@ -30,4 +77,3 @@ docker run --rm  \
         -e BRANCH=${BRANCH} \
         -v ${PWD}:"${SHARED_BASE}" \
         node:18-buster "${SHARED_BASE}/build" pkg
-

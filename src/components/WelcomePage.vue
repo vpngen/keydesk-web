@@ -7,23 +7,23 @@ WelcomePageStepOne(
 	@highlight="highlightElement()")
 WelcomePageStepTwo(
 	v-if="step===2"
-	:buttonPosition="buttonPositionForWelcomePageStepTwo"
-	@highlight="highlightElement()"
-	@darkenElements="darkenElement()"
-	@triggerStepThree ="triggerNextSteps()"
-	@close="closeComponent()")
-WelcomePageStepThree(
-	v-if="step===3"
-	@close="closeComponent()"
-	@highlight="highlightElement()"
-	@triggerStepFour ="triggerNextSteps()")
-WelcomePageStepFour(
-	v-if="step===4"
 	:buttonPosition="firstUserProfileCardPosition"
 	@close="closeComponent()"
 	@triggerStepFive ="triggerNextSteps()"
 	@highlight="highlightElement()"
 	@darkenElements="darkenElement()")
+WelcomePageStepThree(
+	v-if="step===3"
+	:buttonPosition="buttonPositionForWelcomePageStepTwo"
+	@highlight="highlightElement()"
+	@darkenElements="darkenElement()"
+	@triggerStepThree ="triggerNextSteps()"
+	@close="closeComponent()")
+WelcomePageStepFour(
+	v-if="step===4"
+	@close="closeComponent()"
+	@highlight="highlightElement()"
+	@triggerStepFour ="triggerNextSteps()")
 WelcomePageStepFive(
 	v-if="step===5"
 	:buttonPosition="secondUserProfileCardPosition"
@@ -52,7 +52,6 @@ import WelcomePageStepFour from "@/components/WelcomePageStepFour.vue";
 import WelcomePageStepFive from "@/components/WelcomePageStepFive.vue";
 import WelcomePageStepSix from "@/components/WelcomePageStepSix.vue";
 import WelcomePageStepSeven from "@/components/WelcomePageStepSeven.vue";
-import scrollLock from 'scroll-lock';
 
 const step = ref(1);
 const buttonPositionForWelcomePageStepTwo = ref(null);
@@ -60,10 +59,10 @@ const firstUserProfileCardPosition = ref(null);
 const secondUserProfileCardPosition = ref(null);
 const searchButtonPosition = ref(null);
 const props = defineProps({
-	elementStepTwo: {
+	elementStepThree: {
 		type: Object
 	},
-	elementStepFour: {
+	elementStepTwo: {
 		type: Object
 	},
 	elementStepFive: {
@@ -73,56 +72,35 @@ const props = defineProps({
 		type: Object
 	},
 });
-
 const emit = defineEmits(['getUsers', 'toggleDisable', 'highlightElement', 'darkenElement', 'updateValue']);
-
-const getUsers = () => {
-	emit('getUsers');
-};
-
-const toggleDisableAll = () => {
-	emit('toggleDisable');
-};
-const updateValue = () => {
-	emit('updateValue');
-};
 
 function getElementData(el, position) {
 	position.value = el.getBoundingClientRect();
 }
 
 onMounted(() => {
-	scrollLock.disablePageScroll();
-	toggleDisableAll();
+	document.body.style.overflow = 'hidden';
+	emit('toggleDisable');
 })
-
-function debounce(f, ms = 10) {
-	let isCooldown = false;
-	return function () {
-		if (isCooldown) return;
-		f.apply(this, arguments);
-		isCooldown = true;
-		setTimeout(() => isCooldown = false, ms);
-	};
-}
 
 const initElementsContainerData = (elementName, position) => {
 	getElementData(elementName, position);
-	window.addEventListener('resize', debounce(() => getElementData(elementName, position)));
+	window.addEventListener('resize', () => getElementData(elementName, position));
+	window.addEventListener('scroll', () => getElementData(elementName, position));
 }
 const removeElementsContainerData = (elementName, position) => {
-	window.removeEventListener('resize', debounce(() => getElementData(elementName, position)));
+	window.removeEventListener('resize', () => getElementData(elementName, position));
+	window.removeEventListener('scroll', () => getElementData(elementName, position));
 }
-
 
 const highlightElement = () => {
 	switch (step.value) {
 		case 2: {
-			emit('highlightElement', 'buttonAddUser');
+			emit('highlightElement', 'firstUserProfileCard');
 			break;
 		}
-		case 4: {
-			emit('highlightElement', 'firstUserProfileCard');
+		case 3: {
+			emit('highlightElement', 'buttonAddUser');
 			break;
 		}
 		case 5: {
@@ -139,11 +117,11 @@ const highlightElement = () => {
 const darkenElement = () => {
 	switch (step.value) {
 		case 3: {
-			emit('darkenElement', 'buttonAddUser');
+			emit('darkenElement', 'firstUserProfileCard');
 			break;
 		}
-		case 5: {
-			emit('darkenElement', 'firstUserProfileCard');
+		case 4: {
+			emit('darkenElement', 'buttonAddUser');
 			break;
 		}
 		case 6: {
@@ -161,20 +139,19 @@ const triggerNextSteps = () => {
 	step.value += 1;
 	switch (step.value) {
 		case 2: {
-			initElementsContainerData(props.elementStepTwo, buttonPositionForWelcomePageStepTwo);
+			initElementsContainerData(props.elementStepTwo[0], firstUserProfileCardPosition);
 			break;
 		}
 		case 3: {
-			removeElementsContainerData(props.elementStepTwo, buttonPositionForWelcomePageStepTwo);
+			removeElementsContainerData(props.elementStepTwo[0], firstUserProfileCardPosition);
+			initElementsContainerData(props.elementStepThree, buttonPositionForWelcomePageStepTwo);
 			break;
 		}
 		case 4: {
-			updateValue();
-			initElementsContainerData(props.elementStepFour[0], firstUserProfileCardPosition);
+			removeElementsContainerData(props.elementStepThree, buttonPositionForWelcomePageStepTwo);
 			break;
 		}
 		case 5: {
-			removeElementsContainerData(props.elementStepFour[0], firstUserProfileCardPosition);
 			initElementsContainerData(props.elementStepFive[0], secondUserProfileCardPosition);
 			break;
 		}
@@ -192,9 +169,9 @@ const triggerNextSteps = () => {
 
 const closeComponent = () => {
 	step.value = 0;
-	toggleDisableAll();
+	emit('toggleDisable');
 	localStorage.setItem('isInstructionHidden', 'true');
-	getUsers();
-	scrollLock.enablePageScroll();
+	emit('getUsers');
+	document.body.style.overflow = 'auto';
 }
 </script>

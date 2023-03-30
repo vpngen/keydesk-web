@@ -7,16 +7,11 @@ include ../assets/pug/base
 		+e.title.welcome-congrats
 			| Теперь ты полноценный повелитель ключницы!
 		+e.button.welcome
-			+button('Пойду раздавать конфиги', 'button', 'welcome')(@click="close")
-
+			+button('Пойду раздавать конфиги', 'button', 'welcome')(@click="emit('close')")
 </template>
 
 <script setup>
 
 const emit = defineEmits(['close']);
-
-const close = () => {
-	emit('close');
-};
 
 </script>
