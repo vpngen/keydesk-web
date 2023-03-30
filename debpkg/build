@@ -35,13 +35,22 @@ constract_version () {
         # File to store the execution count for each input value.
         history_file="$SHARED_BASE/history.txt"
 
+        # Create the history file if it doesn't exist.
+        if [ ! -f "$history_file" ]; then
+          touch "$history_file"
+        fi
+
         # Extract the execution count for the input value from the history file, defaulting to 0
-        count=$(grep -oE "^$l_tag [0-9]+" "$history_file" | awk '{print $2}')
-        count=${count:-0}
+        old_count=$(grep -oE "^$l_tag [0-9]+" "$history_file" | awk '{print $2}')
+        count=${old_count:-0}
 
         # Increment the count and write the updated history line to the file
         new_count=$((count + 1))
-        sed -i "s/^$l_tag [0-9]\+/$l_tag $new_count/" "$history_file"
+        if [ -n "$old_count" ]; then
+                sed -i "s/^$l_tag [0-9]\+/$l_tag $new_count/" "$history_file"
+        else
+                echo "$l_tag $new_count" >> "$history_file"
+        fi
 
         export PACKAGE_RELEASE="${new_count}" 
 }
