@@ -30,7 +30,11 @@ constract_version () {
         fi
 
         # Export the new version
-        export PACKAGE_VERSION="${l_tag}-${BRANCH}"        
+        if [ "$BRANCH" = "prod" ]; then
+          export PACKAGE_VERSION="${l_tag}"
+        else
+          export PACKAGE_VERSION="${l_tag}-${BRANCH}"
+        fi
 
         # File to store the execution count for each input value.
         history_file="$SHARED_BASE/history.txt"
@@ -45,10 +49,11 @@ constract_version () {
         count=${old_count:-0}
 
         # Increment the count and write the updated history line to the file
-        new_count=$((count + 1))
         if [ -n "$old_count" ]; then
+                new_count=$((count + 1))
                 sed -i "s/^$l_tag [0-9]\+/$l_tag $new_count/" "$history_file"
         else
+                new_count=$count
                 echo "$l_tag $new_count" >> "$history_file"
         fi
 
