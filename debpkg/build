@@ -45,19 +45,18 @@ constract_version () {
         fi
 
         # Extract the execution count for the input value from the history file, defaulting to 0
-        old_count=$(grep -oE "^$l_tag [0-9]+" "$history_file" | awk '{print $2}')
-        count=${old_count:-0}
+        count=$(grep -oE "^$l_tag [0-9]+" "$history_file" | awk '{print $2}')
 
         # Increment the count and write the updated history line to the file
-        if [ -n "$old_count" ]; then
+        if [ -n "$count" ]; then
                 new_count=$((count + 1))
                 sed -i "s/^$l_tag [0-9]\+/$l_tag $new_count/" "$history_file"
+                export PACKAGE_RELEASE="${new_count}" 
         else
-                new_count=$count
-                echo "$l_tag $new_count" >> "$history_file"
+                echo "$l_tag 0" >> "$history_file"
+                unset PACKAGE_RELEASE
         fi
 
-        export PACKAGE_RELEASE="${new_count}" 
 }
 
 
