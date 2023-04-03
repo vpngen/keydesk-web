@@ -2,93 +2,75 @@
 include ../assets/pug/base
 +b.popup
 	+e.overlay.welcome
-	+e.alert.welcome-save(ref='startLine')
-		+e.title.save-title
-			| Это твой пользователь. Его можно восстановить только через 6 слов и имя.
-		+e.title.save-title
-			| Если ты их не сохранил - сделай это прямо сейчас!
-		+e.button.welcome-save
-			+button('Все, сохранил(-а)!', 'button', 'welcome')(@click="triggerStepFive")
+	+e.overlay.qr
+	+e.alert.welcome-qr(ref="endLine")
+		+e.close
+			SvgIcon(name="icon-close")
+		+e.icon-qr-code
+			SvgIcon(name="icon-qr-code")
+		+e.title.qr-title
+			| Конфигурация готова!
+		+e.subtitle.qr-subtitle
+			| Скачайте, скопируйте или<br>активируйте ее по QR-коду
+		+e.buttons.qr-buttons
+			+e.BUTTON(class="button button--option2 popup__action no-border")
+				+e.SPAN
+					| Копировать данные
+			+e.A(class="button button--option2 popup__action")
+				+e.button-img
+					SvgIcon(name="download")
+				+e.SPAN
+					| Скачать данные
+	+e.alert.welcome-qr-description(ref="startLine")
+		+e.title.qr-title-description
+			| Конфигурация создана! Скопируй, скачай или открой через QR  данные для нового устройства
+		+e.button.welcome
+			+button('Далее', 'button', 'welcome')(@click="triggerStepFour")
 	+e.text.welcome.bottom-close
 		a(@click="close")
 			| Пропустить
-	+e.fake-area(ref='fakeButton')
 </template>
 
 <script setup>
+import SvgIcon from './SvgIcon.vue';
+import {onMounted, ref} from "vue";
+import generateLines from "@/assets/helpers/animations";
 
-import {ref, watchEffect} from "vue";
-import LeaderLine from "leader-line-new";
+const emit = defineEmits(['close', 'initElementsContainerData']);
+const startLine = ref(null);
+const endLine = ref(null);
 
-const props = defineProps({
-	buttonPosition: {
-		type: Object
-	}
-});
-const fakeButton = ref(null)
-const line = ref(null)
-const startLine = ref(null)
-const secondLine = ref(null);
+const { applySizePositionOptions, firstLine, secondLine, thirdLine } = generateLines(startLine, endLine,
+		{endSocket: 'right', startSocket: 'bottom'},
+		{endSocket: 'bottom', startSocket: 'top'},
+		{endSocket: 'bottom', startSocket: 'top'},
+		{x: '100%', y: '83%'});
 
-const setLine = () => {
-	if (!startLine || !fakeButton) return
-	if (line.value) {
-		line.value.remove();
-	}
-	if (secondLine.value) {
-		secondLine.value.remove();
-	}
-
-	line.value = new LeaderLine(
-			startLine.value,
-			fakeButton.value,
-			{dash: true, color: 'white', size: 2, positionByWindowResize: false}).setOptions({endSocket: 'right'});
-	secondLine.value = new LeaderLine(
-			startLine.value,
-			fakeButton.value,
-			{dash: true, color: 'white', size: 2, positionByWindowResize: false}).setOptions({endSocket: 'bottom'});
+const initElementsContainerData = () => {
+	applySizePositionOptions(endLine, endLine);
+	window.addEventListener('resize', ()=>applySizePositionOptions(endLine, endLine));
+	window.addEventListener('scroll', ()=>applySizePositionOptions(endLine, endLine));
 }
 
-
-const applySizePositionOptions = (ref, position) => {
-	if (!position || !ref.value) {
-		return
+onMounted(() => {
+	if (endLine.value) {
+		initElementsContainerData(endLine.value, endLine.value);
 	}
-	ref.value.style.width = `${position.width}px`;
-	ref.value.style.top = `${position.top}px`;
-	ref.value.style.left = `${position.left}px`;
-	ref.value.style.height = `${position.height}px`;
-
-	setTimeout(() => {  setLine()}, 100)
-}
-
-watchEffect(() => {
-	applySizePositionOptions(fakeButton, props.buttonPosition)
 })
 
+const close = () => {
+  emit('close');
+	firstLine.value.remove();
+	secondLine.value.remove();
+	thirdLine.value.remove();
+};
 
-const emit = defineEmits(['highlight', 'close']);
-
-const highlight = () => {
+const triggerStepFour = () => {
+  emit('triggerStepFour');
+	firstLine.value.remove();
+	secondLine.value.remove();
+	thirdLine.value.remove();
 	emit('highlight');
 };
 
-const darkenElements = () => {
-	emit('darkenElements');
-};
-
-const triggerStepFive = () => {
-	emit('triggerStepFive');
-	darkenElements();
-	line.value.remove();
-	secondLine.value.remove();
-	highlight();
-};
-
-const close = () => {
-	emit('close');
-	darkenElements();
-	line.value.remove();
-	secondLine.value.remove();
-};
 </script>

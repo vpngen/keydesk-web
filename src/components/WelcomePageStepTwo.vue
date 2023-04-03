@@ -1,92 +1,58 @@
 <template lang="pug">
 include ../assets/pug/base
 +b.popup
-  +e.overlay.welcome
-  +e.alert.welcome-add(ref='startLine')
-    +e.title.welcome-add
-      | Нажмите тут для добавления пользователя
-    +e.button.welcome
-      +button('Далее', 'button', 'welcome')(@click="triggerStepThree")
-  +e.fake-area(ref='fakeButton')
-  +e.text.welcome.bottom-close
-    a(@click="close")
-      | Пропустить
-
+	+e.overlay.welcome
+	+e.alert.welcome-save(ref='startLine')
+		+e.title.save-title
+			| Это аккаунт бригадира. Его можно восстановить только через 6 слов и имя.
+		+e.title.save-title
+			| Если ты их не сохранил - сделай это прямо сейчас!
+		+e.button.welcome-save
+			+button('Все, сохранил(-а)!', 'button', 'welcome')(@click="triggerStepFive")
+	+e.text.welcome.bottom-close
+		a(@click="close")
+			| Пропустить
+	+e.fake-area(ref='endLine')
 </template>
 
 <script setup>
 
-import {onMounted, ref, watchEffect} from "vue";
-import LeaderLine from "leader-line-new";
+import {ref, watchEffect} from "vue";
+import generateLines from "@/assets/helpers/animations";
 
 const props = defineProps({
-  buttonPosition: {
-    type: Object
-  }
-});
-const fakeButton = ref(null)
-const line = ref(null)
-const startLine = ref(null);
-const secondLine = ref(null);
-
-const setLine = () => {
-  if (!startLine || !fakeButton) return
-  if (line.value) {
-    line.value.remove();
-  }
-	if (secondLine.value) {
-		secondLine.value.remove();
+	buttonPosition: {
+		type: Object
 	}
-
-  line.value = new LeaderLine(
-      startLine.value,
-      fakeButton.value,
-      {dash: true, color: 'white', size: 2, positionByWindowResize: false}).setOptions({endSocket: 'bottom'});
-	secondLine.value = new LeaderLine(
-			startLine.value,
-			fakeButton.value,
-			{dash: true, color: 'white', size: 2, positionByWindowResize: false}).setOptions({endSocket: 'bottom'});
-}
-
-const applySizePositionOptions = (ref, position) => {
-  if (!position || !ref.value) {
-    return
-  }
-  ref.value.style.width = `${position.width}px`;
-  ref.value.style.top = `${position.top}px`;
-  ref.value.style.left = `${position.left}px`;
-  ref.value.style.height = `${position.height}px`;
-
-	setTimeout(() => {  setLine(position)}, 100)
-}
+});
+const startLine = ref(null);
+const endLine = ref(null);
+const { applySizePositionOptions, firstLine, secondLine, thirdLine } = generateLines(startLine, endLine,
+		{endSocket: 'bottom'},
+		{endSocket: 'bottom'},
+		{endSocket: 'top'}
+);
 
 watchEffect(() => {
-	applySizePositionOptions(fakeButton, props.buttonPosition)
+	applySizePositionOptions(endLine, props.buttonPosition)
 })
 
 const emit = defineEmits(['highlight', 'close']);
 
-const highlight = () => {
-  emit('highlight');
-};
-
-const darkenElements = () => {
-  emit('darkenElements');
+const triggerStepFive = () => {
+	emit('triggerStepFive');
+	emit('darkenElements');
+	firstLine.value.remove();
+	secondLine.value.remove();
+	thirdLine.value.remove();
+	emit('highlight');
 };
 
 const close = () => {
-  emit('close');
-  line.value.remove();
+	emit('close');
+	emit('darkenElements');
+	firstLine.value.remove();
 	secondLine.value.remove();
-  darkenElements();
+	thirdLine.value.remove();
 };
-
-const triggerStepThree = () => {
-	emit('triggerStepThree');
-	line.value.remove();
-	secondLine.value.remove();
-	darkenElements();
-};
-
-
 </script>

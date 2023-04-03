@@ -17,15 +17,26 @@
 
 	&__overlay {
 		position: absolute;
-		left: 0;
-		top: 0;
 		z-index: -1;
 		width: 100%;
 		height: 100%;
 		background: rgba(0, 0, 0, 0.6);
 
+		&.welcome, &.error {
+			position: fixed;
+			left: 0;
+			right: 0;
+			top: 0;
+			bottom: 0;
+		}
+
 		&.welcome {
 			backdrop-filter: blur(vc(7));
+		}
+
+		&.error {
+			background: rgba(0, 0, 0, 0.1);
+			backdrop-filter: blur(12px);
 		}
 
 		&.qr {
@@ -45,7 +56,7 @@
 			@include mobile {
 				width: vc(345);
 				height: vc(479);
-				top: vc(31);
+				top: vc(-145);
 			}
 		}
 	}
@@ -60,6 +71,19 @@
 		width: calc(100% - #{vc(60)});
 		background-color: $color-catskill-white;
 		backdrop-filter: blur(vc(34));
+
+		&.error {
+			width: vc(440);
+			height: vc(396);
+			backdrop-filter: blur(17px);
+			padding: vc(40) vc(41);
+
+			@include mobile {
+				width: vc(325);
+				height: vc(389);
+				padding: vc(40) vc(10);
+			}
+		}
 
 		&.welcome {
 			width: vc(440);
@@ -133,14 +157,23 @@
 				}
 			}
 
+			&.welcome-save, &.welcome-delete, &.welcome-search {
+
+			}
+
 			&.welcome-save {
 				top: vc(462);
-				right: vc(26);
+				right: vc(32);
+				width: vc(374);
+				padding: calc(32 * var(--width-multiplier)) calc(10 * var(--width-multiplier));
 			}
 
 			&.welcome-delete {
-				top: vc(519);
-				right: vc(17);
+				top: vc(517);
+				right: vc(32);
+				width: vc(374);
+				height: calc(260 * var(--width-multiplier));
+				padding: calc(32 * var(--width-multiplier)) calc(10 * var(--width-multiplier));
 			}
 		}
 
@@ -172,13 +205,13 @@
 			&.welcome-qr {
 				width: vc(325);
 				height: vc(451);
-				top: vc(45);
+				top: vc(-130);
 				left: auto;
 
 				&-description {
 					width: vc(325);
 					height: vc(164);
-					top: vc(543);
+					top: vc(375);
 					left: auto;
 					right: auto;
 					padding: calc(32 * var(--width-multiplier)) calc(10 * var(--width-multiplier));
@@ -186,18 +219,18 @@
 			}
 
 			&.welcome-save {
-				width: vc(325);
+				width: vc(316.4);
 				height: vc(184);
-				top: vc(555);
+				top: vc(25);
 				right: auto;
 				padding: calc(32 * var(--width-multiplier)) calc(10 * var(--width-multiplier));
 			}
 
 			&.welcome-delete {
-				width: vc(325);
+				width: vc(316.4);
 				height: vc(200);
 				top: vc(265);
-				right: vc(30);
+				right: auto;
 				padding: vc(20) vc(10);
 			}
 
@@ -261,6 +294,14 @@
 		}
 	}
 
+	&__icon-sad-error {
+		width: vc(100);
+		height: vc(100);
+		background:  url($url-image + 'svg/icon-sad-error.svg') no-repeat center center;
+		background-size: cover;
+		margin: 0 0 vc(32);
+	}
+
 	&__action {
 		display: flex;
 		align-items: center;
@@ -274,6 +315,17 @@
 		font-size: vc(16);
 		line-height: (19 / 16);
 		text-align: center;
+
+		&.error {
+			font-size: vc(24);
+			line-height: vc(28);
+			margin: 0 0 vc(8);
+
+			@include mobile {
+				font-size: vc(18);
+				line-height: vc(21);
+			}
+		}
 
 		&.welcome {
 			width: vc(357);
@@ -383,6 +435,23 @@
 		font-size: vc(16);
 		line-height: (24 / 16);
 
+		&.error {
+			font-size: vc(16);
+			line-height: vc(24);
+			text-align: center;
+			color: #1D4365;
+
+			@include mobile {
+				font-size: vc(14);
+				line-height: vc(20);
+				width: vc(244);
+			}
+
+			&>span {
+				margin-right: vc(2);
+			}
+		}
+
 		&.welcome {
 			margin-top: vc(12);
 			text-decoration: underline;
@@ -393,6 +462,12 @@
 				color: white;
 				font-size: vc(14);
 				line-height: vc(16);
+
+				&.top {
+					@include mobile {
+						top: vc(60);
+					}
+				}
 				@include tablet {
 					bottom: vc(10);
 				}
@@ -495,7 +570,7 @@
 	}
 
 	@include mobile {
-		overflow-y: scroll;
+
 	}
 
 	@include tablet {
@@ -520,9 +595,16 @@
 			height: vc(40);
 		}
 	}
+
+	&__error-link {
+		font-weight: 700;
+		text-decoration-line: underline;
+		color: #0179E5;
+		text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+	}
 }
 
-svg.leader-line:nth-of-type(2n) {
+svg.leader-line:nth-of-type(2) {
 	display: block;
 	@include mobile {
 		display: none;
@@ -531,11 +613,20 @@ svg.leader-line:nth-of-type(2n) {
 		display: none;
 	}
 }
-svg.leader-line:nth-of-type(3n) {
+svg.leader-line:nth-of-type(3) {
 	display: none;
 	@include tablet {
 		display: block;
 	}
 	@include mobile {
-	display: block;
+	display: none;
 };}
+
+svg.leader-line:nth-of-type(4) {
+	display: none;
+	@include tablet {
+		display: none;
+	}
+	@include mobile {
+		display: block;
+	};}

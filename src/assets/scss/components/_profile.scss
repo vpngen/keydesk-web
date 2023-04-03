@@ -109,6 +109,8 @@
 		}
 	}
 
+
+
 	&__cards {
 		display: grid;
 		grid-template-columns: repeat(auto-fill,minmax(vc(312), 1fr));
@@ -123,12 +125,17 @@
 		}
 	}
 
+
 	&__card,
 	&__add {
 		margin: 0 auto vc(16);
 		border-radius: vc(20);
 		min-width: vc(312);
 		height: vc(260);
+
+		@include mobile {
+			width: 100%;
+		}
 
 		@include tablet {
 			margin: vc(10);
@@ -146,45 +153,158 @@
 		flex-direction: column;
 		padding: vc(16);
 		background-color: $color-white;
-
-		&::before {
-			content: "";
-			position: absolute;
-			right: vc(16);
-			top: vc(16);
-			z-index: 1;
-			border-radius: 50%;
-			width: vc(20);
-			height: vc(20);
-			pointer-events: none;
-		}
-
-		&.is-active {
-			&::before {
-				background: $color-puerto-rico url($url-image + 'svg/icon-status-active.svg') no-repeat center center;
-				background-size: cover;
-			}
-		}
-
-		&.is-deactive {
-			&::before {
-				background: $color-razzmatazz url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
-				background-size: cover;
-			}
-		}
-
-		&.is-problem {
-			&::before {
-				background: $color-razzmatazz url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
-				background-size: cover;
-			}
-		}
 	}
 
 	&__card-headline {
 		display: flex;
 		align-items: center;
 		margin: 0 0 vc(18);
+		position: relative;
+	}
+
+	&__card-status {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: vc(20);
+		height: vc(20);
+		border-radius: 50%;
+
+		&.status-green {
+			background: $color-puerto-rico url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
+			background-size: cover;
+		}
+
+		&.status-black {
+			background: $color-black url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
+			background-size: cover;
+		}
+
+		&.status-gray {
+			background: $color-gray url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
+			background-size: cover;
+		}
+
+		&.status-yellow {
+			background: $color-yellow url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
+			background-size: cover;
+		}
+
+		&.status-red {
+			background: $color-razzmatazz url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
+			background-size: cover;
+
+		}
+
+		&.tooltip::before {
+			content: attr(data-user);
+			position: absolute;
+			right: vc(48);
+			top: calc(-25 * var(--width-multiplier));
+			max-width: vc(240);
+			font-size: vc(14);
+			line-height: vc(16);
+			padding: vc(12);
+			display: none;
+			color: $color-black;
+			background: #EFF7F8;
+			border-radius: vc(6);
+			transition: opacity 0.1s ease-out;
+			z-index: 98;
+			text-align: left;
+			border: vc(1) solid #4cbfa6;
+			inline-size: max-content;
+			@include mobile {
+				right: vc(54);
+			}
+		}
+
+		&.tooltip.status-black::before {
+			border: vc(1) solid $color-black;
+		}
+
+		&.tooltip.status-black::after {
+			border-right: vc(1) solid $color-black;
+			border-bottom: vc(1) solid $color-black;
+		}
+
+		&.tooltip.status-gray::before {
+			border: vc(1) solid $color-gray;
+		}
+
+		&.tooltip.status-gray::after {
+			border-right: vc(1) solid $color-gray;
+			border-bottom: vc(1) solid $color-gray;
+		}
+
+		&.tooltip.status-yellow::before {
+			border: vc(1) solid $color-yellow;
+		}
+
+		&.tooltip.status-yellow::after {
+			border-right: vc(1) solid $color-yellow;
+			border-bottom: vc(1) solid $color-yellow;
+		}
+
+		&.tooltip.status-red::before {
+			border: vc(1) solid $color-red;
+		}
+
+		&.tooltip.status-red::after {
+			border-right: vc(1) solid $color-red;
+			border-bottom: vc(1) solid $color-red;
+		}
+
+		&.tooltip::after {
+			content: '';
+			position: absolute;
+			display: none;
+			background: #EFF7F8;
+			border-radius: 0 0 vc(5) 0;
+			transition: opacity 0.1s ease-out;
+			z-index: 99;
+			transform: rotate(-45deg);
+			width: vc(17);
+			height: vc(17);
+			right: vc(40);
+			border-right: vc(1) solid #4cbfa6;
+			border-bottom: vc(1) solid #4cbfa6;
+			@include mobile {
+				right: vc(45);
+			}
+		}
+
+		&.tooltip:hover::before,  &.tooltip:hover::after{
+			display: inline-block;
+		}
+	}
+
+	&__status-color {
+		width: vc(8);
+		height: vc(8);
+		border-radius: 50%;
+		margin-top: vc(3);
+		margin-left: vc(3);
+
+		&-1 {
+			background: #4CBFA6;
+		}
+		&-2 {
+			background: #000000;
+		}
+		&-3 {
+			background: #8F8F8F;
+		}
+		&-4 {
+			background: #EAE100;
+		}
+		&-5 {
+			background: #ED0B70;
+		}
+	}
+
+	&__status-description {
+		margin-left: 4px;
 	}
 
 	&__card-logo {
@@ -237,6 +357,10 @@
 			width: vc(22);
 			height: vc(13);
 		}
+	}
+
+	&__card-feature {
+		display: flex;
 	}
 
 	&__card-button {
@@ -438,7 +562,7 @@
 		justify-content: center;
 		flex-shrink: 0;
 		border-left: 1px solid $color-silver-chalice;
-		width: vc(60);
+		width: vc(65);
 		text-align: center;
 
 		&.tooltip::before {
@@ -577,7 +701,7 @@
 			will-change: transform;
 		}
 
-		#{$p}__accordion-line.is-active & {
+		#{$p}__accordion-line.status-green & {
 			&::before {
 				transform: rotate(180deg);
 			}

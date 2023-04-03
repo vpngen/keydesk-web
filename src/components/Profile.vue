@@ -25,9 +25,11 @@ include ../assets/pug/data
 		+e.card(
 			v-for="(user, index) in filteredUsers",
 			:key="user.UserID",
-			:class="`${user.Problems ? 'is-problem' : 'is-active'} ${highlightedElementProperties[index===0 ? 'firstUserProfileCard' : 'secondUserProfileCard'].highlight}`",
+			:class="`${highlightedElementProperties[getRefForHighlight(index)].highlight}`",
 			:ref="user.ref")
 			+e.card-headline
+				+e.card-status(:class="`${profileCardStatus.statusColor[user.Status]} tooltip`",
+					:data-user="`${profileCardStatus.statusHint[user.Status]}`")
 				+e.card-logo
 					+e.SPAN.card-icon
 						SvgIcon(name='icon-card')
@@ -35,11 +37,15 @@ include ../assets/pug/data
 					| {{ user.UserName }}
 			+e.UL.card-features
 				+e.LI.card-feature(v-if="user.LastVisitHour")
-					| #[b Последний визит:]#[span {{ new Date(user.LastVisitHour) }}]
+					| #[b Последний визит:]#[span {{ formattedDate(user.LastVisitHour) }}]
 				+e.LI.card-feature(v-if="user.MonthlyQuotaRemainingGB")
 					| #[b Лимит трафика:]#[span {{ user.MonthlyQuotaRemainingGB }}Gb]
 				+e.LI.card-feature
-					| #[b Статус:]#[span(v-if="user.Problems") Problem]
+					+e.status-caption
+					| #[b Статус:]
+					+e.status-color(:class="`profile__status-color-${user.Status}`")
+					+e.status-description
+						| {{profileCardStatus.statusName[user.Status]}}
 				+e.LI.card-feature(v-if="false")
 					| #[b AS:]#[SvgIcon(name='icon-de', v-if="user.LastVisitSubnet")]#[span(v-if="user.LastVisitSubnet") {{ user.LastVisitSubnet }}]
 			+e.BUTTON.card-button(
@@ -69,9 +75,9 @@ include ../assets/pug/data
 							+e.table-title
 								| Тип данных
 							+e.table-column
-								| Brigadir
+								| Юзер
 							+e.table-column
-								| User
+								| Бригадир
 						each line in data.dataCollection
 							+e.table-line
 								+e.table-title
@@ -100,20 +106,20 @@ include ../assets/pug/data
 									+e.accordion-content
 										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
 
-DialogUser(v-show="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
-DialogQrCode(v-show="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
+DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
+DialogQrCode(v-if="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
 WelcomePage(
-	v-if="!isInstructionHidden"
+	v-if="usersList.length && !isInstructionHidden"
 	@getUsers="getUsers()"
 	@toggleDisable="toggleDisableAll"
 	@highlightElement="highlightElement"
 	@darkenElement="darkenElement"
-	@updateValue="updateValue"
-	:elementStepTwo="buttonAddUser"
-	:elementStepFour="firstUserProfileCard"
+	:elementStepTwo="firstUserProfileCard"
+	:elementStepThree="buttonAddUser"
 	:elementStepFive="secondUserProfileCard"
 	:elementStepSix="searchButton"
 )
+PopupError(v-if="isError" )
 
 </template>
 
@@ -124,45 +130,37 @@ import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
 import DialogQrCode from './DialogQrCode.vue';
 import WelcomePage from "@/components/WelcomePage.vue";
+import {mockedDataProfile, profileCardStatus} from '@/assets/constants/profileConstants.js'
+import {generateHighlightedElementProperties} from "@/assets/helpers/profileHelpers";
+import PopupError from "@/components/PopupError.vue";
 
-const buttonAddUser = ref(null);
-const firstUserProfileCard = ref(null);
-const secondUserProfileCard = ref(null);
-const searchButton = ref(null);
+let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
+
 const filterUserText = ref('');
 const token = ref(null);
 const qrCodeFile = ref(new Blob([]));
 const blobLink = ref('');
 const usersList = ref([]);
 const filename = ref('');
+const isError = ref(false)
 
-const highlightedElementProperties = ref({
-	buttonAddUser: {
-		disabled: false,
-		highlight: '',
-		ref:  buttonAddUser,
-	},
-	firstUserProfileCard: {
-		disabled: false,
-		highlight: '',
-		ref: firstUserProfileCard,
-	},
-	secondUserProfileCard: {
-		disabled: false,
-		highlight: '',
-		ref: secondUserProfileCard,
-	},
-	searchButton: {
-		disabled: false,
-		highlight: '',
-		ref: searchButton,
-	},
-})
+const highlightedElementProperties = ref(generateHighlightedElementProperties(buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton));
+
+const formattedDate = (data) => {
+	const date = new Date(data);
+
+	const day = date.getUTCDate().toString().padStart(2, '0')
+	const month = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+	const year = date.getUTCFullYear().toString()
+	const hours = date.getUTCHours().toString().padStart(2, '0')
+
+	return `${day}.${month}.${year} ~${hours}:00`
+}
 
 const selectClass = 'is-select';
 let apiLink = '';
 if (process.env.NODE_ENV === 'development') {
-	apiLink = 'http://static.140.53.88.23.clients.your-server.de';
+	apiLink = 'https://keydesk.ussr.vpngen.org';
 }
 
 const isInstructionHidden = ref(true);
@@ -174,10 +172,14 @@ const getUsers = async () => {
 			await getToken()
 			getUsers()
 		} else {
+      isError.value = true;
 			console.error(error)
 		}
 	});
 };
+const getRefForHighlight = (index) => {
+	return index===0 ? 'firstUserProfileCard' : 'secondUserProfileCard'
+}
 
 const getToken = async () => {
 	await axios.post(`${apiLink}/token`).then((r) => {
@@ -188,39 +190,13 @@ const getToken = async () => {
 		if (isInstructionHidden.value) {
 			getUsers();
 		} else {
-			usersList.value = [{
-				"MonthlyQuotaRemainingGB": 100,
-				"LastVisitHour": '01.12.22, 15:32',
-				"PersonDesc": "За открытие нейтрона",
-				"PersonDescLink": "https://ru.wikipedia.org/wiki/%D0%A7%D0%B5%D0%B4%D0%B2%D0%B8%D0%BA,_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
-				"PersonName": "Джеймс Чедвик",
-				"Problems": true,
-				"UserID": "1613927c-a3ba-433b-b102-499017503122",
-				"UserName": "user",
-				"ref": "firstUserProfileCard",
-			}, {
-				"MonthlyQuotaRemainingGB": 100,
-				"LastVisitHour": '01.12.22, 15:32',
-				"PersonDesc": "За крупный вклад в дело разоружения. Роль: писатель, дипломат, член кабинета министров.",
-				"PersonDescLink": "https://ru.wikipedia.org/wiki/%D0%9C%D1%8E%D1%80%D0%B4%D0%B0%D0%BB%D1%8C,_%D0%90%D0%BB%D1%8C%D0%B2%D0%B0",
-				"PersonName": "Альва Мюрдаль",
-				"Problems": null,
-				"UserID": "4f90e7d1-64c6-4209-ae24-c2728d6e3b21",
-				"UserName": "Умный Ильич Мечников",
-				"ref": "secondUserProfileCard",
-			}, {
-				"MonthlyQuotaRemainingGB": 100,
-				"LastVisitHour": '01.12.22, 15:32',
-				"PersonDesc": "В знак признания заслуг в деле мира. Роль: основательницы движения за мир в Северной Ирландии.",
-				"PersonDescLink": "https://ru.wikipedia.org/wiki/%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC%D1%81,_%D0%91%D0%B5%D1%82%D1%82%D0%B8",
-				"PersonName": "Бетти Уильямс",
-				"Problems": true,
-				"UserID": "959e5242-daa8-4402-ac6a-0f2cf83c1e68",
-				"UserName": "Разный Лев Давыдович",
-				"ref": "thirdUserProfileCard",
-			}];
+			usersList.value = mockedDataProfile;
 		}
 	});
+	buttonAddUser = ref(null);
+	firstUserProfileCard = ref(null);
+	secondUserProfileCard = ref(null);
+	searchButton = ref(null);
 }
 
 getToken();
@@ -246,11 +222,6 @@ const addUser = async () => {
 		}
 
 		blobLink.value = window.URL.createObjectURL(blob);
-		// const link = document.createElement('a');
-		// link.href = url;
-		// link.setAttribute('download', `${filename.value}.conf`);
-		// document.body.appendChild(link);
-		// link.click();
 
 		getUsers();
 	}).catch(async (error) => {
@@ -265,7 +236,7 @@ const addUser = async () => {
 
 const removeUser = async (id) => {
 	await axios.delete(`${apiLink}/user/${id}`)
-			.then((r) => {
+			.then(() => {
 				showDialogUser.value = false;
 				deletedUserId.value = null;
 				getUsers()
@@ -312,11 +283,6 @@ const openDialogQrCode = () => {
 const dataView = ref(true);
 const changeDataView = () => {
 	dataView.value = !dataView.value
-}
-
-const updateValue = () => {
-	firstUserProfileCard.value=firstUserProfileCard.value;
-	secondUserProfileCard.value=secondUserProfileCard.value;
 }
 
 const highlightElement = (path) => {
