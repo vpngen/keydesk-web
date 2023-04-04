@@ -9,7 +9,7 @@ export const mockedDataProfile = [{
     "UserID": "1613927c-a3ba-433b-b102-499017503122",
     "UserName": "user",
     "ref": "firstUserProfileCard",
-    "Status": 1,
+    "Status": 'green',
 }, {
     "MonthlyQuotaRemainingGB": 100,
     "LastVisitHour": '2023-03-21T11:00:00.000Z',
@@ -20,7 +20,7 @@ export const mockedDataProfile = [{
     "UserID": "4f90e7d1-64c6-4209-ae24-c2728d6e3b21",
     "UserName": "Умный Ильич Мечников",
     "ref": "secondUserProfileCard",
-    "Status": 4,
+    "Status": 'yellow',
 }, {
     "MonthlyQuotaRemainingGB": 100,
     "LastVisitHour": '2023-03-21T11:00:00.000Z',
@@ -31,29 +31,29 @@ export const mockedDataProfile = [{
     "UserID": "959e5242-daa8-4402-ac6a-0f2cf83c1e68",
     "UserName": "Разный Лев Давыдович",
     "ref": "thirdUserProfileCard",
-    "Status": 5,
+    "Status": 'grey',
 }];
 
 export const profileCardStatus = {
     statusName: {
-        1: 'Всё отлично!',
-        2: 'Мёртвая душа',
-        3: 'Ёжик в тумане',
-        4: 'Работает с ограничениями',
-        5: 'Временная блокировка',
+        'green': 'Всё отлично!',
+        'black': 'Мёртвая душа',
+        'grey': 'Ёжик в тумане',
+        'yellow': 'Работает с ограничениями',
+        'red': 'Временная блокировка',
     },
     statusHint: {
-        1: 'Этот пользователь просто наслаждается VPN и ничто не предвещает беды',
-        2: 'Этот пользователь ни разу не подключился к VPN',
-        3: 'Этот пользователь не подключился к VPN в этом месяце',
-        4: 'Скорость этого пользователя снижена до 256 кб\\сек из-за превышения лимита трафика',
-        5: 'Пользователь заблокирован на [оставшееся время] за [тип нарушения]',
+        'green': 'Этот пользователь просто наслаждается VPN и ничто не предвещает беды',
+        'black': 'Этот пользователь ни разу не подключился к VPN',
+        'grey': 'Этот пользователь не подключился к VPN в этом месяце',
+        'yellow': 'Скорость этого пользователя снижена до 256 кб\\сек из-за превышения лимита трафика',
+        'red': 'Пользователь заблокирован на [оставшееся время] за [тип нарушения]',
     },
     statusColor: {
-        1: 'status-green',
-        2: 'status-black',
-        3: 'status-gray',
-        4: 'status-yellow',
-        5: 'status-red',
+        'green': 'status-green',
+        'black': 'status-black',
+        'grey': 'status-gray',
+        'yellow': 'status-yellow',
+        'red': 'status-red',
     }
 }
