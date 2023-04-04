@@ -170,27 +170,27 @@
 		height: vc(20);
 		border-radius: 50%;
 
-		&.status-green {
+		&.green {
 			background: $color-puerto-rico url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
 			background-size: cover;
 		}
 
-		&.status-black {
+		&.black {
 			background: $color-black url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
 			background-size: cover;
 		}
 
-		&.status-gray {
+		&.grey {
 			background: $color-gray url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
 			background-size: cover;
 		}
 
-		&.status-yellow {
+		&.yellow {
 			background: $color-yellow url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
 			background-size: cover;
 		}
 
-		&.status-red {
+		&.red {
 			background: $color-razzmatazz url($url-image + 'svg/icon-status-deactive.svg') no-repeat center center;
 			background-size: cover;
 
@@ -200,7 +200,7 @@
 			content: attr(data-user);
 			position: absolute;
 			right: vc(48);
-			top: calc(-25 * var(--width-multiplier));
+			top: calc(-15 * var(--width-multiplier));
 			max-width: vc(240);
 			font-size: vc(14);
 			line-height: vc(16);
@@ -286,19 +286,19 @@
 		margin-top: vc(3);
 		margin-left: vc(3);
 
-		&-1 {
+		&-green {
 			background: #4CBFA6;
 		}
-		&-2 {
+		&-black {
 			background: #000000;
 		}
-		&-3 {
+		&-grey {
 			background: #8F8F8F;
 		}
-		&-4 {
+		&-yellow {
 			background: #EAE100;
 		}
-		&-5 {
+		&-red {
 			background: #ED0B70;
 		}
 	}
