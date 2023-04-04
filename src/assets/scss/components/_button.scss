@@ -38,6 +38,22 @@
 	&--search {
 		font-weight: 700;
 	}
+
+	&--search-button {
+		width: vc(105);
+		height: vc(40);
+		background: transparent;
+		color: $color-azure-radiance;
+		border: 1px solid $color-azure-radiance;
+		border-radius: vc(5);
+
+		@include desktop {
+			display: none;
+		}
+		@include mobile {
+			width: 30%;
+		}
+	}
 	
 	&--option1,
 	&--option2 {
@@ -67,13 +83,15 @@
 
 	&--ok,
 	&--close,
-	&--delete {
+	&--delete,
+	&--welcome{
 		border-radius: vc(10);
 		font-weight: 500;
 	}
 
 	&--ok,
-	&--close {
+	&--close,
+	&--welcome{
 		border: 1px solid $color-azure-radiance;
 		color: $color-azure-radiance;
 		background-color: transparent;
@@ -107,6 +125,7 @@
 	@include desktop {
 		&:hover {
 			background-color: darken($color-azure-radiance, 5%);
+			color: white;
 		}
 
 		&--helper {
@@ -120,7 +139,12 @@
 
 			&:not(.is-select) {
 				&:hover {
-					background-color: $color-white;
+					color: $color-white;
+					background-color: $color-azure-radiance;
+
+					&>span>svg {
+						filter: brightness(0) invert(1);
+					}
 				}
 			}
 		}
@@ -128,7 +152,8 @@
 		&--ok,
 		&--close {
 			&:hover {
-				background-color: $color-white;
+				color: $color-white;
+				background-color: $color-azure-radiance;
 			}
 		}
 

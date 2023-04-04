@@ -1,10 +1,10 @@
 name: "vgkeydesk-web"
-arch: "amd64"
+arch: "all"
 platform: "linux"
-version: 0.0.3
+version: ${PACKAGE_VERSION}
 section: "default"
-priority: "extra"
-release: 1
+priority: "optional"
+release: ${PACKAGE_RELEASE}
 
 provides:
 - vgkeydesk-web

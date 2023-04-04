@@ -4,15 +4,32 @@ include ../assets/pug/data
 +b.profile
 	+e.headline
 		+e.H2.title
-			!=`${data.profile.headline.title}{{ usersList.length ? usersList[0].UserName : 'Brigadier' }}`
+			!=`${data.profile.headline.title}{{ usersList?.length ? usersList[0].UserName : 'Brigadier' }}`
 		+e.search
-			+e.search-label
-				+e.INPUT.search-input(type="text", placeholder="Поиск", v-model="filterUserText")
-			+e.search-button
-				+button(data.profile.headline.button, 'button')(@click="addUser")
+			+e.add-label(:class="highlightedElementProperties.searchButton.highlight")
+				+e.INPUT.search-input(
+					type="text",
+					placeholder="Поиск",
+					v-model="filterUserText",
+					ref="searchButton",
+					:disabled="highlightedElementProperties.searchButton.disabled")
+				+button(data.profile.headline.search, 'button', 'search-button')(:disabled="highlightedElementProperties.searchButton.disabled")
+			+e.add-button()
+				+button(data.profile.headline.button, 'button')(
+					id='welcome-add-end'
+					ref='buttonAddUser'
+					@click="addUser"
+					:disabled="highlightedElementProperties.buttonAddUser.disabled"
+					:class="highlightedElementProperties.buttonAddUser.highlight")
 	+e.cards
-		+e.card(v-for="(user, index) in filteredUsers", :key="user.UserID", :class="user.Problems ? 'is-problem' : 'is-active'")
+		+e.card(
+			v-for="(user, index) in filteredUsers",
+			:key="user.UserID",
+			:class="`${highlightedElementProperties[getRefForHighlight(index)].highlight}`",
+			:ref="user.ref")
 			+e.card-headline
+				+e.card-status(:class="`${user.Status} tooltip`",
+					:data-user="`${profileCardStatus.statusHint[user.Status]}`")
 				+e.card-logo
 					+e.SPAN.card-icon
 						SvgIcon(name='icon-card')
@@ -20,27 +37,35 @@ include ../assets/pug/data
 					| {{ user.UserName }}
 			+e.UL.card-features
 				+e.LI.card-feature(v-if="user.LastVisitHour")
-					| #[b Последний визит:]#[span {{ new Date(user.LastVisitHour) }}]
+					| #[b Последний визит:]#[span {{ formattedDate(user.LastVisitHour) }}]
 				+e.LI.card-feature(v-if="user.MonthlyQuotaRemainingGB")
 					| #[b Лимит трафика:]#[span {{ user.MonthlyQuotaRemainingGB }}Gb]
 				+e.LI.card-feature
-					| #[b Статус:]#[span(v-if="user.Problems") Problem]
+					+e.status-caption
+					| #[b Статус:]
+					+e.status-color(:class="`profile__status-color-${user.Status}`")
+					+e.status-description
+						| {{profileCardStatus.statusName[user.Status]}}
 				+e.LI.card-feature(v-if="false")
 					| #[b AS:]#[SvgIcon(name='icon-de', v-if="user.LastVisitSubnet")]#[span(v-if="user.LastVisitSubnet") {{ user.LastVisitSubnet }}]
-			+e.BUTTON.card-button(type="button", v-if="index !== 0" @click="openDialogUser(user.UserID)")
+			+e.BUTTON.card-button(
+				type="button",
+				v-if="index !== 0"
+				@click="openDialogUser(user.UserID)"
+				:disabled="highlightedElementProperties.secondUserProfileCard.disabled")
 				| Удалить
 		+e.add(@click="addUser")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
 				| Добавить<br>пользователя
-	+e.data(v-if="false")
+	+e.data
 		+e.H2.title
 			!=data.profile.title
 		+e.select
 			+e.option
-				+button('What data we collect?', 'button', 'option1', false, 1)(:class="dataView ? selectClass : ''", @click="changeDataView")
-			+e.option
+				+button('Какие данные мы собираем?', 'button', 'option1', false, 1)(:class="dataView ? selectClass : ''", @click="changeDataView")
+			+e.option(v-show="false")
 				+button('FAQ', 'button', 'option2', false, 2)(:class="!dataView ? selectClass : ''", @click="changeDataView")
 		+e.tabs
 			+e.tab(data-tab="1" v-show="dataView")
@@ -48,19 +73,19 @@ include ../assets/pug/data
 					+e.table
 						+e.table-head
 							+e.table-title
-								| Date type
+								| Тип данных
 							+e.table-column
-								| Brigadir
+								| Юзер
 							+e.table-column
-								| User
-						each line, index in Array(5)
+								| Бригадир
+						each line in data.dataCollection
 							+e.table-line
 								+e.table-title
-									| Date type #[=index + 1]
-								+e.table-column
-									SvgIcon(name=`icon-status-${index != 1 ? 'on' : 'off'}`)
-								+e.table-column
-									SvgIcon(name=`icon-status-${index != 1 ? 'off' : 'on'}`)
+									!=line.type
+								+e.table-column(data-user=`${line.user}`)(class=`${line.user}`? "tooltip" : "")
+									SvgIcon(name=`icon-status-${line.user ? 'on' : 'off'}`)
+								+e.table-column(data-user=`${line.brigadier}`)(class=`${line.brigadier}`? "tooltip" : "")
+									SvgIcon(name=`icon-status-${line.brigadier ? 'on' : 'off'}`)
 			+e.tab(data-tab="2" v-show="!dataView")
 				+e.accordion
 					+e.accordion-column
@@ -81,49 +106,109 @@ include ../assets/pug/data
 									+e.accordion-content
 										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
 
-DialogUser(v-show="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
-DialogQrCode(v-show="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
+DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
+DialogQrCode(v-if="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
+WelcomePage(
+	v-if="usersList.length && !isInstructionHidden"
+	@getUsers="getUsers()"
+	@toggleDisable="toggleDisableAll"
+	@highlightElement="highlightElement"
+	@darkenElement="darkenElement"
+	:elementStepTwo="firstUserProfileCard"
+	:elementStepThree="buttonAddUser"
+	:elementStepFive="secondUserProfileCard"
+	:elementStepSix="searchButton"
+)
+PopupError(v-if="isError" )
+
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import {computed, ref} from "vue";
 import axios from 'axios';
 import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
 import DialogQrCode from './DialogQrCode.vue';
+import WelcomePage from "@/components/WelcomePage.vue";
+import {mockedDataProfile, profileCardStatus} from '@/assets/constants/profileConstants.js'
+import {generateHighlightedElementProperties} from "@/assets/helpers/profileHelpers";
+import PopupError from "@/components/PopupError.vue";
 
-const selectClass = 'is-select';
-let apiLink = '';
-if (process.env.NODE_ENV === 'development') {
-	apiLink = 'http://static.140.53.88.23.clients.your-server.de';
-}
+let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
+
 const filterUserText = ref('');
-
 const token = ref(null);
 const qrCodeFile = ref(new Blob([]));
 const blobLink = ref('');
 const usersList = ref([]);
 const filename = ref('');
-const getUsers = async () => {
-	usersList.value = await axios.get(`${apiLink}/user`).then((r) => r.data)
-};
+const isError = ref(false)
 
-(async function () {
-    token.value = await axios.post(`${apiLink}/token`).then((r) => r.data.Token);
-	if( token.value	) {
+const highlightedElementProperties = ref(generateHighlightedElementProperties(buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton));
+
+const formattedDate = (data) => {
+	const date = new Date(data);
+
+	const day = date.getUTCDate().toString().padStart(2, '0')
+	const month = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+	const year = date.getUTCFullYear().toString()
+	const hours = date.getUTCHours().toString().padStart(2, '0')
+
+	return `${day}.${month}.${year} ~${hours}:00`
+}
+
+const selectClass = 'is-select';
+let apiLink = '';
+if (process.env.NODE_ENV === 'development') {
+	apiLink = 'https://keydesk.ussr.vpngen.org';
+}
+
+const isInstructionHidden = ref(true);
+const getUsers = async () => {
+	usersList.value = await axios.get(`${apiLink}/user`)
+	.then((r) => r.data)
+	.catch(async (error) => {
+		if (error.response.status === 401) {
+			await getToken()
+			getUsers()
+		} else {
+      isError.value = true;
+			console.error(error)
+		}
+	});
+};
+const getRefForHighlight = (index) => {
+	return index===0 ? 'firstUserProfileCard' : 'secondUserProfileCard'
+}
+
+const getToken = async () => {
+	await axios.post(`${apiLink}/token`).then((r) => {
+		token.value = r.data.Token
 		axios.defaults.headers.common['Authorization'] = `Bearer ${token.value}`;
-		getUsers();
-	}
-})();
+
+		isInstructionHidden.value = localStorage.getItem('isInstructionHidden');
+		if (isInstructionHidden.value) {
+			getUsers();
+		} else {
+			usersList.value = mockedDataProfile;
+		}
+	});
+	buttonAddUser = ref(null);
+	firstUserProfileCard = ref(null);
+	secondUserProfileCard = ref(null);
+	searchButton = ref(null);
+}
+
+getToken();
 
 const addUser = async () => {
-	await axios.post(`${apiLink}/user`,{}, {
+	await axios.post(`${apiLink}/user`, {}, {
 		responseType: 'blob',
 		headers: {
 			'accept': 'application/octet-stream'
 		}
 	}).then((r) => {
-		const blob = new Blob([r.data], {type:  r.headers.get('content-type')})
+		const blob = new Blob([r.data], {type: r.headers.get('content-type')})
 
 		qrCodeFile.value = blob
 		openDialogQrCode()
@@ -137,37 +222,46 @@ const addUser = async () => {
 		}
 
 		blobLink.value = window.URL.createObjectURL(blob);
-        // const link = document.createElement('a');
-        // link.href = url;
-        // link.setAttribute('download', `${filename.value}.conf`);
-        // document.body.appendChild(link);
-        // link.click();
 
 		getUsers();
-	}).catch((error) => {
-        console.error(error)
-      });
+	}).catch(async (error) => {
+		if (error.response.status === 401) {
+			await getToken()
+			addUser()
+		} else {
+			console.error(error)
+		}
+	});
 }
 
 const removeUser = async (id) => {
 	await axios.delete(`${apiLink}/user/${id}`)
-	.then((r) => {
-		showDialogUser.value = false;
-		deletedUserId.value = null;
-	});
-	getUsers()
+			.then(() => {
+				showDialogUser.value = false;
+				deletedUserId.value = null;
+				getUsers()
+			}).catch(async (error) => {
+				if (error.response.status === 401) {
+					await getToken()
+					removeUser(deletedUserId.value)
+				} else {
+					console.error(error)
+				}
+			});
 }
 
-const filteredUsers = computed( () => {
+const filteredUsers = computed(() => {
+
 	let filter = filterUserText.value
 	if (!filter.length) return usersList.value
-	return usersList.value.filter( user =>
-		user.PersonName.toLowerCase().includes(filter.toLowerCase())
+	return usersList.value.filter(user =>
+			user.UserName.toLowerCase().includes(filter.toLowerCase())
 	)
 })
 
 const showDialogUser = ref(false);
 const deletedUserId = ref(null);
+
 const closeDialogUser = () => {
 	showDialogUser.value = false;
 };
@@ -191,4 +285,19 @@ const changeDataView = () => {
 	dataView.value = !dataView.value
 }
 
+const highlightElement = (path) => {
+	highlightedElementProperties.value[path].highlight = 'highlight';
+}
+
+const darkenElement = (path) => {
+	highlightedElementProperties.value[path].highlight = '';
+}
+
+const toggleDisableAll = () => {
+	for (let key in highlightedElementProperties.value) {
+		if (highlightedElementProperties.value[key].hasOwnProperty("disabled")) {
+			highlightedElementProperties.value[key].disabled = !highlightedElementProperties.value[key].disabled;
+		}
+	}
+}
 </script>

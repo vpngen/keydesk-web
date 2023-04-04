@@ -5,7 +5,6 @@
 	left: 0;
 	right: 0;
 	top: 0;
-	z-index: 5;
 
 	&__container {
 		display: flex;
@@ -27,7 +26,6 @@
 
 	&__logo {
 		position: relative;
-		z-index: 16;
 		flex-shrink: 0;
 		width: vc(66);
 		height: vc(26);
