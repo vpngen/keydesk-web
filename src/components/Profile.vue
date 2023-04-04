@@ -28,7 +28,7 @@ include ../assets/pug/data
 			:class="`${highlightedElementProperties[getRefForHighlight(index)].highlight}`",
 			:ref="user.ref")
 			+e.card-headline
-				+e.card-status(:class="`${profileCardStatus.statusColor[user.Status]} tooltip`",
+				+e.card-status(:class="`${user.Status} tooltip`",
 					:data-user="`${profileCardStatus.statusHint[user.Status]}`")
 				+e.card-logo
 					+e.SPAN.card-icon
