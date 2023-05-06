@@ -70,6 +70,23 @@
 		}
 	}
 
+	&__show-more-container {
+		display: flex;
+	}
+
+	&__show-more-column {
+		flex: 1;
+		padding-right: 10px;
+		box-sizing: border-box;
+		display: flex;
+		flex-direction: column;
+		align-content: flex-start;
+
+		&--mobile {
+			padding: 0;
+		}
+	}
+
 	&__search-input {
 		border-radius: vc(5);
 		padding: 0 vc(20) 0 vc(40);
@@ -219,38 +236,38 @@
 			}
 		}
 
-		&.tooltip.status-black::before {
+		&.tooltip.black::before {
 			border: vc(1) solid $color-black;
 		}
 
-		&.tooltip.status-black::after {
+		&.tooltip.black::after {
 			border-right: vc(1) solid $color-black;
 			border-bottom: vc(1) solid $color-black;
 		}
 
-		&.tooltip.status-gray::before {
+		&.tooltip.grey::before {
 			border: vc(1) solid $color-gray;
 		}
 
-		&.tooltip.status-gray::after {
+		&.tooltip.grey::after {
 			border-right: vc(1) solid $color-gray;
 			border-bottom: vc(1) solid $color-gray;
 		}
 
-		&.tooltip.status-yellow::before {
+		&.tooltip.yellow::before {
 			border: vc(1) solid $color-yellow;
 		}
 
-		&.tooltip.status-yellow::after {
+		&.tooltip.yellow::after {
 			border-right: vc(1) solid $color-yellow;
 			border-bottom: vc(1) solid $color-yellow;
 		}
 
-		&.tooltip.status-red::before {
+		&.tooltip.red::before {
 			border: vc(1) solid $color-red;
 		}
 
-		&.tooltip.status-red::after {
+		&.tooltip.red::after {
 			border-right: vc(1) solid $color-red;
 			border-bottom: vc(1) solid $color-red;
 		}
@@ -643,7 +660,7 @@
 		}
 
 		@include desktop {
-			display: flex;
+			display: flex; flex-wrap: wrap;
 			justify-content: space-between;
 			font-size: vc(16);
 			line-height: (24 / 16);
@@ -680,17 +697,21 @@
 		align-items: center;
 		font-feature-settings: 'pnum' on, 'lnum' on, 'liga' off;
 		font-weight: 700;
+		font-size: vc(16);
+		line-height: vc(19);
 		border-radius: vc(10);
-		padding: 0 0 0 vc(16);
+		padding: vc(8) vc(65) vc(8) vc(16);
 		width: 100%;
-		height: vc(40);
 		background-color: $color-white;
+		min-height: vc(66);
+		margin-bottom: vc(16);
 
 		&::before {
 			content: "";
 			position: absolute;
 			right: vc(16);
-			top: vc(12);
+			top: 50%;
+			transform: translate(-50%, -50%);
 			z-index: 1;
 			width: vc(16);
 			height: vc(16);
@@ -701,32 +722,41 @@
 			will-change: transform;
 		}
 
+		&--open {
+			&::before {
+				top: 50%;
+				transform: rotate(180deg) translate(50%, 50%);
+				transition: transform $duration-normal;
+			}
+		}
+
 		#{$p}__accordion-line.status-green & {
 			&::before {
 				transform: rotate(180deg);
 			}
 		}
 
+		@include mobile {
+			font-size: vc(12);
+			line-height: vc(14);
+		}
+
 		@include tablet {
-			padding: 0 0 0 vc(24);
-			height: vc(50);
+			padding: vc(8) vc(65) vc(8) vc(24);
 
 			&::before {
 				right: vc(24);
-				top: vc(13);
 				width: vc(24);
 				height: vc(24);
 			}
 		}
 
 		@include desktop {
-			padding: 0 0 0 vc(24);
-			height: vc(50);
+			padding: vc(8) vc(65) vc(8) vc(24);
 			cursor: pointer;
 
 			&::before {
 				right: vc(24);
-				top: vc(13);
 				width: vc(24);
 				height: vc(24);
 			}
@@ -734,8 +764,26 @@
 	}
 
 	&__accordion-responsion {
-		height: 0;
-		transition: height $duration-normal;
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s ease-out;
+
+		& p {
+			padding: vc(5) 0 vc(15) vc(10);
+			font-size: vc(16);
+			line-height: vc(24);
+
+			@include mobile {
+				font-size: vc(12);
+				line-height: vc(18);
+			}
+		}
+
+		&--open {
+			max-height: 500px;
+
+			transition: max-height 0.5s ease-in;
+		}
 	}
 
 	&__accordion-content {
