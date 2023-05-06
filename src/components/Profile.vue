@@ -38,8 +38,8 @@ include ../assets/pug/data
 			+e.UL.card-features
 				+e.LI.card-feature(v-if="user.LastVisitHour")
 					| #[b Последний визит:]#[span {{ formattedDate(user.LastVisitHour) }}]
-				+e.LI.card-feature(v-if="user.MonthlyQuotaRemainingGB")
-					| #[b Лимит трафика:]#[span {{ user.MonthlyQuotaRemainingGB }}Gb]
+				+e.LI.card-feature(v-if="user.MonthlyQuotaRemainingGB !== undefined")
+					| #[b Лимит трафика:]#[span {{ user.MonthlyQuotaRemainingGB }}&nbsp;GB]
 				+e.LI.card-feature
 					+e.status-caption
 					| #[b Статус:]
@@ -65,7 +65,7 @@ include ../assets/pug/data
 		+e.select
 			+e.option
 				+button('Какие данные мы собираем?', 'button', 'option1', false, 1)(:class="dataView ? selectClass : ''", @click="changeDataView")
-			+e.option(v-show="false")
+			+e.option
 				+button('FAQ', 'button', 'option2', false, 2)(:class="!dataView ? selectClass : ''", @click="changeDataView")
 		+e.tabs
 			+e.tab(data-tab="1" v-show="dataView")
@@ -87,24 +87,8 @@ include ../assets/pug/data
 								+e.table-column(data-user=`${line.brigadier}`)(class=`${line.brigadier}`? "tooltip" : "")
 									SvgIcon(name=`icon-status-${line.brigadier ? 'on' : 'off'}`)
 			+e.tab(data-tab="2" v-show="!dataView")
-				+e.accordion
-					+e.accordion-column
-						each line, index in Array(3)
-							+e.accordion-line
-								+e.accordion-question
-									| Question №#[=index + 1]
-								+e.accordion-responsion
-									+e.accordion-content
-										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
-										| #[br]#[br]Odio posuere molestie aliquam, faucibus lacus, pharetra, ut non. Posuere turpis elementum egestas turpis nulla. Justo mauris pulvinar rhoncus habitant proin consectetur.
-					+e.accordion-column
-						each line, index in Array(3)
-							+e.accordion-line
-								+e.accordion-question
-									| Question №#[=index + 4]
-								+e.accordion-responsion
-									+e.accordion-content
-										| Porta consequat pellentesque maecenas lobortis rhoncus a. Mollis habitasse iaculis purus sit lorem. Suscipit porttitor sed amet leo malesuada. Urna eu quis lorem facilisi dui rhoncus.
+				ShowMoreList(:isShown="dataView")
+
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
 DialogQrCode(v-if="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
@@ -130,6 +114,7 @@ import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
 import DialogQrCode from './DialogQrCode.vue';
 import WelcomePage from "@/components/WelcomePage.vue";
+import ShowMoreList from "@/components/ShowMoreList.vue";
 import {mockedDataProfile, profileCardStatus} from '@/assets/constants/profileConstants.js'
 import {generateHighlightedElementProperties} from "@/assets/helpers/profileHelpers";
 import PopupError from "@/components/PopupError.vue";
@@ -229,6 +214,7 @@ const addUser = async () => {
 			await getToken()
 			addUser()
 		} else {
+			isError.value = true;
 			console.error(error)
 		}
 	});
@@ -245,6 +231,7 @@ const removeUser = async (id) => {
 					await getToken()
 					removeUser(deletedUserId.value)
 				} else {
+					isError.value = true;
 					console.error(error)
 				}
 			});
