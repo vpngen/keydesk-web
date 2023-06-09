@@ -1,4 +1,3 @@
-
 export const mockedDataProfile = [{
     "MonthlyQuotaRemainingGB": 100,
     "LastVisitHour": '2023-03-21T11:00:00.000Z',
@@ -33,27 +32,86 @@ export const mockedDataProfile = [{
     "ref": "thirdUserProfileCard",
     "Status": 'grey',
 }];
+export const sortingMap = {
+    'nameAsc': 'nameAsc',
+    'nameDesc': 'nameDesc',
+    'dateAsc': 'dateAsc',
+    'dateDesc': 'dateDesc',
+}
 
+export const sortingList = [
+    {
+        name: 'По алфавиту (возрастание)',
+        label: sortingMap.nameAsc,
+        textLabel: '(А-Я)',
+    },
+    {
+        name: 'По алфавиту (убывание)',
+        label: sortingMap.nameDesc,
+        textLabel: '(Я-А)',
+    },
+    {
+        name: 'По дате создания (возрастание)',
+        label: sortingMap.dateAsc,
+    },
+    {
+        name: 'По дате создания (убывание)',
+        label: sortingMap.dateDesc,
+    },
+];
+
+export const statusMap = {
+    'all': 'all',
+    'green': 'green',
+    'black': 'black',
+    'grey': 'grey',
+    'yellow': 'yellow',
+    'red': 'red',
+}
 export const profileCardStatus = {
     statusName: {
-        'green': 'Всё отлично!',
-        'black': 'Мёртвая душа',
-        'grey': 'Ёжик в тумане',
-        'yellow': 'Работает с ограничениями',
-        'red': 'Временная блокировка',
+        [statusMap.green]: 'Всё отлично!',
+        [statusMap.black]: 'Мёртвая душа',
+        [statusMap.grey]: 'Ёжик в тумане',
+        [statusMap.yellow]: 'Работает с ограничениями',
+        [statusMap.red]: 'Временная блокировка',
     },
     statusHint: {
-        'green': 'Этот пользователь просто наслаждается VPN и ничто не предвещает беды',
-        'black': 'Этот пользователь ни разу не подключился к VPN',
-        'grey': 'Этот пользователь не подключился к VPN в этом месяце',
-        'yellow': 'Скорость этого пользователя снижена до 256 кб\\сек из-за превышения лимита трафика',
-        'red': 'Пользователь заблокирован на [оставшееся время] за [тип нарушения]',
+        [statusMap.green]: 'Этот пользователь просто наслаждается VPN и ничто не предвещает беды',
+        [statusMap.black]: 'Этот пользователь ни разу не подключился к VPN',
+        [statusMap.grey]: 'Этот пользователь не подключился к VPN в этом месяце',
+        [statusMap.yellow]: 'Скорость этого пользователя снижена до 256 кб\\сек из-за превышения лимита трафика',
+        [statusMap.red]: 'Пользователь заблокирован на [оставшееся время] за [тип нарушения]',
     },
     statusColor: {
-        'green': 'status-green',
-        'black': 'status-black',
-        'grey': 'status-gray',
-        'yellow': 'status-yellow',
-        'red': 'status-red',
+        [statusMap.green]: 'status-green',
+        [statusMap.black]: 'status-black',
+        [statusMap.grey]: 'status-grey',
+        [statusMap.yellow]: 'status-yellow',
+        [statusMap.red]: 'status-red',
     }
 }
+
+export const statusesList = [
+    {
+        name: 'Все статусы', label: statusMap.all,
+    },
+    {
+        name: 'Все отлично!', label: statusMap.green,
+    },
+    {
+        name: 'Мертвая душа', label: statusMap.black,
+    },
+    {
+        name: 'Ежик в тумане', label: statusMap.grey,
+    },
+    {
+        name: 'Работает с ограничениями', label: statusMap.yellow,
+    },
+    {
+        name: 'Временная блокировка', label: statusMap.red,
+    },
+]
+
+
+export const labelsOnly = statusesList.map(item => item.label)

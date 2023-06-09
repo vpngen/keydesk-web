@@ -5,12 +5,14 @@ HeaderInset
   +e.SECTION.section--profile
     Profile
 Footer
+TheLoader
 </template>
 
 <script setup>
 import Profile from './components/Profile.vue';
 import HeaderInset from './components/HeaderInset.vue';
 import Footer from './components/Footer.vue';
+import TheLoader from "@/components/TheLoader.vue";
 
 </script>
 
