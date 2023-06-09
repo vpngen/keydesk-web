@@ -1,0 +1,108 @@
+.loader {
+  $p: &;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+
+  &__overlay {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(vc(2));
+
+    &.welcome {
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+  }
+
+  &__container {
+    position: relative;
+    width: vc(440);
+    height: vc(440);
+    border-radius: vc(20);
+    background-color: $color-catskill-white;
+    backdrop-filter: blur(vc(34));
+
+    @include mobile {
+      width: vc(220);
+      height: vc(220);
+    }
+
+    &-overlay {
+      width: 100%;
+      height: 100%;
+      background: #BCDFFF;
+      filter: blur(vc(112));
+      position: absolute;
+      z-index: -2;
+    }
+  }
+
+  &__content {
+    font-weight: 400;
+    font-size: vc(16);
+    line-height: vc(20);
+    color: #1D4365;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: vc(4);
+    width: 100%;
+    height: 100%;
+
+    @include mobile {
+      font-size: vc(14);
+      line-height: vc(17);
+    }
+  }
+
+  &__logo {
+    width: vc(84);
+    height: vc(39);
+    background: url($url-image + 'svg/loader-logo.svg') no-repeat center center;
+    background-size: contain;
+
+    @include mobile {
+      width: vc(63);
+      height: vc(29);
+    }
+  }
+
+  &__active-circle {
+    width: vc(300);
+    height: vc(300);
+    background: url($url-image + 'svg/loader-active-circle.svg') no-repeat center center;
+    background-size: cover;
+    position: absolute;
+    top: 17%;
+    left: 17%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: bubble 1100ms forwards infinite;
+
+    @include mobile {
+      width: vc(150);
+      height: vc(150);
+    }
+  }
+
+  @keyframes bubble {
+    0%   { transform: scale(1, 1); }
+    50%  { transform: scale(1.35, 1.35); }
+    100%  { transform: scale(1, 1); }
+  }
+}
