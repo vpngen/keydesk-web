@@ -41,6 +41,7 @@ body {
 	min-height: 100vh;
 	font-family: $font-raleway;
 	font-weight: 400;
+	font-feature-settings: 'pnum' on, 'lnum' on, 'liga' off;
 	-webkit-font-smoothing: antialiased;
 	text-decoration-skip: objects;
 	text-rendering: optimizeLegibility;
@@ -134,6 +135,7 @@ ul {
 
 a,
 button {
+	box-sizing: border-box;
 	outline: none;
 	text-decoration: none;
 	color: currentColor;
