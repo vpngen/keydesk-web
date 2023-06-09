@@ -3,8 +3,10 @@ include ../assets/pug/base
 +b.popup
   +e.overlay.welcome
   +e.alert.welcome-add(ref='startLine')
-    +e.title.welcome-add
-      | Нажмите тут для добавления пользователя
+    +e.title.save-title.welcome-add
+      | Нажмите тут для добавления конфигурации.
+    +e.title.save-title.welcome-add
+      | На каждое устройство нужна отдельная конфигурация!
     +e.button.welcome
       +button('Далее', 'button', 'welcome')(@click="triggerStepThree")
   +e.fake-area(ref='endLine')
