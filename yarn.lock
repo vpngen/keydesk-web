@@ -1052,7 +1052,7 @@
 
 "@kurkle/color@^0.3.0":
   version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@kurkle/color/-/color-0.3.2.tgz#5acd38242e8bde4f9986e7913c8fdf49d3aa199f"
+  resolved "https://registry.npmjs.org/@kurkle/color/-/color-0.3.2.tgz"
   integrity sha512-fuscdXJ9G1qb7W8VdHi+IwRqij3lBkosAm4ydQtEmbY58OzHXqQhvlxqEkoz0yssNVn38bcpRWgA9PP+OGoisw==
 
 "@leichtgewicht/ip-codec@^2.0.1":
@@ -1300,6 +1300,24 @@
   dependencies:
     "@volar/source-map" "1.2.0-alpha.17"
 
+"@volar/language-core@1.7.9":
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/@volar/language-core/-/language-core-1.7.9.tgz#e9ca92fcbffa88136394c692454036548d97ea5a"
+  integrity sha512-U6GMPDNqfGFqVRv4npUN2hEDW4/6EwL4YHd6qggapcvTzRrYAodTTbOTZs4PDzmw7NSZ2Cdrmd54SjzCCMXbZw==
+  dependencies:
+    "@volar/source-map" "1.7.9"
+
+"@volar/language-service@*":
+  version "1.7.9"
+  resolved "https://registry.yarnpkg.com/@volar/language-service/-/language-service-1.7.9.tgz#368ac25e08e898ddbc879b5cf56407eb3d3589ad"
+  integrity sha512-ZybgxvX27PNo22DbMkTpQjP/jxW6dJFXzhmcFPP4PvOBDw6qCnWQcTJ5nKESSN4B5yjayRfi7FnisSPUfAejQw==
+  dependencies:
+    "@volar/language-core" "1.7.9"
+    "@volar/source-map" "1.7.9"
+    vscode-languageserver-protocol "^3.17.3"
+    vscode-languageserver-textdocument "^1.0.8"
+    vscode-uri "^3.0.7"
+
 "@volar/language-service@1.2.0-alpha.17":
   version "1.2.0-alpha.17"
   resolved "https://registry.npmjs.org/@volar/language-service/-/language-service-1.2.0-alpha.17.tgz"
@@ -1322,6 +1340,13 @@
   dependencies:
     typesafe-path "^0.2.2"
     vscode-uri "^3.0.7"
+
+"@volar/source-map@*", "@volar/source-map@1.7.9":
+  version "1.7.9"
+  resolved "https://registry.npmjs.org/@volar/source-map/-/source-map-1.7.9.tgz"
+  integrity sha512-bLizh8HIAzbq7OdxfyoG18dXJJF9FNXBcaiRj7eqg2Bq+DkgkYHabaY+xobgaXeKFOp93Tg1KfMM7qyR2KXHmQ==
+  dependencies:
+    muggle-string "^0.3.1"
 
 "@volar/source-map@1.0.24":
   version "1.0.24"
@@ -1644,6 +1669,14 @@
     vue-template-es2015-compiler "^1.9.0"
   optionalDependencies:
     prettier "^1.18.2 || ^2.0.0"
+
+"@vue/language-plugin-pug@^1.8.2":
+  version "1.8.2"
+  resolved "https://registry.npmjs.org/@vue/language-plugin-pug/-/language-plugin-pug-1.8.2.tgz"
+  integrity sha512-Oh9WooxGphkdaizekEgLqhFoult1Z1RanKQ3KoJeBsTKnwrAutwEQ/qnA3OZyhuYGOC/4D4KYCgHUuImKsHHmw==
+  dependencies:
+    "@volar/source-map" "1.7.9"
+    volar-service-pug "0.0.8"
 
 "@vue/reactivity-transform@3.2.47":
   version "3.2.47"
@@ -2380,7 +2413,7 @@ character-parser@^2.2.0:
 
 chart.js@^4.3.0:
   version "4.3.0"
-  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-4.3.0.tgz#ac363030ab3fec572850d2d872956f32a46326a1"
+  resolved "https://registry.npmjs.org/chart.js/-/chart.js-4.3.0.tgz"
   integrity sha512-ynG0E79xGfMaV2xAHdbhwiPLczxnNNnasrmPEXriXsPJGjmhOBYzFVEsB65w2qMDz+CaBJJuJD0inE/ab/h36g==
   dependencies:
     "@kurkle/color" "^0.3.0"
@@ -2509,7 +2542,7 @@ collection-visit@^1.0.0:
 
 color-convert@^1.9.0:
   version "1.9.3"
-  resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.3.tgz#bb71850690e1f136567de629d2d5471deda4c1e8"
+  resolved "https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz"
   integrity sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
   dependencies:
     color-name "1.1.3"
@@ -2528,7 +2561,7 @@ color-name@1.1.3:
 
 color-name@~1.1.4:
   version "1.1.4"
-  resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
+  resolved "https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 colord@^2.9.1:
@@ -4675,6 +4708,11 @@ muggle-string@^0.2.2:
   resolved "https://registry.npmjs.org/muggle-string/-/muggle-string-0.2.2.tgz"
   integrity sha512-YVE1mIJ4VpUMqZObFndk9CJu6DBJR/GB13p3tXuNbwD4XExaI5EOuRl6BHeIDxIqXZVxSfAC+y6U1Z/IxCfKUg==
 
+muggle-string@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.npmjs.org/muggle-string/-/muggle-string-0.3.1.tgz"
+  integrity sha512-ckmWDJjphvd/FvZawgygcUeQCxzvohjFO5RxTjj4eq8kw359gFF3E1brjfI+viLMxss5JrHTDRHZvu2/tuy0Qg==
+
 multicast-dns@^7.2.5:
   version "7.2.5"
   resolved "https://registry.npmjs.org/multicast-dns/-/multicast-dns-7.2.5.tgz"
@@ -6242,7 +6280,7 @@ split-string@^3.0.1, split-string@^3.0.2:
 
 ssr-window@^4.0.2:
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
+  resolved "https://registry.npmjs.org/ssr-window/-/ssr-window-4.0.2.tgz"
   integrity sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==
 
 ssri@^8.0.1:
@@ -6474,7 +6512,7 @@ svgo@^3.0.0, svgo@^3.0.2:
 
 swiper@^9.1.1:
   version "9.3.2"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-9.3.2.tgz#f29eddb17f231221c7727372637c44279174a4e1"
+  resolved "https://registry.npmjs.org/swiper/-/swiper-9.3.2.tgz"
   integrity sha512-Kj9Z4kXRmJR3YT/Wj+XLWj8P6IcRt+WG38uL8M3/Wny7+6sV0TlP9vnE1X+Co9c7VzNooojWGnFa+Wf/9+CUMA==
   dependencies:
     ssr-window "^4.0.2"
@@ -6751,6 +6789,28 @@ void-elements@^3.1.0:
   resolved "https://registry.npmjs.org/void-elements/-/void-elements-3.1.0.tgz"
   integrity sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==
 
+volar-service-html@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.npmjs.org/volar-service-html/-/volar-service-html-0.0.8.tgz"
+  integrity sha512-pP1bmN9iJjjK8oDZ1F/c75/lwUqcw9BzcUYa6WE0eYTc30X6BPpj/6Rzed6Sw7dBMmAmsodoaHOamgNU/RJY/w==
+  dependencies:
+    vscode-html-languageservice "^5.0.4"
+    vscode-uri "^3.0.7"
+
+volar-service-pug@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.npmjs.org/volar-service-pug/-/volar-service-pug-0.0.8.tgz"
+  integrity sha512-rDYhhPFmo726oN8wCZs7+Cm/L3u1h7Nkz68PN1fBIdaBhcKPaPIDtGOW4mEpYw1A1sGm6GrklVkQ03p7clXGkQ==
+  dependencies:
+    "@volar/language-service" "*"
+    "@volar/source-map" "*"
+    muggle-string "^0.3.1"
+    pug-lexer "^5.0.1"
+    pug-parser "^6.0.0"
+    volar-service-html "0.0.8"
+    vscode-html-languageservice "^5.0.4"
+    vscode-languageserver-textdocument "^1.0.8"
+
 vscode-html-languageservice@^5.0.4:
   version "5.0.4"
   resolved "https://registry.npmjs.org/vscode-html-languageservice/-/vscode-html-languageservice-5.0.4.tgz"
@@ -6802,7 +6862,7 @@ vscode-uri@^3.0.7:
 
 vue-chartjs@^5.2.0:
   version "5.2.0"
-  resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-5.2.0.tgz#3d0076ccf8016d1bf8fab5ccd837e7fb81005ded"
+  resolved "https://registry.npmjs.org/vue-chartjs/-/vue-chartjs-5.2.0.tgz"
   integrity sha512-d3zpKmGZr2OWHQ1xmxBcAn5ShTG917+/UCLaSpaCDDqT0U7DBsvFzTs69ZnHCgKoXT55GZDW8YEj9Av+dlONLA==
 
 vue-cli-plugin-pug@^2.0.0:
