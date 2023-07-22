@@ -149,7 +149,7 @@ include ../assets/pug/data
 				ShowMoreList
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
-DialogQrCode(v-if="showDialogQrCode" :file="qrCodeFile" :fileLink="blobLink" :filename="filename" @close="closeDialogQrCode()")
+DialogQrCode(v-if="showDialogQrCode" :userData="userData" @close="closeDialogQrCode()")
 WelcomePage(
 	v-if="usersList.length && !isInstructionHidden"
 	@getUsers="getUsers()"
@@ -186,10 +186,8 @@ let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
 
 const filterUserText = ref('');
 const token = ref(null);
-const qrCodeFile = ref(new Blob([]));
-const blobLink = ref('');
+const userData = ref({});
 const usersList = ref([]);
-const filename = ref('');
 const isError = ref(false);
 const selectedFilterSort = ref(sortingMap.dateAsc);
 const selectedFilterStatus = ref(statusMap.all);
@@ -286,8 +284,6 @@ const getChart = async () => {
 	});
 };
 
-// const messageShow = true;
-
 const iconActiveUsers = computed(() => {
 	return chartList.value && chartList.value.ActiveUsers[11].Value > chartList.value.ActiveUsers[10].Value ?
 	"icon-stats-up" :
@@ -346,39 +342,27 @@ getToken();
 const addUser = async () => {
 	loadingService.show();
 	await axios.post(`${apiLink}/user`, {}, {
-		responseType: 'blob',
+		responseType: 'application/json',
 		headers: {
-			'accept': 'application/octet-stream'
+			'accept': 'application/json'
 		}
 	}).then((r) => {
-		const blob = new Blob([r.data], {type: r.headers.get('content-type')})
+		userData.value = JSON.parse(r.data);
 
-		qrCodeFile.value = blob
 		openDialogQrCode()
-
-		const header = r.headers.get('content-disposition');
-
-		if (header) {
-			filename.value = header.split('filename*=')[1].replaceAll(`"`, ``).replace(`utf-8''`, ``).replace(`.conf`, ``);
-		} else {
-			filename.value = 'config';
-		}
-
-		blobLink.value = window.URL.createObjectURL(blob);
-
 		getUsers();
 	}).catch(async (error) => {
 		if (error.response.status === 401) {
-			await getToken()
-			addUser()
+			await getToken();
+			addUser();
 		} else {
 			isError.value = true;
-			console.error(error)
+			console.error(error);
 		}
 	}).finally(() => {
 		loadingService.hide();
 	});
-}
+};
 
 const removeUser = async (id) => {
 	loadingService.show();
