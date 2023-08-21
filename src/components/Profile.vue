@@ -27,7 +27,7 @@ include ../assets/pug/data
 					+button(data.profile.headline.button, 'button')(
 						id='welcome-add-end'
 						ref='buttonAddUser'
-						@click="addUser"
+						@click="toggleDialogOs"
 						:disabled="highlightedElementProperties.buttonAddUser.disabled"
 						:class="highlightedElementProperties.buttonAddUser.highlight")
 	+e.message(v-if="messageShow")
@@ -70,7 +70,7 @@ include ../assets/pug/data
 				@click="openDialogUser(user.UserID)"
 				:disabled="highlightedElementProperties.secondUserProfileCard.disabled")
 				| Удалить
-		+e.add(@click="addUser")
+		+e.add(@click="toggleDialogOs")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
@@ -148,8 +148,17 @@ include ../assets/pug/data
 			+e.tab(data-tab="3" v-show="showTab === 3")
 				ShowMoreList
 
-DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser()" @removeUser="removeUser")
-DialogQrCode(v-if="showDialogQrCode" :userData="userData" @close="closeDialogQrCode()")
+DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser")
+DialogOs(v-if="showDialogOs" @close="toggleDialogOs" @next="openDialogQrCode" @skip="openDialogConfig")
+DialogQrCode(
+	v-if="showDialogQrCode"
+	:configName="configName"
+	:userData="userData"
+	:title="titleDialogQrCode"
+	:chosenOS="chosenOS"
+	@close="closeDialogQrCode"
+	)
+DialogConfig(v-if="showDialogConfig" :configName="configName" :userData="userData" @close="closeDialogConfig")
 WelcomePage(
 	v-if="usersList.length && !isInstructionHidden"
 	@getUsers="getUsers()"
@@ -171,7 +180,9 @@ import axios from 'axios';
 import ChartLine from './ChartLine.vue';
 import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
+import DialogOs from './DialogOs.vue';
 import DialogQrCode from './DialogQrCode.vue';
+import DialogConfig from './DialogConfig.vue';
 import WelcomePage from "@/components/WelcomePage.vue";
 import ShowMoreList from "@/components/ShowMoreList.vue";
 import {mockedDataProfile, profileCardStatus, sortingMap, statusMap} from '@/assets/constants/profileConstants.js'
@@ -186,6 +197,7 @@ let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
 
 const filterUserText = ref('');
 const token = ref(null);
+const titleDialogQrCode = ref('');
 const userData = ref({});
 const usersList = ref([]);
 const isError = ref(false);
@@ -200,6 +212,10 @@ const showTab = ref(1);
 const loadingService = inject('loadingService');
 const chartOptionsRef = ref(null);
 const chartScroll = ref();
+const showDialogOs = ref(false);
+const showDialogQrCode = ref(false);
+const showDialogConfig = ref(false);
+const chosenOS = ref(null);
 
 onMounted(()=>{
 	if (window.screen.width <= 767) {
@@ -306,7 +322,7 @@ const iconTotalTraffic = computed(() => {
 });
 
 const messageShow = computed(() => {
-	return !messageClose.value && chartList.value && chartList.value.ActiveUsers[11].Value < 5 ? true : false;
+	return !messageClose.value && chartList.value && chartList.value.ActiveUsers[11].Value < 5;
 });
 
 const getRefForHighlight = (index) => {
@@ -339,29 +355,29 @@ const getToken = async () => {
 
 getToken();
 
-const addUser = async () => {
-	loadingService.show();
-	await axios.post(`${apiLink}/user`, {}, {
-		responseType: 'application/json',
-		headers: {
-			'accept': 'application/json'
-		}
-	}).then((r) => {
-		userData.value = JSON.parse(r.data);
-
-		openDialogQrCode()
-		getUsers();
-	}).catch(async (error) => {
-		if (error.response.status === 401) {
-			await getToken();
-			addUser();
-		} else {
-			isError.value = true;
-			console.error(error);
-		}
-	}).finally(() => {
-		loadingService.hide();
-	});
+const addUser = async (type) => {
+		await axios.post(`${apiLink}/user`, {}, {
+			responseType: 'application/json',
+			headers: {
+				'accept': 'application/json'
+			}
+		}).then((r) => {
+			const configList = require('../../vpn_sistems_config.json');
+			const configType = configList.system_defaults[type];
+			configName.value = configType;
+			userData.value = JSON.parse(r.data);
+			getUsers();
+		}).catch(async (error) => {
+			if (error.response.status === 401) {
+				await getToken();
+				addUser(type);
+			} else {
+				isError.value = true;
+				console.error(error);
+			}
+		}).finally(() => {
+			loadingService.hide();
+		});
 };
 
 const removeUser = async (id) => {
@@ -451,13 +467,36 @@ const openDialogUser = (id) => {
 	showDialogUser.value = true
 };
 
-const showDialogQrCode = ref(false);
-const closeDialogQrCode = () => {
-	showDialogQrCode.value = false;
+const toggleDialogOs = () => {
+	showDialogOs.value = !showDialogOs.value;
 };
 
-const openDialogQrCode = () => {
-	showDialogQrCode.value = true
+const closeDialogQrCode = () => {
+	showDialogQrCode.value = !showDialogQrCode.value;
+};
+
+const configName = ref('');
+
+const openDialogQrCode = (type) => {
+	chosenOS.value = type;
+	addUser(type.value)
+	if (type.value === 'other') {
+		showDialogOs.value = !showDialogOs.value;
+		showDialogConfig.value = !showDialogConfig.value;
+	} else {
+		titleDialogQrCode.value = type.value;
+		showDialogOs.value = !showDialogOs.value;
+		showDialogQrCode.value = !showDialogQrCode.value;
+	}
+};
+
+const closeDialogConfig = () => {
+	showDialogConfig.value = !showDialogConfig.value;
+};
+
+const openDialogConfig = () => {
+	showDialogOs.value = !showDialogOs.value;
+	showDialogConfig.value = !showDialogConfig.value;
 };
 
 const highlightElement = (path) => {

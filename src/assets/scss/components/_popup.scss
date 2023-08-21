@@ -428,6 +428,15 @@
 				line-height: vc(20);
 			}
 		}
+
+		a {
+			font-weight: 700;
+			text-decoration: underline;
+		}
+
+		&--minimize-margin {
+			margin-bottom: vc(8);
+		}
 	}
 
 	&__text {
@@ -491,7 +500,7 @@
 		}
 	}
 
-	&__tonnel {
+	&__tunnel {
 		display: block;
 		padding: vc(4) 0 0;
 		font-size: vc(14);
@@ -518,6 +527,89 @@
 		}
 	}
 
+	&__emoji {
+		margin: 0 0 vc(24);
+		width: vc(100);
+		height: vc(100);
+	}
+
+	&__cards {
+		display: grid;
+		gap: vc(8);
+		grid-template-columns: repeat(3, 1fr);
+		margin: 0 0 vc(24);
+
+		@include desktop {
+			gap: vc(12);
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	&__card {
+		border: 1px solid rgba($color-azure-radiance, 0);
+		border-radius: vc(20);
+		padding: vc(8) 0 0;
+		width: vc(92);
+		height: vc(92);
+		background-color: $color-white;
+		transition: border-color $duration-normal / 2;
+
+		&.is-active {
+			border-color: $color-azure-radiance;
+				cursor: pointer;
+
+				#{$p}__card-icon {
+					color: rgba($color-white, 0.5);
+					background-color: $color-azure-radiance;
+				}
+
+				#{$p}__card-text {
+					font-weight: 700;
+				}
+		}
+
+		@include desktop {
+			padding: vc(12) 0 0;
+			width: vc(125);
+			height: vc(118);
+			cursor: pointer;
+
+			&:hover {
+				border-color: $color-azure-radiance;
+			}
+		}
+	}
+
+	&__card-icon {
+		overflow: hidden;
+		margin: 0 auto vc(8);
+		border-radius: vc(20);
+		width: vc(52);
+		height: vc(52);
+		color: $color-oslo-grey;
+		background-color: $color-catskill-white;
+		transition: color $duration-normal, background-color $duration-normal;
+
+		@include desktop {
+			width: vc(70);
+			height: vc(70);
+		}
+	}
+
+	&__card-text {
+		margin: 0 auto;
+		font-weight: 500;
+		font-size: vc(12);
+		line-height: calc(14 / 12);
+		text-align: center;
+		color: $color-biscay;
+
+		@include desktop {
+			font-size: vc(14);
+			line-height: calc(16 / 14);
+		}
+	}
+
 	&__buttons {
 		display: flex;
 		align-items: center;
@@ -525,11 +617,16 @@
 		gap: vc(20);
 		width: 100%;
 
-		&.qr-buttons {
+		&--qr {
 			@include mobile {
 				flex-direction: column;
 				gap: vc(0);
 			}
+		}
+
+		&--os {
+			flex-direction: column;
+			gap: vc(8);
 		}
 	}
 
@@ -559,6 +656,16 @@
 			margin-top: vc(8);
 		}
 
+		&.os-button {
+			width: vc(183);
+		}
+
+		&.os-color {
+			font-weight: 700;
+			color: $color-white;
+			background-color: $color-azure-radiance;
+		}
+
 		@include mobile {
 			width: vc(211);
 			height: vc(40);
@@ -579,13 +686,21 @@
 
 		@include desktop {
 			width: vc(211);
+
+			&.os-button {
+				width: vc(150);
+			}
 		}
 	}
 
 	.qr-code {
-		max-width: vc(250);
-		width: 100%;
-		margin-bottom: vc(32);
+		margin: 0 0 vc(24);
+		width: vc(250);
+		height: vc(250);
+
+		@include desktop {
+			margin: 0 0 vc(32);
+		}
 	}
 
 	&__button-img {
@@ -604,7 +719,7 @@
 	@include desktop {
 
 	}
-	
+
 	&__close {
 		position: absolute;
 		top: vc(22);
