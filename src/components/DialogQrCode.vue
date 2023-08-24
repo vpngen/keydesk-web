@@ -33,12 +33,12 @@ include ../assets/pug/base
 			+e.SPAN.tunnel
 				| Название туннеля: <b>{{ tunnelName }}</b>
 		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Отдай ссылку на клиент и файл другу. Нужно установить AmneziaVPN и добавить туда файл
+			| Отдай ссылку на клиент и файл другу. Нужно установить WireGuard и добавить туда файл
 		+e.subtitle
 			| Ссылка на клиент:&nbsp;
 			+e.SPAN
 				+e.A(:href="osLink", target="_blank")
-					| [ссылка]
+					| {{ osLink }}
 		+e.buttons--qr
 			+e.BUTTON(class="button button--option2 popup__action no-border", @click="copy")
 				+e.SPAN
