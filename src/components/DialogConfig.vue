@@ -17,12 +17,12 @@ include ../assets/pug/base
 			| Ссылка на клиент AmneziaVPN:&nbsp;
 			+e.SPAN
 				+e.A(:href="amneziaLink", target="_blank")
-					| &nbsp;[ссылка]
+					| &nbsp;{{ amneziaLink }}
 		+e.subtitle
 			| Ссылка на клиент Wireguard:&nbsp;
 			+e.SPAN
 				+e.A(:href="wireguardLink", target="_blank")
-					| &nbsp;[ссылка]
+					| &nbsp;{{ wireguardLink }}
 		+e.buttons.qr-buttons
 			+e.A(class="button button--option2 popup__action", :href="AmneziaButtonHref", :download="buttonDownloadAmnezia")
 				+e.button-img
@@ -40,7 +40,7 @@ include ../assets/pug/base
 import { ref, watch } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 const amneziaLink = 'https://bit.ly/AmnOther';
-const wireguardLink = 'https://bit.ly/WGWin';
+const wireguardLink = 'https://bit.ly/WGOther';
 
 const props = defineProps({
 	userData: {
