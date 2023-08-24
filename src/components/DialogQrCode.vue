@@ -51,7 +51,7 @@ include ../assets/pug/base
 </template>
 
 <script setup>
-import {computed, ref, watch} from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import QRCodeVue3 from 'qrcode-vue3';
 import SvgIcon from './SvgIcon.vue';
 // import { dialogQrDic as dic } from '../const/dialog.ts';
@@ -94,7 +94,8 @@ const osLink = computed(() => {
 	return osCard ? osCard.link : '';
 });
 
-watch(() => props.userData, async (userConfig) => {
+watchEffect(() => {
+	const userConfig = props.userData;
 	if (userConfig) {
 		qrCode.value = userConfig[props.configName].FileContent;
 		userName.value = userConfig.UserName;

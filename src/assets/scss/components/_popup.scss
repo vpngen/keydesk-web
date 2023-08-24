@@ -307,6 +307,10 @@
 		align-items: center;
 		justify-content: center;
 		gap: vc(8);
+
+		@include mobile {
+			gap: vc(2);
+		}
 	}
 
 	&__title {
@@ -616,6 +620,13 @@
 		justify-content: center;
 		gap: vc(20);
 		width: 100%;
+
+		@include mobile {
+
+			& a > span {
+				line-height: normal;
+			}
+		}
 
 		&--qr {
 			@include mobile {
