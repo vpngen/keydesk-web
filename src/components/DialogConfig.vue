@@ -37,7 +37,7 @@ include ../assets/pug/base
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watchEffect } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 const amneziaLink = 'https://bit.ly/AmnOther';
 const wireguardLink = 'https://bit.ly/WGOther';
@@ -58,7 +58,8 @@ const buttonDownloadWireguard = ref('');
 const buttonDownloadAmnezia = ref('');
 const userName = ref('');
 
-watch(() => props.userData, async (userConfig) => {
+watchEffect(() => {
+	const userConfig = props.userData;
 	if (userConfig) {
 		WireguardButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.WireguardConfig.FileContent], {type: 'application/conf'}));
 		AmneziaButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.AmnzOvcConfig.FileContent], {type: 'application/conf'}));

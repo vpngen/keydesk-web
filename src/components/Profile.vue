@@ -377,6 +377,14 @@ const addUser = async (type) => {
 			}
 		}).finally(() => {
 			loadingService.hide();
+			if (type === 'other') {
+				showDialogOs.value = !showDialogOs.value;
+				showDialogConfig.value = !showDialogConfig.value;
+			} else {
+				titleDialogQrCode.value = type;
+				showDialogOs.value = !showDialogOs.value;
+				showDialogQrCode.value = !showDialogQrCode.value;
+			}
 		});
 };
 
@@ -478,16 +486,9 @@ const closeDialogQrCode = () => {
 const configName = ref('');
 
 const openDialogQrCode = (type) => {
+	loadingService.show();
 	chosenOS.value = type;
 	addUser(type.value)
-	if (type.value === 'other') {
-		showDialogOs.value = !showDialogOs.value;
-		showDialogConfig.value = !showDialogConfig.value;
-	} else {
-		titleDialogQrCode.value = type.value;
-		showDialogOs.value = !showDialogOs.value;
-		showDialogQrCode.value = !showDialogQrCode.value;
-	}
 };
 
 const closeDialogConfig = () => {
