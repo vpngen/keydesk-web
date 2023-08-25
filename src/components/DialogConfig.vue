@@ -13,7 +13,7 @@ include ../assets/pug/base
 			| Конфигурация готова!
 		+e.subtitle.popup__subtitle--minimize-margin
 			| Скачай и передай другу подходящий клиент вместе с подходящей конфигурацией.
-		+e.subtitle.popup__subtitle--minimize-margin
+		+e.subtitle.popup__subtitle--minimize-margin( v-if="hasAmneziaConfig" )
 			| Ссылка на клиент AmneziaVPN:&nbsp;
 			+e.SPAN
 				+e.A(:href="amneziaLink", target="_blank")
@@ -24,7 +24,7 @@ include ../assets/pug/base
 				+e.A(:href="wireguardLink", target="_blank")
 					| &nbsp;{{ wireguardLink }}
 		+e.buttons.qr-buttons
-			+e.A(class="button button--option2 popup__action", :href="AmneziaButtonHref", :download="buttonDownloadAmnezia")
+			+e.A(class="button button--option2 popup__action", v-if="hasAmneziaConfig" :href="AmneziaButtonHref", :download="buttonDownloadAmnezia")
 				+e.button-img
 					SvgIcon(name="download")
 				+e.SPAN
@@ -39,8 +39,9 @@ include ../assets/pug/base
 <script setup>
 import { ref, watchEffect } from 'vue';
 import SvgIcon from './SvgIcon.vue';
-const amneziaLink = 'https://bit.ly/AmnOther';
-const wireguardLink = 'https://bit.ly/WGOther';
+const configList = require('../../vpn_sistems_config.json');
+const amneziaLink = configList.links_defaults.other.AmnzOvcConfig;
+const wireguardLink = configList.links_defaults.other.WireguardConfig;
 
 const props = defineProps({
 	userData: {
@@ -56,16 +57,21 @@ const WireguardButtonHref = ref('');
 const AmneziaButtonHref = ref('');
 const buttonDownloadWireguard = ref('');
 const buttonDownloadAmnezia = ref('');
+const hasAmneziaConfig = ref(false);
 const userName = ref('');
 
 watchEffect(() => {
 	const userConfig = props.userData;
 	if (userConfig) {
+		if ('AmnzOvcConfig' in userConfig) {
+			hasAmneziaConfig.value = true;
+			AmneziaButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.AmnzOvcConfig.FileContent], {type: 'application/conf'}));
+			buttonDownloadAmnezia.value = userConfig.AmnzOvcConfig.FileName;
+		};
 		WireguardButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.WireguardConfig.FileContent], {type: 'application/conf'}));
-		AmneziaButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.AmnzOvcConfig.FileContent], {type: 'application/conf'}));
 		userName.value = userConfig.UserName;
 		buttonDownloadWireguard.value = userConfig.WireguardConfig.FileName;
-		buttonDownloadAmnezia.value = userConfig.AmnzOvcConfig.FileName;
+		
 	}
 })
 

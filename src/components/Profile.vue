@@ -456,9 +456,11 @@ const filteredUsers = computed(() => {
               break;
       }
 
-      return [firstElement, ...userListCopy].filter(user =>
+	  userListCopy = userListCopy.filter(user =>
           user.UserName.toLowerCase().includes(filter.toLowerCase())
       );
+
+      return [firstElement, ...userListCopy]
 	}
     return usersList.value;
 })
