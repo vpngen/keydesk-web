@@ -33,7 +33,7 @@ include ../assets/pug/base
 			+e.SPAN.tunnel
 				| Название туннеля: <b>{{ tunnelName }}</b>
 		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Отдай ссылку на клиент и файл другу. Нужно установить WireGuard и добавить туда файл
+			| Отдай ссылку на клиент и файл другу. Нужно установить {{ vpnName }} и добавить туда файл
 		+e.subtitle
 			| Ссылка на клиент:&nbsp;
 			+e.SPAN
@@ -77,6 +77,7 @@ const userName = ref('');
 const tunnelName = ref('');
 const buttonHref = ref('');
 const buttonDownload = ref('');
+const configList = require('../../vpn_sistems_config.json');
 
 let showQrCode = ref(false);
 
@@ -90,9 +91,13 @@ const osLabel = computed(() => {
 });
 
 const osLink = computed(() => {
-	const osCard = dialogOsCards.find(card => card.value === props.chosenOS.value);
-	return osCard ? osCard.link : '';
+	const chosenConfig = props.configName.value ? props.configName.value : 'WireguardConfig';
+	return configList.links_defaults[props.chosenOS.value][chosenConfig] ;
 });
+
+const vpnName = computed(() => {
+	return configList.vpn_name[props.configName]
+})
 
 watchEffect(() => {
 	const userConfig = props.userData;
