@@ -8,6 +8,7 @@ include ../assets/pug/base
 		+e.name
 			| {{ userName }}
 		QRCodeVue3(
+			v-if="showQrCode"
 			:width="500",
 			:height="500",
 			:qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
@@ -23,16 +24,23 @@ include ../assets/pug/base
 			:cornersSquareOptions="{ type: 'extra-rounded', color: '#1D4365' }",
 			:cornersDotOptions="{ type: undefined, color: '#1D4365' }",
 		)
+		+e.emoji(v-else)
+			SvgIcon(name="icon-emoji-happy")
 		+e.title.qr-title
-			| Конфигурация готова!
-		+e.subtitle
+			| Конфиг для {{ osLabel }} готов!
+		+e.subtitle(v-if="showQrCode")
 			| Скачайте, скопируйте или<br>активируйте ее&nbsp;по&nbsp;QR-коду
-			+e.SPAN.tonnel
-				| Название туннеля: <b>{{ tonnelName }}</b>
-		+e.buttons.qr-buttons
-			+e.BUTTON(class="button button--option2 popup__action no-border", @click="copy", v-if="canCopy")
-				//- +e.button-img
-				//- 	SvgIcon(name="share")
+			+e.SPAN.tunnel
+				| Название туннеля: <b>{{ tunnelName }}</b>
+		+e.subtitle.popup__subtitle--minimize-margin(v-else)
+			| Отдай ссылку на клиент и файл другу. Нужно установить WireGuard и добавить туда файл
+		+e.subtitle
+			| Ссылка на клиент:&nbsp;
+			+e.SPAN
+				+e.A(:href="osLink", target="_blank")
+					| {{ osLink }}
+		+e.buttons--qr
+			+e.BUTTON(class="button button--option2 popup__action no-border", @click="copy")
 				+e.SPAN
 					| Копировать данные
 			+e.A(class="button button--option2 popup__action", :href="buttonHref", :download="buttonDownload")
@@ -43,34 +51,59 @@ include ../assets/pug/base
 </template>
 
 <script setup>
-import { watchEffect, ref } from "vue";
-import QRCodeVue3 from "qrcode-vue3";
+import { computed, ref, watchEffect } from 'vue';
+import QRCodeVue3 from 'qrcode-vue3';
 import SvgIcon from './SvgIcon.vue';
+// import { dialogQrDic as dic } from '../const/dialog.ts';
+import { dialogOsCards } from '../const/dialog.ts';
 
 const props = defineProps({
 	userData: {
 		type: Object
 	},
+	title: {
+		type: String
+	},
+	configName: {
+		type: String
+	},
+	chosenOS: {
+		type: String
+	}
 });
 
 const qrCode = ref(new Blob([]))
 const userName = ref('');
-const tonnelName = ref('');
+const tunnelName = ref('');
 const buttonHref = ref('');
 const buttonDownload = ref('');
 
-// const qrCodeBtnShare = !!navigator.canShare
-const canCopy = !!navigator.clipboard
+let showQrCode = ref(false);
+
+// onMounted(()=> {
+// 	showQrCode.value = dic.includes(props.title);
+// })
+
+const osLabel = computed(() => {
+	const osCard = dialogOsCards.find(card => card.value === props.chosenOS.value);
+	return osCard ? osCard.label : '';
+});
+
+const osLink = computed(() => {
+	const osCard = dialogOsCards.find(card => card.value === props.chosenOS.value);
+	return osCard ? osCard.link : '';
+});
 
 watchEffect(() => {
-	if(props.userData) {
-		qrCode.value = props.userData.WireguardConfig.FileContent;
-		userName.value = props.userData.UserName;
-		tonnelName.value = props.userData.WireguardConfig.TonnelName;
+	const userConfig = props.userData;
+	if (userConfig) {
+		qrCode.value = userConfig[props.configName].FileContent;
+		userName.value = userConfig.UserName;
+		tunnelName.value = userConfig[props.configName].TonnelName;
 		buttonHref.value = window.URL.createObjectURL(new Blob([qrCode.value], {type: 'application/conf'}));
-		buttonDownload.value = props.userData.WireguardConfig.FileName;
+		buttonDownload.value = userConfig[props.configName].FileName;
 	}
-})
+});
 
 const image = require('@/assets/images/sprites/png/logo-vpn.png')
 
@@ -93,7 +126,14 @@ const copy = async () => {
 	await navigator.clipboard.writeText(qrCode.value);
 }
 
-const emit = defineEmits(['close']);
+const emit = defineEmits([
+	'close',
+	'next'
+]);
+
+const next = () => {
+	emit('next');
+};
 
 const close = () => {
 	emit('close');
