@@ -112,4 +112,4 @@ docker run --rm  \
         -e BRANCH="${BRANCH}" \
         -e VERMETADATA="${VERMETADATA}" \
         -v ${PWD}:"${SHARED_BASE}" \
-        node:18-buster "${SHARED_BASE}/build" pkg
+        node:14.19.3-buster "${SHARED_BASE}/build" pkg
