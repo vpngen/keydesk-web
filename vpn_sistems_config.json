@@ -2,10 +2,40 @@
   "vpn_list": ["WireguardConfig","AmnzOvcConfig"],
   "system_defaults": {
     "windows": "WireguardConfig",
-    "linux":"AmnzOvcConfig",
-    "macos":"AmnzOvcConfig",
-    "ios":"AmnzOvcConfig",
-    "android":"AmnzOvcConfig",
+    "linux":"WireguardConfig",
+    "macos":"WireguardConfig",
+    "ios":"WireguardConfig",
+    "android":"WireguardConfig",
     "other": "AmnzOvcConfig"
+  },
+  "links_defaults" : {
+    "windows": {
+      "WireguardConfig": "https://bit.ly/WGWin",
+      "AmnzOvcConfig": ""
+    },
+    "linux": {
+      "WireguardConfig": "https://bit.ly/WGOther",
+      "AmnzOvcConfig": ""
+    },
+    "macos": {
+      "WireguardConfig": "https://bit.ly/WGAStore",
+      "AmnzOvcConfig": ""
+    },
+    "ios": {
+      "WireguardConfig": "https://bit.ly/WGAStore",
+      "AmnzOvcConfig": ""
+    },
+    "android": {
+      "WireguardConfig": "https://bit.ly/WGGPlay",
+      "AmnzOvcConfig": ""
+    },
+    "other": {
+      "WireguardConfig": "https://bit.ly/WGOther",
+      "AmnzOvcConfig": "https://bit.ly/AmnOther"
+    }
+  },
+  "vpn_name": {
+    "WireguardConfig": "WireGuard",
+    "AmnzOvcConfig": "AmneziaVPN"
   }
 }
