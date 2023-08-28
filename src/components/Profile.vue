@@ -149,7 +149,7 @@ include ../assets/pug/data
 				ShowMoreList
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser")
-DialogOs(v-if="showDialogOs" @close="toggleDialogOs" @next="openDialogQrCode" @skip="openDialogConfig")
+DialogOs(v-if="showDialogOs" @close="toggleDialogOs" @next="openDialogQrCode" @skip="skipDialogConfig")
 DialogQrCode(
 	v-if="showDialogQrCode"
 	:configName="configName"
@@ -497,9 +497,10 @@ const closeDialogConfig = () => {
 	showDialogConfig.value = !showDialogConfig.value;
 };
 
-const openDialogConfig = () => {
-	showDialogOs.value = !showDialogOs.value;
-	showDialogConfig.value = !showDialogConfig.value;
+const skipDialogConfig = () => {
+	loadingService.show();
+	chosenOS.value = 'other';
+	addUser('other')
 };
 
 const highlightElement = (path) => {
