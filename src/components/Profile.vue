@@ -27,7 +27,7 @@ include ../assets/pug/data
 					+button(data.profile.headline.button, 'button')(
 						id='welcome-add-end'
 						ref='buttonAddUser'
-						@click="toggleDialogOs"
+						@click="toggleDialogOsHandler"
 						:disabled="highlightedElementProperties.buttonAddUser.disabled"
 						:class="highlightedElementProperties.buttonAddUser.highlight")
 	+e.message(v-if="messageShow")
@@ -70,7 +70,7 @@ include ../assets/pug/data
 				@click="openDialogUser(user.UserID)"
 				:disabled="highlightedElementProperties.secondUserProfileCard.disabled")
 				| Удалить
-		+e.add(@click="toggleDialogOs")
+		+e.add(@click="toggleDialogOsHandler")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
@@ -149,16 +149,24 @@ include ../assets/pug/data
 				ShowMoreList
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser")
-DialogOs(v-if="showDialogOs" @close="toggleDialogOs" @next="openDialogQrCode" @skip="skipDialogConfig")
+DialogOs(v-if="showDialogOs" @close="toggleDialogOsHandler" @next="openDialogQrCodeHandler" @skip="skipDialogConfig")
+DialogOther(
+	v-if="showDialogOther"
+	:chosenClient="chosenClient"
+	@close="toggleDialogOtherHandler"
+	@next="switchDialogConfigHandler"
+	@back="skipDialogConfig"
+	)
 DialogQrCode(
 	v-if="showDialogQrCode"
 	:configName="configName"
 	:userData="userData"
 	:title="titleDialogQrCode"
 	:chosenOS="chosenOS"
-	@close="closeDialogQrCode"
+	@close="closeDialogQrCodeHandler"
+	@others="returnToOthersHandler"
 	)
-DialogConfig(v-if="showDialogConfig" :configName="configName" :userData="userData" @close="closeDialogConfig")
+DialogConfig(v-if="showDialogConfig" :clientName="chosenClient" :userData="userData" @close="togleDialogConfigHandler" @back="switchDialogConfigHandler")
 WelcomePage(
 	v-if="usersList.length && !isInstructionHidden"
 	@getUsers="getUsers()"
@@ -192,6 +200,7 @@ import FiltersPanel from "@/components/FiltersPanel.vue";
 import useClickOutside from '@/assets/hooks/useClickOutside.js';
 import Swiper from 'swiper';
 import 'swiper/css';
+import DialogOther from "@/components/DialogOther.vue";
 
 let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
 
@@ -213,9 +222,11 @@ const loadingService = inject('loadingService');
 const chartOptionsRef = ref(null);
 const chartScroll = ref();
 const showDialogOs = ref(false);
+const showDialogOther = ref(false);
 const showDialogQrCode = ref(false);
 const showDialogConfig = ref(false);
 const chosenOS = ref(null);
+const chosenClient = ref(null);
 
 onMounted(()=>{
 	if (window.screen.width <= 767) {
@@ -355,36 +366,26 @@ const getToken = async () => {
 
 getToken();
 
-const addUser = async (type) => {
-		await axios.post(`${apiLink}/user`, {}, {
+const addUser = async () => {
+	loadingService.show();
+	await axios.post(`${apiLink}/user`, {}, {
 			responseType: 'application/json',
 			headers: {
 				'accept': 'application/json'
 			}
 		}).then((r) => {
-			const configList = require('../../vpn_sistems_config.json');
-			const configType = configList.system_defaults[type];
-			configName.value = configType;
 			userData.value = JSON.parse(r.data);
 			getUsers();
 		}).catch(async (error) => {
 			if (error.response.status === 401) {
 				await getToken();
-				addUser(type);
+				addUser();
 			} else {
 				isError.value = true;
 				console.error(error);
 			}
 		}).finally(() => {
 			loadingService.hide();
-			if (type === 'other') {
-				showDialogOs.value = !showDialogOs.value;
-				showDialogConfig.value = !showDialogConfig.value;
-			} else {
-				titleDialogQrCode.value = type;
-				showDialogOs.value = !showDialogOs.value;
-				showDialogQrCode.value = !showDialogQrCode.value;
-			}
 		});
 };
 
@@ -472,35 +473,62 @@ const closeDialogUser = () => {
 	showDialogUser.value = false;
 };
 
+const returnToOthersHandler = () => {
+	showDialogQrCode.value = !showDialogQrCode.value;
+	showDialogOther.value = !showDialogOther.value;
+}
+
+const toggleDialogOtherHandler = () => {
+	showDialogOther.value = !showDialogOther.value;
+};
+
 const openDialogUser = (id) => {
 	deletedUserId.value = id;
 	showDialogUser.value = true
 };
 
-const toggleDialogOs = () => {
+const toggleDialogOsHandler = () => {
+	addUser()
+	showDialogOther.value = false;
 	showDialogOs.value = !showDialogOs.value;
 };
 
-const closeDialogQrCode = () => {
+const closeDialogQrCodeHandler = () => {
 	showDialogQrCode.value = !showDialogQrCode.value;
 };
 
 const configName = ref('');
 
-const openDialogQrCode = (type) => {
-	loadingService.show();
-	chosenOS.value = type;
-	addUser(type.value)
+const openDialogQrCodeHandler = (type) => {
+	chosenOS.value = type.value;
+	const configList = require('../../vpn_sistems_config.json');
+	const configType = configList.system_defaults[type.value];
+	configName.value = configType;
+	if (type.value === 'other') {
+		showDialogOs.value = !showDialogOs.value;
+		showDialogOther.value = !showDialogOther.value;
+	} else {
+		titleDialogQrCode.value = type.value;
+		showDialogOs.value = !showDialogOs.value;
+		showDialogQrCode.value = !showDialogQrCode.value;
+	}
 };
 
-const closeDialogConfig = () => {
+const togleDialogConfigHandler = () => {
 	showDialogConfig.value = !showDialogConfig.value;
 };
 
+const switchDialogConfigHandler = (configType) => {
+	toggleDialogOtherHandler()
+	togleDialogConfigHandler();
+	if (configType) {
+		chosenClient.value = configType.value;
+	}
+}
+
 const skipDialogConfig = () => {
-	loadingService.show();
-	chosenOS.value = 'other';
-	addUser('other')
+	showDialogOs.value = !showDialogOs.value;
+	toggleDialogOtherHandler()
 };
 
 const highlightElement = (path) => {
