@@ -1,41 +1,50 @@
 {
   "vpn_list": ["WireguardConfig","AmnzOvcConfig"],
   "system_defaults": {
-    "windows": "WireguardConfig",
-    "linux":"WireguardConfig",
-    "macos":"WireguardConfig",
-    "ios":"WireguardConfig",
-    "android":"WireguardConfig",
-    "other": "AmnzOvcConfig"
+    "windows": "AmnzOvcConfig",
+    "linux":"OutlineConfig",
+    "macos":"AmnzOvcConfig",
+    "ios":"OutlineConfig",
+    "android":"OutlineConfig",
+    "cloak": "AmnzOvcConfig",
+    "shadowsocks": "OutlineConfig",
+    "wireguard": "WireguardConfig"
   },
   "links_defaults" : {
     "windows": {
       "WireguardConfig": "https://bit.ly/WGWin",
-      "AmnzOvcConfig": ""
+      "AmnzOvcConfig": "https://bit.ly/AmneziaWin3-1-0-1",
+      "OutlineConfig": "https://bit.ly/Outline-Win"
     },
     "linux": {
       "WireguardConfig": "https://bit.ly/WGOther",
-      "AmnzOvcConfig": ""
+      "AmnzOvcConfig": "https://bit.ly/AmneziaNix3-1-0-1",
+      "OutlineConfig": "https://bit.ly/Outline-Linux"
     },
     "macos": {
       "WireguardConfig": "https://bit.ly/WGAStore",
-      "AmnzOvcConfig": ""
+      "AmnzOvcConfig": "https://bit.ly/AmnAStore",
+      "OutlineConfig": "https://bit.ly/Outline-MacOS"
     },
     "ios": {
       "WireguardConfig": "https://bit.ly/WGAStore",
-      "AmnzOvcConfig": ""
+      "AmnzOvcConfig": "https://bit.ly/AmnAStore",
+      "OutlineConfig": "https://bit.ly/Outline-iOS"
     },
     "android": {
       "WireguardConfig": "https://bit.ly/WGGPlay",
-      "AmnzOvcConfig": ""
+      "AmnzOvcConfig": "https://bit.ly/AmnGPlay",
+      "OutlineConfig": "https://bit.ly/Outline-Android"
     },
     "other": {
       "WireguardConfig": "https://bit.ly/WGOther",
-      "AmnzOvcConfig": "https://bit.ly/AmnOther"
+      "AmnzOvcConfig": "https://bit.ly/AmnOther",
+      "OutlineConfig": "https://bit.ly/Outline-Dowload"
     }
   },
   "vpn_name": {
     "WireguardConfig": "WireGuard",
-    "AmnzOvcConfig": "AmneziaVPN"
+    "AmnzOvcConfig": "AmneziaVPN",
+    "OutlineConfig": "Outline"
   }
 }
