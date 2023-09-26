@@ -10,75 +10,112 @@ include ../assets/pug/base
 		+e.emoji
 			SvgIcon(name="icon-emoji-happy")
 		+e.title.qr-title
-			| Конфигурация готова!
+			| {{ clientLabel }}-конфиг готов!
 		+e.subtitle.popup__subtitle--minimize-margin
-			| Скачай и передай другу подходящий клиент вместе с подходящей конфигурацией.
-		+e.subtitle.popup__subtitle--minimize-margin( v-if="hasAmneziaConfig" )
-			| Ссылка на клиент AmneziaVPN:&nbsp;
-			+e.SPAN
-				+e.A(:href="amneziaLink", target="_blank")
-					| &nbsp;{{ amneziaLink }}
+			| Отдай ссылку на клиент и {{ downloadLabel }} другу. Нужно установить {{ displayedClientName }} и добавить туда {{ downloadLabel }}
 		+e.subtitle
-			| Ссылка на клиент Wireguard:&nbsp;
+			| Ссылка на клиент:&nbsp
 			+e.SPAN
-				+e.A(:href="wireguardLink", target="_blank")
-					| &nbsp;{{ wireguardLink }}
-		+e.buttons.qr-buttons
-			+e.A(class="button button--option2 popup__action", v-if="hasAmneziaConfig" :href="AmneziaButtonHref", :download="buttonDownloadAmnezia")
+				+e.A(:href="clientLink", target="_blank")
+					| &nbsp;{{ clientLink }}
+		+e.buttons.qr-buttons(v-if="clientName !== 'shadowsocks'")
+			+e.A(class="button button--option2 popup__action"  @click="back")
+				+e.SPAN
+					| Другие варианты
+			+e.A(class="button button--option2 popup__action", :href="buttonHref", :download="buttonDownload")
 				+e.button-img
 					SvgIcon(name="download")
 				+e.SPAN
-					| Cloak-файл
-			+e.A(class="button button--option2 popup__action", :href="WireguardButtonHref", :download="buttonDownloadWireguard")
-				+e.button-img
-					SvgIcon(name="download")
-				+e.SPAN
-					| Wireguard файл
+					| Скачать файл
+		+e.outline-block(v-else)
+			+e.outline-header
+				| Ссылка конфига:
+			+e.outline-link
+				+e(ref="outlineLinkRef")
+					| {{ outlineLink }}
+			+e.buttons--qr
+				+e.BUTTON(class="button button--option2 popup__action no-border" @click="back")
+					+e.SPAN
+						| Другие варианты
+				+e.A(class="button button--option2 popup__action button__outline" @click="copyLink(outlineLinkRef)")
+					+e.button-img
+						SvgIcon(name="link")
+					+e.SPAN
+						| Скопировать
 </template>
 
 <script setup>
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 const configList = require('../../vpn_sistems_config.json');
-const amneziaLink = configList.links_defaults.other.AmnzOvcConfig;
-const wireguardLink = configList.links_defaults.other.WireguardConfig;
+const clientLink = ref();
+import { dialogOtherCards as cards } from '../const/dialog.ts';
 
 const props = defineProps({
 	userData: {
 		type: Object
 	},
-	configName: {
+	clientName: {
 		type: String
 	}
 });
 
 const qrCode = ref(new Blob([]));
-const WireguardButtonHref = ref('');
-const AmneziaButtonHref = ref('');
-const buttonDownloadWireguard = ref('');
-const buttonDownloadAmnezia = ref('');
-const hasAmneziaConfig = ref(false);
+const buttonHref = ref('');
+const buttonDownload = ref('');
 const userName = ref('');
+const clientKey =ref(null);
+const outlineLinkRef = ref('');
+
+const clientLabel = computed(() => {
+	const card = cards.find(card => card.value === props.clientName);
+	return card ? card.label : '';
+});
+
+const downloadLabel = computed(() => {
+	return props.clientName === 'shadowsocks' ? 'ссылку' : 'файл';
+});
+
+const displayedClientName = computed(() => {
+	const card = cards.find(card => card.value === props.clientName);
+	return card ? card.client : '';
+});
+
+const outlineLink = computed(() => {
+	return props.clientName === 'shadowsocks' ? props.userData[clientKey.value].AccessKey : ''
+});
+
+const copyLink = async (target) => {
+	await navigator.clipboard.writeText(target.innerText);
+}
 
 watchEffect(() => {
 	const userConfig = props.userData;
 	if (userConfig) {
-		if ('AmnzOvcConfig' in userConfig) {
-			hasAmneziaConfig.value = true;
-			AmneziaButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.AmnzOvcConfig.FileContent], {type: 'application/conf'}));
-			buttonDownloadAmnezia.value = userConfig.AmnzOvcConfig.FileName;
-		};
-		WireguardButtonHref.value = window.URL.createObjectURL(new Blob([userConfig.WireguardConfig.FileContent], {type: 'application/conf'}));
-		userName.value = userConfig.UserName;
-		buttonDownloadWireguard.value = userConfig.WireguardConfig.FileName;
-		
+			userName.value = userConfig.UserName;
+
+		clientKey.value = configList.system_defaults[props.clientName];
+
+		if (clientKey.value) {
+			clientLink.value = configList.links_defaults.other[clientKey.value];
+		}
+
+		buttonHref.value = window.URL.createObjectURL(new Blob([userConfig[clientKey.value].FileContent], {type: 'application/conf'}));
+		buttonDownload.value = userConfig[clientKey.value].FileName;
 	}
 })
 
-const emit = defineEmits(['close']);
+const emit = defineEmits([
+		'close',
+		'back'
+]);
 
 const close = () => {
 	emit('close');
 };
+
+const back = () => {
+	emit('back');
+}
 
 </script>

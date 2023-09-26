@@ -27,6 +27,24 @@ export const dialogOsCards = [
 	{
 		label: 'Другое',
 		value: 'other',
-		link: ''
+	},
+];
+
+
+export const dialogOtherCards = [
+	{
+		label: 'Cloak',
+		value: 'cloak',
+		client: 'AmneziaVPN'
+	},
+	{
+		label: 'Outline',
+		value: 'shadowsocks',
+		client: 'Outline'
+	},
+	{
+		label: 'WireGuard',
+		value: 'wireguard',
+		client: 'Wireguard'
 	},
 ];

@@ -33,21 +33,37 @@ include ../assets/pug/base
 			+e.SPAN.tunnel
 				| Название туннеля: <b>{{ tunnelName }}</b>
 		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Отдай ссылку на клиент и файл другу. Нужно установить {{ vpnName }} и добавить туда файл
+			| Отдай ссылку на клиент и {{ resourceType }} другу. Нужно установить {{ vpnName }} и добавить туда {{ resourceType }}
 		+e.subtitle
 			| Ссылка на клиент:&nbsp;
 			+e.SPAN
 				+e.A(:href="osLink", target="_blank")
 					| {{ osLink }}
-		+e.buttons--qr
-			+e.BUTTON(class="button button--option2 popup__action no-border", @click="copy")
+		+e.buttons--qr(v-if="props.configName !== 'OutlineConfig'" )
+			+e.BUTTON(class="button button--option2 popup__action no-border", @click="others")
 				+e.SPAN
-					| Копировать данные
+					| Другие варианты
 			+e.A(class="button button--option2 popup__action", :href="buttonHref", :download="buttonDownload")
 				+e.button-img
 					SvgIcon(name="download")
 				+e.SPAN
 					| Скачать данные
+		+e.outline-block(v-else)
+			+e.outline-header
+				| Ссылка конфига:
+			+e.outline-link
+				+e(ref="outlineLinkRef")
+					| {{ outlineLink }}
+			+e.buttons--qr
+				+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
+					+e.SPAN
+						| Другие варианты
+				+e.A(class="button button--option2 popup__action button__outline" @click="copyLink(outlineLinkRef)")
+					+e.button-img
+						SvgIcon(name="link")
+					+e.SPAN
+						| Скопировать
+
 </template>
 
 <script setup>
@@ -73,6 +89,7 @@ const props = defineProps({
 });
 
 const qrCode = ref(new Blob([]))
+const outlineLinkRef = ref('');
 const userName = ref('');
 const tunnelName = ref('');
 const buttonHref = ref('');
@@ -85,15 +102,23 @@ let showQrCode = ref(false);
 // 	showQrCode.value = dic.includes(props.title);
 // })
 
+const resourceType = computed(() => {
+	return props.configName === 'OutlineConfig' ? 'ссылку' : 'файл';
+});
+
 const osLabel = computed(() => {
 	const osCard = dialogOsCards.find(card => card.value === props.chosenOS.value);
 	return osCard ? osCard.label : '';
 });
 
 const osLink = computed(() => {
-	const chosenConfig = props.configName.value ? props.configName.value : 'WireguardConfig';
-	return configList.links_defaults[props.chosenOS.value][chosenConfig] ;
+	const chosenConfig = props.configName ? props.configName : 'WireguardConfig';
+	return configList.links_defaults[props.chosenOS][chosenConfig] ;
 });
+
+const outlineLink = computed(() => {
+		return props.configName === 'OutlineConfig' ? props.userData[props.configName].AccessKey : ''
+})
 
 const vpnName = computed(() => {
 	return configList.vpn_name[props.configName]
@@ -131,17 +156,21 @@ const copy = async () => {
 	await navigator.clipboard.writeText(qrCode.value);
 }
 
+const copyLink = async (target) => {
+	await navigator.clipboard.writeText(target.innerText);
+}
+
 const emit = defineEmits([
 	'close',
-	'next'
+	'others'
 ]);
-
-const next = () => {
-	emit('next');
-};
 
 const close = () => {
 	emit('close');
+};
+
+const others = () => {
+	emit('others');
 };
 
 </script>

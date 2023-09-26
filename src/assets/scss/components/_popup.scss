@@ -67,7 +67,7 @@
 		align-items: center;
 		justify-content: center;
 		border-radius: vc(20);
-		padding: vc(32) vc(28);
+		padding: vc(32) vc(25);
 		width: calc(100% - #{vc(60)});
 		background-color: $color-catskill-white;
 		backdrop-filter: blur(vc(34));
@@ -144,8 +144,8 @@
 		}
 
 		@include tablet {
-			padding: vc(32) vc(113);
-			width: vc(670);
+			padding: vc(32);
+			width: vc(440);
 
 			&.welcome-qr {
 				top: vc(84);
@@ -178,8 +178,8 @@
 		}
 
 		@include desktop {
-			padding: vc(32) vc(113);
-			width: vc(670);
+			padding: vc(32);
+			width: vc(440);
 		}
 
 		@include mobile {
@@ -558,6 +558,26 @@
 		background-color: $color-white;
 		transition: border-color $duration-normal / 2;
 
+		& .icon-cloak, & .icon-shadowsocks, & .icon-wireguard {
+			width: 100%;
+			height: 100%;
+		}
+
+		& .icon-cloak {
+			background: url($url-image + 'png/icon-cloack.png') no-repeat center center;
+			background-size: contain;
+		}
+
+		& .icon-shadowsocks {
+			background: url($url-image + 'png/icon-shadowsocks.png') no-repeat center center;
+			background-size: contain;
+		}
+
+		& .icon-wireguard {
+			background: url($url-image + 'png/icon-wireguard.png') no-repeat center center;
+			background-size: contain;
+		}
+
 		&.is-active {
 			border-color: $color-azure-radiance;
 				cursor: pointer;
@@ -565,6 +585,21 @@
 				#{$p}__card-icon {
 					color: rgba($color-white, 0.5);
 					background-color: $color-azure-radiance;
+
+					& .icon-cloak {
+						background: url($url-image + 'png/icon-cloack-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					& .icon-shadowsocks {
+						background: url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					& .icon-wireguard {
+						background: url($url-image + 'png/icon-wireguard-active.png') no-repeat center center;
+						background-size: contain;
+					}
 				}
 
 				#{$p}__card-text {
@@ -752,6 +787,25 @@
 		color: #0179E5;
 		text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
 	}
+
+	&__outline-block {
+		max-width: 100%;
+		margin-top: vc(-20);
+	}
+
+	&__outline-link {
+		word-wrap: break-word;
+		border-radius: vc(4);
+		padding: vc(8);
+		background: #FFF;
+		margin: vc(4) 0 vc(24);
+		color: #0179E5;
+		font-size: vc(12);
+		font-style: normal;
+		font-weight: 400;
+		line-height: vc(18);
+		text-decoration-line: underline;
+	}
 }
 
 svg.leader-line:nth-of-type(2) {
@@ -780,3 +834,9 @@ svg.leader-line:nth-of-type(4) {
 	@include mobile {
 		display: block;
 	};}
+
+.card-icon--container {
+	padding: vc(5);
+}
+
+
