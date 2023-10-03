@@ -37,11 +37,14 @@ include ../assets/pug/base
 				+e.BUTTON(class="button button--option2 popup__action no-border" @click="back")
 					+e.SPAN
 						| Другие варианты
-				+e.A(class="button button--option2 popup__action button__outline" @click="copyLink(outlineLinkRef)")
+				+e.A(class="button button--option2 popup__action button__outline" :class="{'disabled': !isLinkCopied}" @click="copyLink(outlineLinkRef)" :disabled="!isLinkCopied")
 					+e.button-img
 						SvgIcon(name="link")
 					+e.SPAN
-						| Скопировать
+						| {{ linkButtonText }}
+		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
+			| {{ linkCopyResult }}
+
 </template>
 
 <script setup>
@@ -65,7 +68,10 @@ const buttonHref = ref('');
 const buttonDownload = ref('');
 const userName = ref('');
 const clientKey =ref(null);
+const isLinkCopied =ref(true);
 const outlineLinkRef = ref('');
+const linkCopyResult = ref('');
+const linkButtonText = ref('Скопировать');
 
 const clientLabel = computed(() => {
 	const card = cards.find(card => card.value === props.clientName);
@@ -86,7 +92,20 @@ const outlineLink = computed(() => {
 });
 
 const copyLink = async (target) => {
-	await navigator.clipboard.writeText(target.innerText);
+	if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+		try {
+			await navigator.clipboard.writeText(target.innerText);
+			isLinkCopied.value = true;
+			linkButtonText.value = 'Скопировано'
+			linkCopyResult.value = 'Ссылка скопирована в буфер обмена!'
+		} catch (error) {
+			isLinkCopied.value = false;
+			linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+		}
+	} else {
+		isLinkCopied.value = false;
+		linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+	}
 }
 
 watchEffect(() => {

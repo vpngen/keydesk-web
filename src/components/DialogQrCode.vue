@@ -58,12 +58,17 @@ include ../assets/pug/base
 				+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
 					+e.SPAN
 						| Другие варианты
-				+e.A(class="button button--option2 popup__action button__outline" @click="copyLink(outlineLinkRef)")
+				+e.A(
+					class="button button--option2 popup__action button__outline"
+					:class="{'disabled': !isLinkCopied}"
+					@click="copyLink(outlineLinkRef)"
+					:disabled="!isLinkCopied")
 					+e.button-img
 						SvgIcon(name="link")
 					+e.SPAN
-						| Скопировать
-
+						| {{ linkButtonText }}
+		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
+			| {{ linkCopyResult }}
 </template>
 
 <script setup>
@@ -95,6 +100,9 @@ const tunnelName = ref('');
 const buttonHref = ref('');
 const buttonDownload = ref('');
 const configList = require('../../vpn_sistems_config.json');
+const isLinkCopied =ref(true);
+const linkCopyResult = ref('');
+const linkButtonText = ref('Скопировать');
 
 let showQrCode = ref(false);
 
@@ -157,7 +165,20 @@ const copy = async () => {
 }
 
 const copyLink = async (target) => {
-	await navigator.clipboard.writeText(target.innerText);
+	if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+		try {
+			await navigator.clipboard.writeText(target.innerText);
+			isLinkCopied.value = true;
+			linkButtonText.value = 'Скопировано'
+			linkCopyResult.value = 'Ссылка скопирована в буфер обмена!'
+		} catch (error) {
+			isLinkCopied.value = false;
+			linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+		}
+	} else {
+		isLinkCopied.value = false;
+		linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+	}
 }
 
 const emit = defineEmits([
