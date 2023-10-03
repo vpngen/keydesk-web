@@ -806,6 +806,24 @@
 		line-height: vc(18);
 		text-decoration-line: underline;
 	}
+
+	&__copy-success, &__copy-error {
+		text-align: center;
+		font-family: "Raleway", sans-serif;;
+		font-size: vc(12);
+		font-style: normal;
+		font-weight: 400;
+		line-height: vc(17);
+		margin-top: vc(8);
+	}
+
+	&__copy-success {
+		color: #9BAFBD;
+	}
+
+	&__copy-error {
+		color: #ED0B70;
+	}
 }
 
 svg.leader-line:nth-of-type(2) {
