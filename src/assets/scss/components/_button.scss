@@ -81,6 +81,14 @@
 		&.no-border {
 			border: transparent;
 		}
+		&.disabled {
+			border: 1px solid #9BAFBD;
+			color: #9BAFBD;
+
+			&>span>svg {
+				filter: brightness(0) invert(0.5);
+			}
+		}
 	}
 
 	&--ok,
@@ -146,6 +154,14 @@
 					color: $color-white;
 					background-color: $color-azure-radiance;
 
+					&.disabled {
+						color: #9BAFBD;
+						background-color:transparent;
+
+						&>span>svg {
+							filter: brightness(0) invert(0.5);
+						}
+					}
 					&>span>svg {
 						filter: brightness(0) invert(1);
 					}
