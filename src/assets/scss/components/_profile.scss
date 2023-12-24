@@ -435,6 +435,12 @@
 		font-weight: 700;
 		font-size: vc(16);
 		line-height: (19 / 16);
+
+		@include desktop {
+			&:hover {
+				text-decoration: underline
+			}
+		}
 	}
 
 	&__card-features {
