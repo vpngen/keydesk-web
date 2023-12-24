@@ -14,5 +14,5 @@ yarn build
 
 nfpm package --config "debpkg/nfpm.yaml" --target "${SHARED_BASE}/pkg" --packager deb
 
-chown ${USER_UID}:${USER_UID} "${SHARED_BASE}/pkg/"*.deb
+chown "${USER_UID}":"${USER_UID}" "${SHARED_BASE}/pkg/"*.deb
 
