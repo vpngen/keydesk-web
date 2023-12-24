@@ -49,7 +49,7 @@ include ../assets/pug/data
 				+e.card-logo
 					+e.SPAN.card-icon
 						SvgIcon(:name="index===0?'icon-card-brigadier':'icon-card'")
-				+e.P.card-name
+				+e.A.card-name(:href="user.PersonDescLink" target="_blank")
 					| {{ user.UserName }}
 			+e.UL.card-features
 				+e.LI.card-feature(v-if="user.LastVisitHour")
