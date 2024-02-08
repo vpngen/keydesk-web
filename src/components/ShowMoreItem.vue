@@ -15,7 +15,7 @@ const emit = defineEmits(['setExpandedQuestionIndex']);
 
 const props = defineProps({
     title: { type: String, required: true },
-    extraContent: { type: String, required: true },
+    extraContent: { type: Array, required: true },
     isExpanded: { type: Boolean }
 });
 </script>
