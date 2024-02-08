@@ -2,12 +2,12 @@
     <div class="profile__show-more-container">
         <div class="profile__show-more-column profile__show-more-column--mobile">
             <ShowMoreItem
-                    v-for="(card, index) in cardsList"
-                    :key="index"
-                    :title="card.question"
-                    :extraContent="card.answers"
-                    :isExpanded="expandedQuestionIndex===index"
-                    @setExpandedQuestionIndex = setExpandedQuestionIndex(index);
+                v-for="(card, index) in cardsList"
+                :key="index"
+                :title="card.question"
+                :extraContent="card.answers"
+                :isExpanded="expandedQuestionIndex===index"
+                @setExpandedQuestionIndex = setExpandedQuestionIndex(index);
             />
         </div>
     </div>
@@ -110,7 +110,7 @@ watchEffect(() => {
 const props = defineProps({
     title: {
 		type: String,
-		required: true,
+		required: false,
 	},
     isShown: { type: Boolean }
 });

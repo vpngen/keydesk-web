@@ -47,7 +47,7 @@
 
 <script setup>
 import {statusMap, profileCardStatus, sortingList, sortingMap} from '@/assets/constants/profileConstants.js'
-import {defineProps, defineEmits, ref} from 'vue';
+import {ref} from 'vue';
 import useClickOutside from '@/assets/hooks/useClickOutside.js';
 
 const sortOptionRef = ref(null)
