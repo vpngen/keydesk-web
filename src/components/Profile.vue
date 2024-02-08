@@ -27,7 +27,7 @@ include ../assets/pug/data
 					+button(data.profile.headline.button, 'button')(
 						id='welcome-add-end'
 						ref='buttonAddUser'
-						@click="toggleDialogOsHandler"
+						@click="toggleDialogOsHandler();addUser();"
 						:disabled="highlightedElementProperties.buttonAddUser.disabled"
 						:class="highlightedElementProperties.buttonAddUser.highlight")
 	+e.message(v-if="messageShow")
@@ -70,7 +70,7 @@ include ../assets/pug/data
 				@click="openDialogUser(user.UserID)"
 				:disabled="highlightedElementProperties.secondUserProfileCard.disabled")
 				| Удалить
-		+e.add(@click="toggleDialogOsHandler")
+		+e.add(@click="toggleDialogOsHandler();addUser();")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
@@ -166,6 +166,10 @@ DialogQrCode(
 	@close="closeDialogQrCodeHandler"
 	@others="returnToOthersHandler"
 	)
+DialogConstruction(
+	v-if="showDialogConstruction"
+	:till="tillConstruction"
+	)
 DialogConfig(v-if="showDialogConfig" :clientName="chosenClient" :userData="userData" @close="togleDialogConfigHandler" @back="switchDialogConfigHandler")
 WelcomePage(
 	v-if="usersList.length && !isInstructionHidden"
@@ -190,6 +194,7 @@ import SvgIcon from './SvgIcon.vue';
 import DialogUser from './DialogUser.vue';
 import DialogOs from './DialogOs.vue';
 import DialogQrCode from './DialogQrCode.vue';
+import DialogConstruction from './DialogConstruction.vue';
 import DialogConfig from './DialogConfig.vue';
 import WelcomePage from "@/components/WelcomePage.vue";
 import ShowMoreList from "@/components/ShowMoreList.vue";
@@ -224,6 +229,8 @@ const chartScroll = ref();
 const showDialogOs = ref(false);
 const showDialogOther = ref(false);
 const showDialogQrCode = ref(false);
+const showDialogConstruction = ref(false);
+const tillConstruction = ref('');
 const showDialogConfig = ref(false);
 const chosenOS = ref(null);
 const chosenClient = ref(null);
@@ -258,6 +265,17 @@ const chartSelected = (value) => {
 	chartSelectShow.value = false;
 };
 
+const handle503 = (error) => {
+	if (error.response.status === 503) {
+		const till = new Date(error.response.data.till);
+		const tillDate = till.toLocaleDateString('ru');
+		const tillHours = till.getHours();
+		const tillMinutes = till.getMinutes();
+		tillConstruction.value = `${tillDate} ${tillHours}:${tillMinutes}`
+		showDialogConstruction.value = true;
+	}
+}
+
 const highlightedElementProperties = ref(generateHighlightedElementProperties(buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton));
 
 const formattedDate = (data) => {
@@ -282,6 +300,7 @@ const getUsers = async () =>  {
 	usersList.value = await axios.get(`${apiLink}/user`)
 	.then((r) => r.data)
 	.catch(async (error) => {
+		handle503(error);
 		if (error.response.status === 401) {
 			await getToken();
 			getUsers();
@@ -299,6 +318,7 @@ const getChart = async () => {
 	chartList.value = await axios.get(`${apiLink}/users/stats`)
 	.then((r) => r.data)
 	.catch(async (error) => {
+		handle503(error);
 		if (error.response.status === 401) {
 			await getToken();
 			getChart();
@@ -355,7 +375,9 @@ const getToken = async () => {
 			usersList.value = mockedDataProfile;
 		}
 	}).catch(error => {
-        console.error(error);
+		handle503(error);
+	}).finally(() => {
+		loadingService.hide();
 	});
 
 	buttonAddUser = ref(null);
@@ -377,6 +399,7 @@ const addUser = async () => {
 			userData.value = JSON.parse(r.data);
 			getUsers();
 		}).catch(async (error) => {
+			handle503(error);
 			if (error.response.status === 401) {
 				await getToken();
 				addUser();
@@ -392,21 +415,22 @@ const addUser = async () => {
 const removeUser = async (id) => {
 	loadingService.show();
 	await axios.delete(`${apiLink}/user/${id}`)
-			.then(() => {
-				showDialogUser.value = false;
-				deletedUserId.value = null;
-				getUsers()
-			}).catch(async (error) => {
-				if (error.response.status === 401) {
-					await getToken()
-					removeUser(deletedUserId.value)
-				} else {
-					isError.value = true;
-					console.error(error)
-				}
-			}).finally(() => {
-				loadingService.hide();
-			});
+		.then(() => {
+			showDialogUser.value = false;
+			deletedUserId.value = null;
+			getUsers()
+		}).catch(async (error) => {
+			handle503(error);
+			if (error.response.status === 401) {
+				await getToken()
+				removeUser(deletedUserId.value)
+			} else {
+				isError.value = true;
+				console.error(error)
+			}
+		}).finally(() => {
+			loadingService.hide();
+		});
 }
 
 const filteredUsers = computed(() => {
@@ -443,18 +467,18 @@ const filteredUsers = computed(() => {
       }
 
       switch (selectedFilterSort.value) {
-					case sortingMap.nameAsc:
-              userListCopy =  userListCopy.sort((a, b) => a.UserName.localeCompare(b.UserName));
-              break;
-          case sortingMap.nameDesc:
-              userListCopy =  userListCopy.sort((a, b) => b.UserName.localeCompare(a.UserName));
-              break;
-          case sortingMap.dateAsc:
-              userListCopy =  userListCopy.sort((a, b) => a?.CreatedAt.localeCompare(b?.CreatedAt));
-              break;
-          case sortingMap.dateDesc:
-              userListCopy =  userListCopy.sort((a, b) => b?.CreatedAt.localeCompare(a?.CreatedAt));
-              break;
+				case sortingMap.nameAsc:
+			userListCopy =  userListCopy.sort((a, b) => a.UserName.localeCompare(b.UserName));
+			break;
+		case sortingMap.nameDesc:
+			userListCopy =  userListCopy.sort((a, b) => b.UserName.localeCompare(a.UserName));
+			break;
+		case sortingMap.dateAsc:
+			userListCopy =  userListCopy.sort((a, b) => a?.CreatedAt.localeCompare(b?.CreatedAt));
+			break;
+		case sortingMap.dateDesc:
+			userListCopy =  userListCopy.sort((a, b) => b?.CreatedAt.localeCompare(a?.CreatedAt));
+			break;
       }
 
 	  userListCopy = userListCopy.filter(user =>
@@ -488,7 +512,6 @@ const openDialogUser = (id) => {
 };
 
 const toggleDialogOsHandler = () => {
-	addUser()
 	showDialogOther.value = false;
 	showDialogOs.value = !showDialogOs.value;
 };

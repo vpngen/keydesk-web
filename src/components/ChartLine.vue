@@ -146,7 +146,7 @@ const chartOptions = {
 				maxTicksLimit: 3,
 				padding: 4,
 				labelOffset: -2,
-				stepSize: 0.025,
+				stepSize: 0.5,
 				font: {
 					family: '"Raleway", sans-serif',
 					size: 10,
