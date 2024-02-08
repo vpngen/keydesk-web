@@ -357,6 +357,10 @@
 			}
 		}
 
+		&.title-regular {
+			font-weight: 400;
+		}
+
 		&.save-title {
 			font-size: vc(17);
 			line-height: vc(20);
