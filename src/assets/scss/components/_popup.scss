@@ -426,7 +426,7 @@
 	}
 
 	&__subtitle {
-		margin-bottom: vc(32);
+		margin-bottom: vc(4);
 		text-align: center;
 		line-height: vc(24);
 
@@ -440,10 +440,6 @@
 		a {
 			font-weight: 700;
 			text-decoration: underline;
-		}
-
-		&--minimize-margin {
-			margin-bottom: vc(8);
 		}
 	}
 
@@ -658,6 +654,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: vc(20);
+		margin-top: vc(20);
 		width: 100%;
 
 		@include mobile {
@@ -794,7 +791,7 @@
 
 	&__outline-block {
 		max-width: 100%;
-		margin-top: vc(-20);
+		margin-top: vc(8);
 	}
 
 	&__outline-link {

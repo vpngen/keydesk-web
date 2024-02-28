@@ -13,6 +13,8 @@ include ../assets/pug/base
 			| {{till}}
 		+e.subtitle.popup__subtitle--minimize-margin
 			| Так что не беспокойся, скорее всего все под контролем.
+		+e.title.qr-title
+			| {{message}}
 </template>
 
 <script setup>
@@ -20,6 +22,9 @@ import SvgIcon from './SvgIcon.vue';
 
 const props = defineProps({
 	till: {
+		type: String
+	},
+	message: {
 		type: String
 	},
 });
