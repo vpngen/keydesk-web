@@ -27,7 +27,7 @@ include ../assets/pug/data
 					+button(data.profile.headline.button, 'button')(
 						id='welcome-add-end'
 						ref='buttonAddUser'
-						@click="toggleDialogOsHandler();addUser();"
+						@click="addUserHandler()"
 						:disabled="highlightedElementProperties.buttonAddUser.disabled"
 						:class="highlightedElementProperties.buttonAddUser.highlight")
 	+e.message(v-if="messageShow")
@@ -70,7 +70,7 @@ include ../assets/pug/data
 				@click="openDialogUser(user.UserID)"
 				:disabled="highlightedElementProperties.secondUserProfileCard.disabled")
 				| Удалить
-		+e.add(@click="toggleDialogOsHandler();addUser();")
+		+e.add(@click="addUserHandler()")
 			+e.add-icon
 				SvgIcon(name='icon-add')
 			+e.P.add-text
@@ -149,13 +149,18 @@ include ../assets/pug/data
 				ShowMoreList
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser")
-DialogOs(v-if="showDialogOs" @close="toggleDialogOsHandler" @next="openDialogQrCodeHandler" @skip="skipDialogConfig")
+DialogOs(
+	v-if="showDialogOs"
+	@close="toggleDialogOsHandler"
+	@next="openDialogQrCodeHandler"
+	@skip="skipDialogConfig"
+)
 DialogOther(
 	v-if="showDialogOther"
 	:chosenClient="chosenClient"
 	@close="toggleDialogOtherHandler"
 	@next="switchDialogConfigHandler"
-	@back="skipDialogConfig"
+	@back="openDialogQrCodeHandler('linux')"
 	)
 DialogQrCode(
 	v-if="showDialogQrCode"
@@ -169,8 +174,15 @@ DialogQrCode(
 DialogConstruction(
 	v-if="showDialogConstruction"
 	:till="tillConstruction"
+	:message="messageConstruction"
 	)
-DialogConfig(v-if="showDialogConfig" :clientName="chosenClient" :userData="userData" @close="togleDialogConfigHandler" @back="switchDialogConfigHandler")
+DialogConfig(
+	v-if="showDialogConfig"
+	:clientName="chosenClient"
+	:userData="userData"
+	@close="togleDialogConfigHandler"
+	@back="switchDialogConfigHandler"
+)
 WelcomePage(
 	v-if="usersList.length && !isInstructionHidden"
 	@getUsers="getUsers()"
@@ -231,6 +243,7 @@ const showDialogOther = ref(false);
 const showDialogQrCode = ref(false);
 const showDialogConstruction = ref(false);
 const tillConstruction = ref('');
+const messageConstruction = ref('');
 const showDialogConfig = ref(false);
 const chosenOS = ref(null);
 const chosenClient = ref(null);
@@ -272,6 +285,7 @@ const handle503 = (error) => {
 		const tillHours = till.getHours();
 		const tillMinutes = till.getMinutes();
 		tillConstruction.value = `${tillDate} ${tillHours}:${tillMinutes}`
+		messageConstruction.value = error.response.data.message
 		showDialogConstruction.value = true;
 	}
 }
@@ -433,6 +447,11 @@ const removeUser = async (id) => {
 		});
 }
 
+const addUserHandler = async () => {
+	await addUser();
+	openDialogQrCodeHandler('linux');
+}
+
 const filteredUsers = computed(() => {
 	let filter = filterUserText.value
 
@@ -499,7 +518,7 @@ const closeDialogUser = () => {
 
 const returnToOthersHandler = () => {
 	showDialogQrCode.value = !showDialogQrCode.value;
-	showDialogOther.value = !showDialogOther.value;
+	showDialogOther.value = true;
 }
 
 const toggleDialogOtherHandler = () => {
@@ -523,16 +542,17 @@ const closeDialogQrCodeHandler = () => {
 const configName = ref('');
 
 const openDialogQrCodeHandler = (type) => {
-	chosenOS.value = type.value;
+	const osType = typeof type === 'string' ? type : type.value;
+	chosenOS.value = osType;
 	const configList = require('../../vpn_sistems_config.json');
-	const configType = configList.system_defaults[type.value];
+	const configType = configList.system_defaults[osType];
 	configName.value = configType;
-	if (type.value === 'other') {
+	if (osType === 'other') {
 		showDialogOs.value = !showDialogOs.value;
 		showDialogOther.value = !showDialogOther.value;
 	} else {
-		titleDialogQrCode.value = type.value;
-		showDialogOs.value = !showDialogOs.value;
+		titleDialogQrCode.value = osType;
+		showDialogOther.value = false;
 		showDialogQrCode.value = !showDialogQrCode.value;
 	}
 };
