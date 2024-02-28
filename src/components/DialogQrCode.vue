@@ -121,7 +121,8 @@ const osLabel = computed(() => {
 
 const osLink = computed(() => {
 	const chosenConfig = props.configName ? props.configName : 'WireguardConfig';
-	return configList.links_defaults[props.chosenOS][chosenConfig] ;
+	const link = configList.links_defaults[props.chosenOS][chosenConfig];
+	return link;
 });
 
 const outlineLink = computed(() => {
