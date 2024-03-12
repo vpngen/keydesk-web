@@ -33,7 +33,7 @@ export const dialogOsCards = [
 
 export const dialogOtherCards = [
 	{
-		label: 'Cloak',
+		label: 'Amnezia',
 		value: 'cloak',
 		client: 'AmneziaVPN'
 	},
@@ -41,10 +41,5 @@ export const dialogOtherCards = [
 		label: 'Outline',
 		value: 'shadowsocks',
 		client: 'Outline'
-	},
-	{
-		label: 'WireGuard',
-		value: 'wireguard',
-		client: 'Wireguard'
 	},
 ];
