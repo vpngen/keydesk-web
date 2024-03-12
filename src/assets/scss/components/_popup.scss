@@ -540,17 +540,15 @@
 	&__cards {
 		display: grid;
 		gap: vc(8);
-		grid-template-columns: repeat(3, 1fr);
-		margin: 0 0 vc(24);
+		grid-template-columns: repeat(2, 1fr);
 
 		@include desktop {
 			gap: vc(12);
-			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 
 	&__card {
-		border: 1px solid rgba($color-azure-radiance, 0);
+		border: 2px solid rgba($color-azure-radiance, 0);
 		border-radius: vc(20);
 		padding: vc(8) 0 0;
 		width: vc(92);
@@ -580,31 +578,31 @@
 
 		&.is-active {
 			border-color: $color-azure-radiance;
-				cursor: pointer;
+			cursor: pointer;
 
-				#{$p}__card-icon {
-					color: rgba($color-white, 0.5);
-					background-color: $color-azure-radiance;
+			#{$p}__card-icon {
+				color: rgba($color-white, 0.5);
+				// background-color: $color-azure-radiance;
 
-					& .icon-cloak {
-						background: url($url-image + 'png/icon-cloack-active.png') no-repeat center center;
-						background-size: contain;
-					}
-
-					& .icon-shadowsocks {
-						background: url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
-						background-size: contain;
-					}
-
-					& .icon-wireguard {
-						background: url($url-image + 'png/icon-wireguard-active.png') no-repeat center center;
-						background-size: contain;
-					}
+				& .icon-cloak {
+					background: url($url-image + 'png/icon-cloack-active.png') no-repeat center center;
+					background-size: contain;
 				}
 
-				#{$p}__card-text {
-					font-weight: 700;
+				& .icon-shadowsocks {
+					background: url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
+					background-size: contain;
 				}
+
+				& .icon-wireguard {
+					background: url($url-image + 'png/icon-wireguard-active.png') no-repeat center center;
+					background-size: contain;
+				}
+			}
+
+			#{$p}__card-text {
+				font-weight: 700;
+			}
 		}
 
 		@include desktop {
@@ -621,8 +619,11 @@
 
 	&__card-icon {
 		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 		margin: 0 auto vc(8);
-		border-radius: vc(20);
+		border-radius: vc(16);
 		width: vc(52);
 		height: vc(52);
 		color: $color-oslo-grey;
@@ -630,6 +631,7 @@
 		transition: color $duration-normal, background-color $duration-normal;
 
 		@include desktop {
+			border-radius: vc(20);
 			width: vc(70);
 			height: vc(70);
 		}
@@ -654,7 +656,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: vc(20);
-		margin-top: vc(20);
+		margin-top: vc(24);
 		width: 100%;
 
 		@include mobile {
@@ -853,9 +855,3 @@ svg.leader-line:nth-of-type(4) {
 	@include mobile {
 		display: block;
 	};}
-
-.card-icon--container {
-	padding: vc(5);
-}
-
-
