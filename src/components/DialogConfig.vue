@@ -18,7 +18,7 @@ include ../assets/pug/base
 			+e.SPAN
 				+e.A(:href="clientLink", target="_blank")
 					| &nbsp;{{ clientLink }}
-		+e.buttons.qr-buttons(v-if="clientName !== 'shadowsocks'")
+		+e.buttons.qr-buttons(v-if="clientName !== 'outline'")
 			+e.A(class="button button--option2 popup__action"  @click="back")
 				+e.SPAN
 					| Другие варианты
@@ -79,7 +79,7 @@ const clientLabel = computed(() => {
 });
 
 const downloadLabel = computed(() => {
-	return props.clientName === 'shadowsocks' ? 'ссылку' : 'файл';
+	return props.clientName === 'outline' ? 'ссылку' : 'файл';
 });
 
 const displayedClientName = computed(() => {
@@ -88,7 +88,7 @@ const displayedClientName = computed(() => {
 });
 
 const outlineLink = computed(() => {
-	return props.clientName === 'shadowsocks' ? props.userData[clientKey.value].AccessKey : ''
+	return props.clientName === 'outline' ? props.userData[clientKey.value].AccessKey : ''
 });
 
 const copyLink = async (target) => {
@@ -125,8 +125,8 @@ watchEffect(() => {
 })
 
 const emit = defineEmits([
-		'close',
-		'back'
+	'close',
+	'back'
 ]);
 
 const close = () => {

@@ -82,9 +82,11 @@ include ../assets/pug/data
 			+e.option.swiper-slide
 				+button('Статистика бригады', 'button', 'option1', false, 1)(:class="showTab === 1 ? selectClass : ''", @click="showTab = 1")
 			+e.option.swiper-slide
-				+button('Какие данные мы собираем?', 'button', 'option1', false, 2)(:class="showTab === 2 ? selectClass : ''", @click="showTab = 2")
+				+button('Инструкции', 'button', 'option1', false, 2)(:class="showTab === 2 ? selectClass : ''", @click="showTab = 2")
 			+e.option.swiper-slide
-				+button('FAQ', 'button', 'option3', false, 3)(:class="showTab === 3 ? selectClass : ''", @click="showTab = 3")
+				+button('Какие данные мы собираем?', 'button', 'option1', false, 3)(:class="showTab === 3 ? selectClass : ''", @click="showTab = 3")
+			+e.option.swiper-slide
+				+button('FAQ', 'button', 'option3', false, 4)(:class="showTab === 4 ? selectClass : ''", @click="showTab = 4")
 		+e.tabs
 			+e.tab(data-tab="1" v-show="showTab === 1")
 				+e.chart
@@ -128,6 +130,26 @@ include ../assets/pug/data
 								+e.chart-text
 									| Объем трафика
 			+e.tab(data-tab="2" v-show="showTab === 2")
+				+e.directions
+					+e.directions-title
+						| Выбор по устройству
+					+e.directions-cards.swiper-container
+						+e.directions-wrapper.swiper-wrapper
+							+e.A.directions-slide.swiper-slide(:href="card.href" target="_blank" v-for="card in profileDirectionsCards.selectByDevice")
+								+e.directions-image(:class="`icon-${card.image}`")
+								+e.directions-label
+									| {{ card.label }}
+								+e.directions-arrow
+					+e.directions-title
+						| Выбор по протоколу
+					+e.directions-cards.swiper-container
+						+e.directions-wrapper.swiper-wrapper
+							+e.A.directions-slide.swiper-slide(:href="card.href" target="_blank" v-for="card in profileDirectionsCards.selectByProtocol")
+								+e.directions-image(:class="`icon-${card.image}`")
+								+e.directions-label
+									| {{ card.label }}
+								+e.directions-arrow
+			+e.tab(data-tab="3" v-show="showTab === 3")
 				+e.table
 					+e.table
 						+e.table-head
@@ -145,7 +167,7 @@ include ../assets/pug/data
 									SvgIcon(name=`icon-status-${line.user ? 'on' : 'off'}`)
 								+e.table-column(data-user=`${line.brigadier}`)(class=`${line.brigadier}`? "tooltip" : "")
 									SvgIcon(name=`icon-status-${line.brigadier ? 'on' : 'off'}`)
-			+e.tab(data-tab="3" v-show="showTab === 3")
+			+e.tab(data-tab="4" v-show="showTab === 4")
 				ShowMoreList
 
 DialogUser(v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser")
@@ -210,7 +232,7 @@ import DialogConstruction from './DialogConstruction.vue';
 import DialogConfig from './DialogConfig.vue';
 import WelcomePage from "@/components/WelcomePage.vue";
 import ShowMoreList from "@/components/ShowMoreList.vue";
-import {mockedDataProfile, profileCardStatus, sortingMap, statusMap} from '@/assets/constants/profileConstants.js'
+import {mockedDataProfile, profileCardStatus, sortingMap, statusMap, profileDirectionsCards} from '@/assets/constants/profileConstants.js'
 import {generateHighlightedElementProperties} from "@/assets/helpers/profileHelpers";
 import PopupError from "@/components/PopupError.vue";
 import FiltersPanel from "@/components/FiltersPanel.vue";
@@ -249,9 +271,16 @@ const chosenOS = ref(null);
 const chosenClient = ref(null);
 
 onMounted(()=>{
+	if (window.screen.width <= 1023) {
+		initSwiperData();
+		window.addEventListener('resize', initSwiperData);
+
+		chartScroll.value.scrollLeft += 1000;
+	}
+
 	if (window.screen.width <= 767) {
-		initSwiper();
-		window.addEventListener('resize', initSwiper);
+		initSwiperDirections();
+		window.addEventListener('resize', initSwiperDirections);
 
 		chartScroll.value.scrollLeft += 1000;
 	}
@@ -261,8 +290,17 @@ onUnmounted(()=>{
 	window.removeEventListener('resize', initSwiper);
 })
 
-const initSwiper = () => {
-	const deviceSwiper = new Swiper('.swiper-container', {
+const initSwiperData = () => {
+	const deviceSwiper = new Swiper('.profile__data', {
+		slidesPerView: "auto",
+		spaceBetween: 0,
+		loop: false,
+		allowTouchMove: window.screen.width <= 1023,
+	});
+}
+
+const initSwiperDirections = () => {
+	const deviceSwiper = new Swiper('.profile__directions-cards', {
 		slidesPerView: "auto",
 		spaceBetween: 0,
 		loop: false,
