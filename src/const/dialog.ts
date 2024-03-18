@@ -34,12 +34,12 @@ export const dialogOsCards = [
 export const dialogOtherCards = [
 	{
 		label: 'Amnezia',
-		value: 'cloak',
+		value: 'amnezia',
 		client: 'AmneziaVPN'
 	},
 	{
 		label: 'Outline',
-		value: 'shadowsocks',
+		value: 'outline',
 		client: 'Outline'
 	},
 ];
