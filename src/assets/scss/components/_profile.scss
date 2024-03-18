@@ -540,22 +540,29 @@
 	}
 
 	&__option {
-		margin-right: vc(10);
 		width: vc(155);
 		height: vc(40);
 
-		&:last-child {
-			margin-left: 0 !important;
+		&:not(:last-child) {
+			margin-right: vc(10);
 		}
 
 		@include tablet {
 			margin-right: vc(20);
 			width: vc(230);
+
+			&:not(:last-child) {
+				margin-right: vc(20);
+			}
 		}
 
 		@include desktop {
 			margin-right: vc(20);
 			width: vc(230);
+
+			&:not(:last-child) {
+				margin-right: vc(20);
+			}
 		}
 	}
 
@@ -1129,6 +1136,203 @@
 		margin: auto;
 		font-size: vc(14);
 		line-height: calc(16 / 14);
+	}
+
+	&__directions {
+		
+	}
+
+	&__directions-title {
+		margin: 0 0 vc(16);
+		font-weight: 800;
+		font-size: vc(16);
+		line-height: calc(19 / 16);
+	}
+
+	&__directions-cards {
+		margin: 0 0 vc(32);
+	}
+
+	&__directions-wrapper {
+		@include tablet {
+			flex-wrap: wrap;
+			row-gap: vc(20);
+			width: 100% !important;
+		}
+	}
+
+	&__directions-slide {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		border-radius: vc(20);
+		padding: vc(12);
+		width: vc(210);
+		height: vc(131);
+		background-color: $color-white;
+
+		&:not(:last-child) {
+			margin-right: vc(20);
+		}
+
+		#{$p}__directions-image {
+			&.icon-windows {
+				background: $color-catskill-white url($url-image + 'png/icon-windows.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-macos {
+				background: $color-catskill-white url($url-image + 'png/icon-macos.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-ios {
+				background: $color-catskill-white url($url-image + 'png/icon-ios.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-android {
+				background: $color-catskill-white url($url-image + 'png/icon-android.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-linux {
+				background: $color-catskill-white url($url-image + 'png/icon-linux.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-outline {
+				background: $color-catskill-white url($url-image + 'png/icon-outline.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-amnezia {
+				background: $color-catskill-white url($url-image + 'png/icon-amnezia.png') no-repeat center center;
+				background-size: contain;
+			}
+		}
+
+		&:active {
+			#{$p}__directions-image {
+				&.icon-windows {
+					background: $color-catskill-white url($url-image + 'png/icon-windows-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-macos {
+					background: $color-catskill-white url($url-image + 'png/icon-macos-active.png') no-repeat center center;
+					background-size: contain;
+				}
+	
+				&.icon-ios {
+					background: $color-catskill-white url($url-image + 'png/icon-ios-active.png') no-repeat center center;
+					background-size: contain;
+				}
+	
+				&.icon-android {
+					background: $color-catskill-white url($url-image + 'png/icon-android-active.png') no-repeat center center;
+					background-size: contain;
+				}
+	
+				&.icon-linux {
+					background: $color-catskill-white url($url-image + 'png/icon-linux-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-outline {
+					background: $color-catskill-white url($url-image + 'png/icon-outline-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-amnezia {
+					background: $color-catskill-white url($url-image + 'png/icon-amnezia-active.png') no-repeat center center;
+					background-size: contain;
+				}
+			}
+		}
+
+		@include desktop {
+			&:hover {
+				#{$p}__directions-image {
+					&.icon-windows {
+						background: $color-catskill-white url($url-image + 'png/icon-windows-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					&.icon-macos {
+						background: $color-catskill-white url($url-image + 'png/icon-macos-active.png') no-repeat center center;
+						background-size: contain;
+					}
+		
+					&.icon-ios {
+						background: $color-catskill-white url($url-image + 'png/icon-ios-active.png') no-repeat center center;
+						background-size: contain;
+					}
+		
+					&.icon-android {
+						background: $color-catskill-white url($url-image + 'png/icon-android-active.png') no-repeat center center;
+						background-size: contain;
+					}
+		
+					&.icon-linux {
+						background: $color-catskill-white url($url-image + 'png/icon-linux-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					&.icon-outline {
+						background: $color-catskill-white url($url-image + 'png/icon-outline-active.png') no-repeat center center;
+						background-size: contain;
+					}
+	
+					&.icon-amnezia {
+						background: $color-catskill-white url($url-image + 'png/icon-amnezia-active.png') no-repeat center center;
+						background-size: contain;
+					}
+				}
+			}
+		}
+	}
+
+	&__directions-image {
+		flex-shrink: 0;
+		border-radius: vc(10);
+		width: vc(80);
+		height: vc(80);
+		color: rgba($color-mine-shaft, 0.5);
+		background-color: $color-catskill-white;
+	}
+
+	&__directions-label {
+		font-weight: 800;
+		font-size: vc(16);
+		line-height: calc(19 / 16);
+	}
+
+	&__directions-arrow {
+		position: absolute;
+		right: vc(8);
+		bottom: vc(8);
+		z-index: 1;
+		border-radius: 50%;
+		width: vc(21);
+		height: vc(21);
+		background-color: $color-catskill-white;
+
+		&::before {
+			content: "";
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			z-index: 1;
+			border-right: 1px solid $color-mine-shaft;
+			border-top: 1px solid $color-mine-shaft;
+			width: vc(7);
+			height: vc(7);
+			transform: translate(-50%, -50%) rotate(45deg);
+		}
 	}
 
 	@include tablet {

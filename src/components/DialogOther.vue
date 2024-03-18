@@ -11,7 +11,6 @@ include ../assets/pug/base
 			+e.card(v-for="card in cards", :class="{ 'is-active': cardType === card.value }" @click="selectCard(card.value)")
 				+e.card-icon(class="card-icon--container")
 					+e.DIV(:class="`icon-${card.value}`")
-					//SvgIcon(:name="`icon-${card.value}`")
 				+e.card-text
 					| {{ card.label }}
 		+e.buttons--os
@@ -28,7 +27,7 @@ import { ref } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 import { dialogOtherCards as cards } from '../const/dialog.ts';
 
-let cardType = ref('cloak');
+let cardType = ref('amnezia');
 
 const selectCard = (os) => {
 	cardType.value = os;
