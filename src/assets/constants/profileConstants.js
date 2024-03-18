@@ -113,5 +113,46 @@ export const statusesList = [
     },
 ]
 
+export const profileDirectionsCards = {
+    selectByDevice: [
+        {
+            label: 'Windows',
+            image: 'windows',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.8qrc3gvqfvjz',
+        },
+        {
+            label: 'MacOS',
+            image: 'macos',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.29gd7ig16m2i',
+        },
+        {
+            label: 'iOS',
+            image: 'ios',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.29gd7ig16m2i',
+        },
+        {
+            label: 'Android',
+            image: 'android',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.x8esnktg3dd6',
+        },
+        {
+            label: '*nix',
+            image: 'linux',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.ibx71rx6io83',
+        },
+    ],
+    selectByProtocol: [
+        {
+            label: 'Outline',
+            image: 'outline',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk',
+        },
+        {
+            label: 'Amnezia',
+            image: 'amnezia',
+            href: 'https://docs.google.com/document/d/1pEwntDJwM8fYQ5DGxTHGjjXmnQ_YYkxF2HCKywEeVa0/',
+        },
+    ]
+}
 
 export const labelsOnly = statusesList.map(item => item.label)

@@ -556,23 +556,19 @@
 		background-color: $color-white;
 		transition: border-color $duration-normal / 2;
 
-		& .icon-cloak, & .icon-shadowsocks, & .icon-wireguard {
+		& .icon-amnezia,
+		& .icon-outline {
 			width: 100%;
 			height: 100%;
 		}
 
-		& .icon-cloak {
-			background: url($url-image + 'png/icon-cloack.png') no-repeat center center;
+		& .icon-amnezia {
+			background: url($url-image + 'png/icon-amnezia.png') no-repeat center center;
 			background-size: contain;
 		}
 
-		& .icon-shadowsocks {
-			background: url($url-image + 'png/icon-shadowsocks.png') no-repeat center center;
-			background-size: contain;
-		}
-
-		& .icon-wireguard {
-			background: url($url-image + 'png/icon-wireguard.png') no-repeat center center;
+		& .icon-outline {
+			background: url($url-image + 'png/icon-outline.png') no-repeat center center;
 			background-size: contain;
 		}
 
@@ -584,18 +580,13 @@
 				color: rgba($color-white, 0.5);
 				// background-color: $color-azure-radiance;
 
-				& .icon-cloak {
-					background: url($url-image + 'png/icon-cloack-active.png') no-repeat center center;
+				& .icon-amnezia {
+					background: url($url-image + 'png/icon-amnezia-active.png') no-repeat center center;
 					background-size: contain;
 				}
 
-				& .icon-shadowsocks {
-					background: url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
-					background-size: contain;
-				}
-
-				& .icon-wireguard {
-					background: url($url-image + 'png/icon-wireguard-active.png') no-repeat center center;
+				& .icon-outline {
+					background: url($url-image + 'png/icon-outline-active.png') no-repeat center center;
 					background-size: contain;
 				}
 			}

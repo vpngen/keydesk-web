@@ -6,8 +6,8 @@
     "macos":"AmnzOvcConfig",
     "ios":"OutlineConfig",
     "android":"OutlineConfig",
-    "cloak": "AmnzOvcConfig",
-    "shadowsocks": "OutlineConfig",
+    "amnezia": "AmnzOvcConfig",
+    "outline": "OutlineConfig",
     "wireguard": "WireguardConfig"
   },
   "links_defaults" : {
