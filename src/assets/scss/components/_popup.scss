@@ -1,6 +1,5 @@
 .popup {
 	$p: &;
-
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -18,9 +17,12 @@
 	&__overlay {
 		position: absolute;
 		z-index: -1;
-		width: 100%;
-		height: 100%;
+		width: 100vw;
+		height: 100vh;
 		background: rgba(0, 0, 0, 0.6);
+		@include mobile {
+			background: unset;
+		}
 
 		&.welcome, &.error {
 			position: fixed;
@@ -62,6 +64,7 @@
 	}
 
 	&__alert {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -71,6 +74,11 @@
 		width: calc(100% - #{vc(60)});
 		background-color: $color-catskill-white;
 		backdrop-filter: blur(vc(34));
+
+		@include mobile {
+			padding: vc(32) vc(16);
+			box-shadow: rgba(0, 0, 0, 0.6) 0 0 0 50vw;
+		}
 
 		&.error {
 			width: vc(440);
@@ -535,6 +543,10 @@
 		margin: 0 0 vc(24);
 		width: vc(100);
 		height: vc(100);
+
+		@include mobile {
+			margin: 0 0 vc(12);
+		}
 	}
 
 	&__cards {
@@ -659,7 +671,7 @@
 
 		&--qr {
 			@include mobile {
-				flex-direction: column;
+				flex-direction: column-reverse;
 				gap: vc(0);
 			}
 		}
@@ -674,6 +686,11 @@
 		width: vc(125);
 		height: vc(40);
 		font-family: "Raleway", sans-serif;
+
+		&.share {
+			margin: vc(20) 0 0;
+			width: 100%;
+		}
 
 		&.welcome {
 			width: vc(211);
@@ -711,12 +728,11 @@
 			height: vc(40);
 			.qr-buttons & {
 				width: vc(175);
-				&:nth-child(1) {
-					order: 2;
-				}
-				&:nth-child(2) {
-					order: 1;
-				}
+			}
+
+			&.share {
+				margin: 0 auto;
+				width: vc(211);
 			}
 		}
 

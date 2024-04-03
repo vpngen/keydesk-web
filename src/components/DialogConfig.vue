@@ -73,6 +73,19 @@ const outlineLinkRef = ref('');
 const linkCopyResult = ref('');
 const linkButtonText = ref('Скопировать');
 
+const shareConfig = () => {
+	const shareText = `Установи клиент Outline ${clientLink.value}, Добавь туда свою конфигурацию ${outlineLink.value}, Инструкция https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
+
+	if (navigator.share) {
+		navigator.share({
+			title: 'Ссылки на клиент, конфиг, инструкцию',
+			text: shareText
+		})
+	} else {
+		navigator.clipboard.writeText('Не поддерживается твоим браузером')
+	}
+}
+
 const clientLabel = computed(() => {
 	const card = cards.find(card => card.value === props.clientName);
 	return card ? card.label : '';
