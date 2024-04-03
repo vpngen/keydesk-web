@@ -185,8 +185,5 @@
 	}
 
 	&__outline {
-		@include mobile {
-			order: -1;
-		}
 	}
 }
