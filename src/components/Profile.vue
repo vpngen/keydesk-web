@@ -30,7 +30,7 @@ include ../assets/pug/data
 						@click="addUserHandler()"
 						:disabled="highlightedElementProperties.buttonAddUser.disabled"
 						:class="highlightedElementProperties.buttonAddUser.highlight")
-	+e.message(v-if="messageShow")
+	+e.message(v-if="isInstructionHidden && messageShow")
 		+e.message-icon
 			SvgIcon(name="icon-status-deactive")
 		+e.message-text

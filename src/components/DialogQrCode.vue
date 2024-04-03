@@ -27,15 +27,15 @@ include ../assets/pug/base
 		+e.emoji(v-else)
 			SvgIcon(name="icon-emoji-happy")
 		+e.title.qr-title
-			| Конфиг для {{ osLabel }} готов!
+			| Настройки для VPN готовы!
 		+e.subtitle(v-if="showQrCode")
 			| Скачайте, скопируйте или<br>активируйте ее&nbsp;по&nbsp;QR-коду
 			+e.SPAN.tunnel
 				| Название туннеля: <b>{{ tunnelName }}</b>
 		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Отдай ссылку на клиент и {{ resourceType }} другу. Нужно установить {{ vpnName }} и добавить туда {{ resourceType }}
+			| Отдай {{ resourceType }} на {{ vpnName }} клиент и настройки другу. Нужно установить {{ vpnName }} и добавить туда {{ resourceType }} от нас.
 		+e.subtitle
-			| Ссылка на клиент:&nbsp;
+			| {{ vpnName }}:&nbsp;
 			+e.SPAN
 				+e.A(:href="osLink", target="_blank")
 					| {{ osLink }}
@@ -58,15 +58,8 @@ include ../assets/pug/base
 				+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
 					+e.SPAN
 						| Другие варианты
-				+e.A(
-					class="button button--option2 popup__action button__outline"
-					:class="{'disabled': !isLinkCopied}"
-					@click="copyLink(outlineLinkRef)"
-					:disabled="!isLinkCopied")
-					+e.button-img
-						SvgIcon(name="link")
-					+e.SPAN
-						| {{ linkButtonText }}
+				+e.BUTTON.button.button--option2(@click="share")
+					| Поделиться
 		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
 			| {{ linkCopyResult }}
 </template>
@@ -106,9 +99,19 @@ const linkButtonText = ref('Скопировать');
 
 let showQrCode = ref(false);
 
-// onMounted(()=> {
-// 	showQrCode.value = dic.includes(props.title);
-// })
+const share = () => {
+	const shareText = `Установи клиент Outline: ${osLink.value}\n\nДобавь туда свою конфигурацию\n${outlineLink.value}\n\nИнструкция: https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
+
+	if (navigator.share) {
+		navigator.share({
+			title: 'Ссылки на клиент, конфиг, инструкцию',
+			text: shareText
+		})
+	} else {
+		isLinkCopied.value = false;
+		linkCopyResult.value = 'Не поддерживается твоим браузером';
+	}
+}
 
 const resourceType = computed(() => {
 	return props.configName === 'OutlineConfig' ? 'ссылку' : 'файл';
@@ -121,8 +124,7 @@ const osLabel = computed(() => {
 
 const osLink = computed(() => {
 	const chosenConfig = props.configName ? props.configName : 'WireguardConfig';
-	const link = configList.links_defaults[props.chosenOS][chosenConfig];
-	return link;
+	return configList.links_defaults[props.chosenOS][chosenConfig];
 });
 
 const outlineLink = computed(() => {
