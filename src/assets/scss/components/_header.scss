@@ -5,6 +5,7 @@
 	left: 0;
 	right: 0;
 	top: 0;
+	z-index: 3;
 
 	&__container {
 		display: flex;
@@ -53,6 +54,189 @@
 				height: vc(48);
 			}
 		}
+	}
+
+	&__notifications {
+		position: relative;
+		z-index: 1;
+		display: block;
+		width: vc(24);
+		height: vc(24);
+		color: $color-shark;
+		transition: color calc($duration-normal / 2);
+		
+		&:active {
+			color: $color-azure-radiance;
+		}
+
+		&--message {
+			&::before {
+				content: attr(data-total);
+				position: absolute;
+				right: vc(3);
+				top: vc(1);
+				z-index: 2;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border-radius: 50%;
+				width: vc(7);
+				height: vc(7);
+				font-weight: 700;
+				font-size: vc(5);
+				line-height: 1;
+				color: $color-white;
+				background-color: $color-razzmatazz;
+			}
+
+			@include tablet {
+				&::before {
+					right: vc(2);
+					top: vc(-1);
+					width: vc(11);
+					height: vc(11);
+				}
+			}
+
+			@include desktop {
+				&::before {
+					right: vc(2);
+					top: vc(-1);
+					width: vc(11);
+					height: vc(11);
+				}
+			}
+		}
+
+		@include tablet {
+			width: vc(32);
+			height: vc(32);
+		}
+
+		@include desktop {
+			width: vc(32);
+			height: vc(32);
+			cursor: pointer;
+
+			&:hover {
+				color: $color-azure-radiance;
+			}
+		}
+	}
+
+	&__message {
+		position: absolute;
+		right: vc(18);
+		top: vc(55);
+		display: flex;
+		align-items: center;
+		gap: vc(11);
+		box-shadow: 0 0 6px 0 rgba(105, 105, 105, 0.25);
+		border-radius: vc(4);
+		padding: vc(12);
+		width: calc(100% - #{vc(36)});
+		background-color: $color-white;
+
+		&::before {
+			position: absolute;
+			top: vc(-6);
+			right: vc(6);
+			z-index: 1;
+			border-radius: vc(5);
+			width: vc(20);
+			height: vc(20);
+			background-color: $color-white;
+			transform: rotate(45deg);
+			pointer-events: none;
+		}
+
+		@include tablet {
+			right: vc(26);
+			top: vc(76);
+			width: vc(382);
+
+			&::before {
+				content: "";
+			}
+		}
+
+		@include desktop {
+			right: vc(40);
+			top: vc(82);
+			width: vc(440);
+
+			&::before {
+				content: "";
+			}
+		}
+	}
+
+	&__message-close {
+		position: absolute;
+		right: vc(8);
+		top: vc(8);
+		z-index: 2;
+		width: vc(16);
+		height: vc(16);
+		color: $color-silver-chalice;
+		transition: color calc($duration-normal / 2);
+
+		&:active {
+			color: $color-shark;
+		}
+
+		@include desktop {
+			cursor: pointer;
+
+			&:hover {
+				color: $color-shark;
+			}
+		}
+	}
+
+	&__message-icon {
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		align-items: center;
+		flex-shrink: 0;
+		border-radius: 50%;
+		width: vc(41);
+		height: vc(41);
+		background: linear-gradient(135deg, rgba(190, 248, 252, 0) 13.11%, #57C3FF 87.68%);
+
+		svg {
+			display: block;
+		}
+	}
+
+	&__message-description {
+		width: vc(237);
+
+		@include tablet {
+			width: vc(281);
+		}
+
+		@include desktop {
+			width: vc(337 );
+		}
+	}
+
+	&__message-title {
+		margin: 0 0 vc(4);
+		font-weight: 700;
+		font-size: vc(14);
+		line-height: calc(16 / 14);
+	}
+
+	&__message-text {
+		overflow: hidden;
+		font-size: vc(10);
+		line-height: calc(20 / 10);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		color: $color-black;
 	}
 
 	&__content {

@@ -13,7 +13,7 @@
 						 <span class="sort-filter__text-label"> {{ getSortingOptionItem(currentSorting)?.textLabel }} </span>
 					</template>
 					<div class="sort-filter__filter-menu" ref="sortOptionRef" :class="{ active: showSortMenu }">
-						<template v-for="(option, index) in sortingList" :key="index">
+						<template v-for="(option, index) in sortingMessageList" :key="index">
 							<a class="sort-filter__filter-item" href="#" @click.stop="setSorting(sortingMap[option.label])">
 								<span class="sort-filter__filter-name">{{ option.name }}</span>
 							</a>
@@ -36,7 +36,7 @@
 					<template v-for="(status, index) in props.statusList" :key="index">
 						<a class="status-filter__filter-item" href="#" @click.stop="setStatus(statusMap[status])">
 							<span :class="['status-filter__icon', statusMap[status]]"/>
-							<span class="status-filter__filter-name">{{ profileCardStatus.statusName[status] }}</span>
+							<span class="status-filter__filter-name">{{ messageStatus.statusName[status] }}</span>
 						</a>
 					</template>
 				</div>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import {statusMap, profileCardStatus, sortingList, sortingMap} from '@/assets/constants/profileConstants.js'
+import {statusMap, messageStatus, sortingMessageList, sortingMap} from '@/assets/constants/profileConstants.js'
 import {ref} from 'vue';
 import useClickOutside from '@/assets/hooks/useClickOutside.js';
 
@@ -69,11 +69,11 @@ const props = defineProps({
 const emit = defineEmits(['update:selectedFilterSort', 'update:selectedFilterStatus']);
 
 const currentStatus = ref(
-		statusMap.all
+	statusMap.all
 );
 
 const currentSorting = ref(
-		sortingMap.dateAsc
+	sortingMap.nameDesc
 );
 
 const showStatusMenu = ref(false);
@@ -110,7 +110,7 @@ const setSorting = (sortingOption) => {
 };
 
 const getSortingOptionItem = (label) => {
-	return sortingList.find(option => option.label === label)
+	return sortingMessageList.find(option => option.label === label)
 }
 
 </script>

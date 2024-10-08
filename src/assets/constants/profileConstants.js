@@ -32,12 +32,13 @@ export const mockedDataProfile = [{
     "ref": "thirdUserProfileCard",
     "Status": 'grey',
 }];
+
 export const sortingMap = {
     'nameAsc': 'nameAsc',
     'nameDesc': 'nameDesc',
     'dateAsc': 'dateAsc',
     'dateDesc': 'dateDesc',
-}
+};
 
 export const sortingList = [
     {
@@ -67,7 +68,8 @@ export const statusMap = {
     'grey': 'grey',
     'yellow': 'yellow',
     'red': 'red',
-}
+};
+
 export const profileCardStatus = {
     statusName: {
         [statusMap.green]: 'Всё отлично!',
@@ -90,7 +92,7 @@ export const profileCardStatus = {
         [statusMap.yellow]: 'status-yellow',
         [statusMap.red]: 'status-red',
     }
-}
+};
 
 export const statusesList = [
     {
@@ -111,7 +113,51 @@ export const statusesList = [
     {
         name: 'Временная блокировка', label: statusMap.red,
     },
-]
+];
+
+export const sortingMessageList = [
+    {
+        name: 'По приоритету (возрастание)',
+        label: sortingMap.nameAsc,
+        textLabel: '(0-10)',
+    },
+    {
+        name: 'По приоритету (убывание)',
+        label: sortingMap.nameDesc,
+        textLabel: '(10-0)',
+    },
+    {
+        name: 'По дате создания (возрастание)',
+        label: sortingMap.dateAsc,
+    },
+    {
+        name: 'По дате создания (убывание)',
+        label: sortingMap.dateDesc,
+    },
+];
+
+export const statusMessageList = [
+    {
+        name: 'Все статусы', label: statusMap.all,
+    },
+    {
+        name: 'Важные', label: statusMap.red,
+    },
+    {
+        name: 'Разные', label: statusMap.green,
+    },
+];
+
+export const messageStatus = {
+    statusName: {
+        [statusMap.red]: 'Важные',
+        [statusMap.green]: 'Разные',
+    },
+    statusColor: {
+        [statusMap.red]: 'status-red',
+        [statusMap.green]: 'status-green',
+    }
+};
 
 export const profileDirectionsCards = {
     selectByDevice: [
@@ -128,7 +174,7 @@ export const profileDirectionsCards = {
         {
             label: 'iOS',
             image: 'ios',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.29gd7ig16m2i',
+            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.c0l38dd4lv2l',
         },
         {
             label: 'Android',
@@ -153,6 +199,6 @@ export const profileDirectionsCards = {
             href: 'https://docs.google.com/document/d/1pEwntDJwM8fYQ5DGxTHGjjXmnQ_YYkxF2HCKywEeVa0/',
         },
     ]
-}
+};
 
-export const labelsOnly = statusesList.map(item => item.label)
+export const labelsOnly = statusesList.map(item => item.label);

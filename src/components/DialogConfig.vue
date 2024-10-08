@@ -74,7 +74,7 @@ const linkCopyResult = ref('');
 const linkButtonText = ref('Скопировать');
 
 const shareConfig = () => {
-	const shareText = `Установи клиент Outline ${clientLink.value}, Добавь туда свою конфигурацию ${outlineLink.value}, Инструкция https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
+	const shareText = `Перейди по ссылке и следуй инструкциям ${clientLink.value}, Добавь туда свою конфигурацию ${outlineLink.value}, Инструкция https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
 
 	if (navigator.share) {
 		navigator.share({

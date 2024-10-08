@@ -129,6 +129,8 @@ include ../assets/pug/data
 										SvgIcon(:name="iconTotalTraffic")
 								+e.chart-text
 									| Объем трафика
+				+e.P.chart-note
+					| &laquo;Нам эти данные не&nbsp;нужны, но&nbsp;это минимально необходимый по&nbsp;закону набор данных для запросов властей юрисдикций VPN-серверов. Все данные защищены шифрованием с&nbsp;ключом, разделенным между командой посуточно побригадно, таким образом, что расшифровать ключ можно только при согласии большинства держателей ключа и&nbsp;расшифровываться будет ровно&nbsp;то, что запросят.&raquo;
 			+e.tab(data-tab="2" v-show="showTab === 2")
 				+e.directions
 					+e.directions-title
@@ -221,7 +223,7 @@ PopupError(v-if="isError" )
 </template>
 
 <script setup>
-import {computed, ref, inject, onMounted, onUnmounted } from "vue";
+import {computed, ref, inject, onMounted } from "vue";
 import axios from 'axios';
 import ChartLine from './ChartLine.vue';
 import SvgIcon from './SvgIcon.vue';
@@ -284,10 +286,6 @@ onMounted(()=>{
 
 		chartScroll.value.scrollLeft += 1000;
 	}
-})
-
-onUnmounted(()=>{
-	window.removeEventListener('resize', initSwiper);
 })
 
 const initSwiperData = () => {
@@ -362,7 +360,7 @@ const getUsers = async () =>  {
 		}
 	});
 	if (localStorage.getItem('isInstructionHidden')){
-			statusList.value =  new Set(usersList.value?.map(user => user.Status))
+		statusList.value =  new Set(usersList.value?.map(user => user.Status))
 	}
 };
 

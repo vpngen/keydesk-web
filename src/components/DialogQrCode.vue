@@ -33,13 +33,13 @@ include ../assets/pug/base
 			+e.SPAN.tunnel
 				| Название туннеля: <b>{{ tunnelName }}</b>
 		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Отдай {{ resourceType }} на {{ vpnName }} клиент и настройки другу. Нужно установить {{ vpnName }} и добавить туда {{ resourceType }} от нас.
-		+e.subtitle
-			| {{ vpnName }}:&nbsp;
-			+e.SPAN
-				+e.A(:href="osLink", target="_blank")
-					| {{ osLink }}
-		+e.buttons--qr(v-if="props.configName !== 'OutlineConfig'" )
+			| Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
+		//+e.subtitle
+		//	| {{ vpnName }}:&nbsp;
+		//	+e.SPAN
+		//		+e.A(:href="osLink", target="_blank")
+		//			| {{ osLink }}
+		+e.buttons--qr(v-if="props.configName !== 'VPNGenConfig'" )
 			+e.BUTTON(class="button button--option2 popup__action no-border", @click="others")
 				+e.SPAN
 					| Другие варианты
@@ -49,17 +49,22 @@ include ../assets/pug/base
 				+e.SPAN
 					| Скачать данные
 		+e.outline-block(v-else)
-			+e.outline-header
-				| Ссылка конфига:
-			+e.outline-link
+			//+e.outline-header
+			//	| Ссылка конфига:
+			+e.outline-link(@click="copyText")
 				+e(ref="outlineLinkRef")
 					| {{ outlineLink }}
+				+e.SPAN(v-show="linkCopy") Скопировано
+			+e.SPAN.outline-footer
+				| Ты не сможешь перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
 			+e.buttons--qr
-				+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
-					+e.SPAN
-						| Другие варианты
+				//+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
+				//	+e.SPAN
+				//		| Другие варианты
 				+e.BUTTON.button.button--option2(@click="share")
-					| Поделиться
+					+e.SPAN
+						SvgIcon(name="link")
+						| Поделиться
 		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
 			| {{ linkCopyResult }}
 </template>
@@ -96,15 +101,32 @@ const configList = require('../../vpn_sistems_config.json');
 const isLinkCopied =ref(true);
 const linkCopyResult = ref('');
 const linkButtonText = ref('Скопировать');
+const linkCopy = ref(false);
+const showQrCode = ref(false);
 
-let showQrCode = ref(false);
+const copyText = () => {
+	if (!linkCopy.value) {
+		linkCopy.value = true;
+		const text = outlineLinkRef.value.innerText;
+		const tempElement = document.createElement('textarea');
+		tempElement.value = text;
+		document.body.appendChild(tempElement);
+		tempElement.select();
+		document.execCommand('copy');
+		document.body.removeChild(tempElement);
+
+		setTimeout(() => {
+			linkCopy.value = false;
+		}, 2000);
+	}
+};
 
 const share = () => {
-	const shareText = `Установи клиент Outline: ${osLink.value}\n\nДобавь туда свою конфигурацию\n${outlineLink.value}\n\nИнструкция: https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
+	const shareText = outlineLink.value;
 
 	if (navigator.share) {
 		navigator.share({
-			title: 'Ссылки на клиент, конфиг, инструкцию',
+			title: 'Перейди по ссылке и следуй инструкциям',
 			text: shareText
 		})
 	} else {
@@ -114,7 +136,7 @@ const share = () => {
 }
 
 const resourceType = computed(() => {
-	return props.configName === 'OutlineConfig' ? 'ссылку' : 'файл';
+	return props.configName === 'VPNGenConfig' ? 'ссылку' : 'файл';
 });
 
 const osLabel = computed(() => {
@@ -128,7 +150,7 @@ const osLink = computed(() => {
 });
 
 const outlineLink = computed(() => {
-		return props.configName === 'OutlineConfig' ? props.userData[props.configName].AccessKey : ''
+	return props.configName === 'VPNGenConfig' ? props.userData[props.configName] : ''
 })
 
 const vpnName = computed(() => {

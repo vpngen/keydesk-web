@@ -3,7 +3,7 @@
 	position: fixed;
 	left: 0;
 	top: 0;
-	z-index: 20;
+	z-index: 30;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -60,6 +60,11 @@
 				height: vc(479);
 				top: vc(-145);
 			}
+		}
+
+		&.notifications {
+			backdrop-filter: blur(vc(4));
+			background: rgba($color-black, 0.1);
 		}
 	}
 
@@ -764,24 +769,13 @@
 		height: vc(20);
 	}
 
-	@include mobile {
-
-	}
-
-	@include tablet {
-
-	}
-
-	@include desktop {
-
-	}
-
 	&__close {
 		position: absolute;
 		top: vc(22);
 		right: vc(22);
 		width: vc(20);
 		height: vc(20);
+		color: $color-shark;
 		cursor: pointer;
 	}
 
@@ -804,17 +798,55 @@
 	}
 
 	&__outline-link {
+		position: relative;
+		z-index: 1;
+		overflow-x: hidden;
+		overflow-y: scroll;
 		word-wrap: break-word;
 		border-radius: vc(4);
 		padding: vc(8);
 		background: #FFF;
-		margin: vc(4) 0 vc(24);
+		margin: vc(4) 0 vc(8);
+		max-height: vc(106);
 		color: #0179E5;
 		font-size: vc(12);
 		font-style: normal;
 		font-weight: 400;
 		line-height: vc(18);
-		text-decoration-line: underline;
+		text-decoration-line: none;
+		-webkit-overflow-scrolling: touch;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+
+		span {
+			position: sticky;
+			right: 0;
+			bottom: 0;
+			z-index: 2;
+			display: block;
+			margin: vc(10) 0 0 auto;
+			border-radius: vc(4);
+			padding: vc(6) vc(12);
+			width: fit-content;
+			font-size: vc(16);
+			color: $color-white;
+			background-color: rgba($color-black, 0.6);
+			animation: copyShow 2s forwards;
+			pointer-events: none;
+		}
+	}
+
+	&__outline-footer {
+		display: block;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 16px;
+		text-align: center;
+		color: #7A7A7A;
 	}
 
 	&__copy-success, &__copy-error {
@@ -833,6 +865,119 @@
 
 	&__copy-error {
 		color: #ED0B70;
+	}
+
+	&__notifications {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border-radius: vc(20);
+		padding: vc(32) vc(16);
+		width: calc(100% - #{vc(32)});
+		background-color: $color-catskill-white;
+
+		@include tablet {
+			padding: vc(64);
+			width: vc(670);
+		}
+
+		@include desktop {
+			padding: vc(64);
+			width: vc(670);
+		}
+	}
+
+	&__notifications-icon {
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		align-items: center;
+		flex-shrink: 0;
+		border-radius: 50%;
+		margin: 0 auto vc(12);
+		width: vc(68);
+		height: vc(68);
+		background: linear-gradient(135deg, rgba(190, 248, 252, 0) 13.11%, #57C3FF 87.68%);
+
+		svg {
+			display: block;
+		}
+
+		@include tablet {
+			margin: 0 auto vc(24);
+			width: vc(94);
+			height: vc(94);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(24);
+			width: vc(94);
+			height: vc(94);
+		}
+	}
+
+	&__notifications-title {
+		margin: 0 auto vc(12);
+		font-weight: 700;
+		font-size: vc(18);
+		line-height: calc(21 / 18);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 auto vc(4);
+			font-size: vc(24);
+			line-height: calc(28 / 24);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(4);
+			font-size: vc(24);
+			line-height: calc(28 / 24);
+		}
+	}
+
+	&__notifications-text {
+		margin: 0 auto vc(24);
+		font-size: vc(14);
+		line-height: calc(21 / 14);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 auto vc(32);
+			font-size: vc(16);
+			line-height: calc(24 / 16);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(32);
+			font-size: vc(16);
+			line-height: calc(24 / 16);
+		}
+	}
+
+	&__notifications-button {
+		width: vc(211);
+		height: vc(40);
+	}
+	
+	@keyframes copyShow {
+		0% {
+			opacity: 0;
+		}
+
+		10% {
+			opacity: 1;
+		}
+
+		70% {
+			opacity: 1;
+		}
+
+		100% {
+			opacity: 0;
+		}
 	}
 }
 
