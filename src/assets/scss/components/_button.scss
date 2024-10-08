@@ -22,6 +22,11 @@
 		background-color: darken($color-azure-radiance, 5%);
 	}
 
+	span {
+		display: flex;
+		align-items: center;
+	}
+
 	&--header {
 		font-family: $font-manrope;
 		font-weight: 400;
@@ -119,6 +124,10 @@
 		}
 	}
 
+	&--notifications {
+		border-radius: vc(10);
+	}
+
 	@include tablet {
 		&--helper {
 			font-size: vc(16);
@@ -185,5 +194,11 @@
 	}
 
 	&__outline {
+	}
+
+	.svg-icon {
+		height: vc(20);
+		width: vc(20);
+		margin-right: vc(8);
 	}
 }

@@ -4,6 +4,10 @@
 	position: relative;
 	overflow: hidden;
 	width: 100%;
+	
+	&:has(.popup) {
+		z-index: 5;
+	}
 
 	&__section {
 		position: relative;

@@ -4,13 +4,18 @@ variables:
   PROJECT_NAMESPACE: "vpn-gen"
   IMAGE_NAME: "${LAB_DOCKER_REPO_URL}/${PROJECT_NAMESPACE}/${CI_PROJECT_NAME}"
   DOCKER_REGISTRY_TOKEN: ${YC_TOKEN_DEV}
-  YC_TOKEN: ${YC_TOKEN_DEV}
-  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID_DEV}
-  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY_DEV}
+#  YC_TOKEN: ${YC_TOKEN_DEV}
+#  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID_DEV}
+#  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY_DEV}
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
-image: docker:18.06
+image: cr.yandex/crprnotkh7r44umnfrio/docker:20-dind
 services:
-  - docker:18.06-dind
+  - name: cr.yandex/crprnotkh7r44umnfrio/docker:20-dind
+    alias: docker
+    command: ["--tls=false"]
 
 stages:
   - build
@@ -57,7 +62,7 @@ deploy_stage:
   variables:
       HOSTNAME: "vpn01-gen-stg01.dev.beeonline.pro"
   image:
-    name: docker/compose:alpine-1.29.2
+    name: cr.yandex/crprnotkh7r44umnfrio/docker/compose:alpine-1.29.2
     entrypoint: [""]
   script:
     - >
@@ -66,8 +71,8 @@ deploy_stage:
       else
         export IMAGE_TAG=${CI_COMMIT_TAG}
       fi
-    - docker login --username oauth --password ${DOCKER_REGISTRY_TOKEN} cr.yandex
     - export DOCKER_HOST="ssh://deployment.automation@${HOSTNAME}"
+    - docker login --username oauth --password ${DOCKER_REGISTRY_TOKEN} cr.yandex
     - export DOCKER_IMAGE_PREF=${IMAGE_NAME}
     - export DOCKER_IMAGE_VER=${IMAGE_TAG}
     - docker-compose -f compose/stage.yml up -d

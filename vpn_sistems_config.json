@@ -1,13 +1,13 @@
 {
-  "vpn_list": ["WireguardConfig","AmnzOvcConfig"],
+  "vpn_list": ["WireguardConfig","AmnzOvcConfig","VPNGenConfig"],
   "system_defaults": {
     "windows": "AmnzOvcConfig",
-    "linux":"OutlineConfig",
+    "linux":"VPNGenConfig",
     "macos":"AmnzOvcConfig",
-    "ios":"OutlineConfig",
-    "android":"OutlineConfig",
+    "ios":"VPNGenConfig",
+    "android":"VPNGenConfig",
     "amnezia": "AmnzOvcConfig",
-    "outline": "OutlineConfig",
+    "outline": "VPNGenConfig",
     "wireguard": "WireguardConfig"
   },
   "links_defaults" : {
