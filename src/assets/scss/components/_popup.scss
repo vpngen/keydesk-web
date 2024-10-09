@@ -676,8 +676,8 @@
 
 		&--qr {
 			@include mobile {
-				flex-direction: column-reverse;
-				gap: vc(0);
+				flex-direction: column;
+				gap: vc(12);
 			}
 		}
 
@@ -800,43 +800,55 @@
 	&__outline-link {
 		position: relative;
 		z-index: 1;
-		overflow-x: hidden;
-		overflow-y: scroll;
-		word-wrap: break-word;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: vc(8);
 		border-radius: vc(4);
 		padding: vc(8);
 		background: #FFF;
 		margin: vc(4) 0 vc(8);
-		max-height: vc(106);
-		color: #0179E5;
-		font-size: vc(12);
-		font-style: normal;
-		font-weight: 400;
+		height: vc(34);
 		line-height: vc(18);
 		text-decoration-line: none;
-		-webkit-overflow-scrolling: touch;
-		-ms-overflow-style: none;
-		scrollbar-width: none;
+		
+		input {
+			overflow: hidden;
+			width: 100%;
+			font-size: vc(12);
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			color: $color-azure-radiance;
 
-		&::-webkit-scrollbar {
-			display: none;
+			&:focus {
+				~ span {
+					display: none;
+				}
+			}
 		}
 
 		span {
-			position: sticky;
-			right: 0;
-			bottom: 0;
+			flex-shrink: 0;
+			width: vc(16);
+			height: vc(16);
+			cursor: pointer;
+		}
+
+		p {
+			position: absolute;
+			right: vc(4);
+			top: calc(50% - #{vc(12)});
 			z-index: 2;
-			display: block;
-			margin: vc(10) 0 0 auto;
+			box-shadow: 0 0 6px 0 rgba(105, 105, 105, 0.25);
 			border-radius: vc(4);
-			padding: vc(6) vc(12);
-			width: fit-content;
-			font-size: vc(16);
-			color: $color-white;
-			background-color: rgba($color-black, 0.6);
+			padding: vc(5) vc(10);
+			height: vc(24);
+			font-size: vc(14);
+			line-height: 1;
+			color: $color-biscay;
+			background-color: $color-white;
 			animation: copyShow 2s forwards;
-			pointer-events: none;
 		}
 	}
 

@@ -52,18 +52,21 @@ include ../assets/pug/base
 			//+e.outline-header
 			//	| Ссылка конфига:
 			+e.outline-link(@click="copyText")
-				+e(ref="outlineLinkRef")
+				+e.INPUT(ref="outlineLinkRef" :value="outlineLink" readonly="readonly")
 					| {{ outlineLink }}
-				+e.SPAN(v-show="linkCopy") Скопировано
+				+e.SPAN
+					SvgIcon(name="icon-copy")
+				+e.P(v-show="linkCopy") Скопировано
 			+e.SPAN.outline-footer
 				| Ты не сможешь перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
 			+e.buttons--qr
-				//+e.BUTTON(class="button button--option2 popup__action no-border" @click="others")
-				//	+e.SPAN
-				//		| Другие варианты
-				+e.BUTTON.button.button--option2(@click="share")
+				+e.BUTTON.button.button--option2(@click="copyText")
 					+e.SPAN
 						SvgIcon(name="link")
+						| Копировать ссылку
+				+e.BUTTON.button.button--option2(@click="share")
+					+e.SPAN
+						SvgIcon(name="icon-share")
 						| Поделиться
 		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
 			| {{ linkCopyResult }}
@@ -105,28 +108,30 @@ const linkCopy = ref(false);
 const showQrCode = ref(false);
 
 const copyText = () => {
-	if (!linkCopy.value) {
-		linkCopy.value = true;
-		const text = outlineLinkRef.value.innerText;
-		const tempElement = document.createElement('textarea');
-		tempElement.value = text;
-		document.body.appendChild(tempElement);
-		tempElement.select();
-		document.execCommand('copy');
-		document.body.removeChild(tempElement);
-
-		setTimeout(() => {
-			linkCopy.value = false;
-		}, 2000);
+	if (linkCopy.value) {
+		return;
 	}
+
+	linkCopy.value = true;
+	const text = `Перейди по ссылке и следуй инструкциям ${outlineLinkRef.value.value}`;
+	const tempElement = document.createElement('textarea');
+	tempElement.value = text;
+	document.body.appendChild(tempElement);
+	tempElement.select();
+	document.execCommand('copy');
+	document.body.removeChild(tempElement);
+
+	setTimeout(() => {
+		linkCopy.value = false;
+	}, 2000);
 };
 
 const share = () => {
-	const shareText = outlineLink.value;
+	const shareText = `Перейди по ссылке и следуй инструкциям \n\n${outlineLink.value}`;
 
 	if (navigator.share) {
 		navigator.share({
-			title: 'Перейди по ссылке и следуй инструкциям',
+			title: 'Ссылка на инструкцию',
 			text: shareText
 		})
 	} else {
