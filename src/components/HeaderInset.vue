@@ -3,8 +3,15 @@ include ../assets/pug/base
 include ../assets/pug/data
 +b.HEADER.header--inset
 	+e.container
-		+e.logo
+		RouterLink(class="header__logo" to="/")
 			SvgIcon(name="logo-vpn")
+		RouterLink(:class="`header__notifications ${message.length ? 'header__notifications--message' : ''}`" to="/notifications"  :data-total="message.length")
+			SvgIcon(name="icon-ring")
+		HeaderMessage(
+			v-if="showMessage"
+			:message="message"
+			@toggle="toggleMessage"
+		)
 		+e.content(v-if="false")
 			+e.NAV.nav
 				each link in data.headerInset.link
@@ -24,32 +31,54 @@ include ../assets/pug/data
 				+e.SPAN
 				+e.SPAN
 				+e.SPAN
-
-
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+import axios from "axios";
 import SvgIcon from './SvgIcon.vue';
-import { onMounted, ref } from 'vue'
+import HeaderMessage from "@/components/HeaderMessage.vue";
 
-const showLangMenu = ref(false)
-
-const openLangMenu = () => {
-	showLangMenu.value = !showLangMenu.value
+let apiLink = "";
+if (process.env.NODE_ENV === "development") {
+  apiLink = "https://keydesk.ussr.vpngen.org";
 }
 
-onMounted(() => {
-	const langMenu = document.querySelector('.header__lang-menu');
+const token = ref(null);
+const message = ref([]);
+const showMessage = ref(false);
 
-	// document.querySelector('body').addEventListener('click', (e) => {
-	// 	if (!e.target.closest('.header__lang-menu') && !e.target.closest('.header__lang')) {
-	// 		langMenu.classList.remove('active');
+const getToken = async () => {
+ 	 await axios.post(`${apiLink}/token`)
+		.then((r) => {
+			token.value = r.data.Token;
+			axios.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
 
-	// 		if(showLangMenu.value) {
-	// 			showLangMenu.value = !showLangMenu.value
-	// 		}
-	// 	}
-	// });
-})
+			getMessage();
+		});
+};
 
+const getMessage = async () => {
+	await axios.get(`${apiLink}/messages?read=false&priority=10&priority-op=eq`)
+		.then((r) => {
+			message.value = r.data.messages;
+
+			if (message.value.length) {
+				showMessage.value = !showMessage.value;
+			}
+		});
+};
+
+getToken();
+
+const toggleMessage = async () => {
+  if (showMessage.value) {
+    await axios.post(`${apiLink}/messages/${message.value[0].id}/read`);
+
+	getMessage();
+  }
+
+  showMessage.value = !showMessage.value;
+};
 </script>

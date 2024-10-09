@@ -3,7 +3,7 @@
 	position: fixed;
 	left: 0;
 	top: 0;
-	z-index: 20;
+	z-index: 30;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -60,6 +60,11 @@
 				height: vc(479);
 				top: vc(-145);
 			}
+		}
+
+		&.notifications {
+			backdrop-filter: blur(vc(4));
+			background: rgba($color-black, 0.1);
 		}
 	}
 
@@ -671,8 +676,8 @@
 
 		&--qr {
 			@include mobile {
-				flex-direction: column-reverse;
-				gap: vc(0);
+				flex-direction: column;
+				gap: vc(12);
 			}
 		}
 
@@ -764,24 +769,13 @@
 		height: vc(20);
 	}
 
-	@include mobile {
-
-	}
-
-	@include tablet {
-
-	}
-
-	@include desktop {
-
-	}
-
 	&__close {
 		position: absolute;
 		top: vc(22);
 		right: vc(22);
 		width: vc(20);
 		height: vc(20);
+		color: $color-shark;
 		cursor: pointer;
 	}
 
@@ -804,17 +798,67 @@
 	}
 
 	&__outline-link {
-		word-wrap: break-word;
+		position: relative;
+		z-index: 1;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: vc(8);
 		border-radius: vc(4);
 		padding: vc(8);
 		background: #FFF;
-		margin: vc(4) 0 vc(24);
-		color: #0179E5;
-		font-size: vc(12);
-		font-style: normal;
-		font-weight: 400;
+		margin: vc(4) 0 vc(8);
+		height: vc(34);
 		line-height: vc(18);
-		text-decoration-line: underline;
+		text-decoration-line: none;
+		
+		input {
+			overflow: hidden;
+			width: 100%;
+			font-size: vc(12);
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			color: $color-azure-radiance;
+
+			&:focus {
+				~ span {
+					display: none;
+				}
+			}
+		}
+
+		span {
+			flex-shrink: 0;
+			width: vc(16);
+			height: vc(16);
+			cursor: pointer;
+		}
+
+		p {
+			position: absolute;
+			right: vc(4);
+			top: calc(50% - #{vc(12)});
+			z-index: 2;
+			box-shadow: 0 0 6px 0 rgba(105, 105, 105, 0.25);
+			border-radius: vc(4);
+			padding: vc(5) vc(10);
+			height: vc(24);
+			font-size: vc(14);
+			line-height: 1;
+			color: $color-biscay;
+			background-color: $color-white;
+			animation: copyShow 2s forwards;
+		}
+	}
+
+	&__outline-footer {
+		display: block;
+		font-size: 12px;
+		font-weight: 400;
+		line-height: 16px;
+		text-align: center;
+		color: #7A7A7A;
 	}
 
 	&__copy-success, &__copy-error {
@@ -833,6 +877,119 @@
 
 	&__copy-error {
 		color: #ED0B70;
+	}
+
+	&__notifications {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		border-radius: vc(20);
+		padding: vc(32) vc(16);
+		width: calc(100% - #{vc(32)});
+		background-color: $color-catskill-white;
+
+		@include tablet {
+			padding: vc(64);
+			width: vc(670);
+		}
+
+		@include desktop {
+			padding: vc(64);
+			width: vc(670);
+		}
+	}
+
+	&__notifications-icon {
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		align-items: center;
+		flex-shrink: 0;
+		border-radius: 50%;
+		margin: 0 auto vc(12);
+		width: vc(68);
+		height: vc(68);
+		background: linear-gradient(135deg, rgba(190, 248, 252, 0) 13.11%, #57C3FF 87.68%);
+
+		svg {
+			display: block;
+		}
+
+		@include tablet {
+			margin: 0 auto vc(24);
+			width: vc(94);
+			height: vc(94);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(24);
+			width: vc(94);
+			height: vc(94);
+		}
+	}
+
+	&__notifications-title {
+		margin: 0 auto vc(12);
+		font-weight: 700;
+		font-size: vc(18);
+		line-height: calc(21 / 18);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 auto vc(4);
+			font-size: vc(24);
+			line-height: calc(28 / 24);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(4);
+			font-size: vc(24);
+			line-height: calc(28 / 24);
+		}
+	}
+
+	&__notifications-text {
+		margin: 0 auto vc(24);
+		font-size: vc(14);
+		line-height: calc(21 / 14);
+		text-align: center;
+
+		@include tablet {
+			margin: 0 auto vc(32);
+			font-size: vc(16);
+			line-height: calc(24 / 16);
+		}
+
+		@include desktop {
+			margin: 0 auto vc(32);
+			font-size: vc(16);
+			line-height: calc(24 / 16);
+		}
+	}
+
+	&__notifications-button {
+		width: vc(211);
+		height: vc(40);
+	}
+	
+	@keyframes copyShow {
+		0% {
+			opacity: 0;
+		}
+
+		10% {
+			opacity: 1;
+		}
+
+		70% {
+			opacity: 1;
+		}
+
+		100% {
+			opacity: 0;
+		}
 	}
 }
 

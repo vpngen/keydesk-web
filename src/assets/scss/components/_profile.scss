@@ -540,28 +540,36 @@
 	}
 
 	&__option {
-		width: vc(155);
-		height: vc(40);
-
 		&:not(:last-child) {
 			margin-right: vc(10);
 		}
 
+		&.swiper-slide {
+			width: vc(155);
+			height: vc(40);
+		}
+
 		@include tablet {
 			margin-right: vc(20);
-			width: vc(230);
 
 			&:not(:last-child) {
 				margin-right: vc(20);
+			}
+
+			&.swiper-slide {
+				width: vc(230);
 			}
 		}
 
 		@include desktop {
 			margin-right: vc(20);
-			width: vc(230);
 
 			&:not(:last-child) {
 				margin-right: vc(20);
+			}
+
+			&.swiper-slide {
+				width: vc(230);
 			}
 		}
 	}
@@ -895,6 +903,7 @@
 	}
 
 	&__chart {
+		margin: 0 0 vc(16);
 		color: $color-black;
 
 		@include desktop {
@@ -1138,6 +1147,10 @@
 		line-height: calc(16 / 14);
 	}
 
+	&__chart-note {
+		color: $color-black;
+	}
+
 	&__directions {
 		
 	}
@@ -1164,18 +1177,21 @@
 	&__directions-slide {
 		position: relative;
 		z-index: 1;
-		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: space-between;
 		border-radius: vc(20);
 		padding: vc(12);
-		width: vc(210);
-		height: vc(131);
 		background-color: $color-white;
 
 		&:not(:last-child) {
 			margin-right: vc(20);
+		}
+
+		&.swiper-slide {
+			display: flex;
+			width: vc(210);
+			height: vc(131);
 		}
 
 		#{$p}__directions-image {
@@ -1485,7 +1501,7 @@
   }
 
   &.red {
-    background: url($url-image + 'svg/black.svg') no-repeat center center;
+    background: url($url-image + 'svg/red.svg') no-repeat center center;
   }
 
   &.yellow {
