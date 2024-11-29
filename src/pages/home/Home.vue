@@ -1,9 +1,9 @@
-<template lang="pug">
-include ../../assets/pug/base.pug
-
-+b.MAIN.home
-  +e.SECTION.section--profile
-    Profile
+<template>
+	<main class="home">
+		<section class="home__section home__section--profile">
+			<Profile />
+		</section>
+	</main>
 </template>
 
 <script setup>

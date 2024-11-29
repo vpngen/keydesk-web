@@ -1,5 +1,4 @@
--
-	const data = {
+export default {
 		header: {
 			link: [
 				{text: 'Как это работает', href: '#generator'},

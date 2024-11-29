@@ -973,6 +973,10 @@
 		width: vc(211);
 		height: vc(40);
 	}
+
+	&--welcome {
+		z-index: 20;
+	}
 	
 	@keyframes copyShow {
 		0% {

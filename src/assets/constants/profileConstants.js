@@ -76,14 +76,14 @@ export const profileCardStatus = {
         [statusMap.black]: 'Мёртвая душа',
         [statusMap.grey]: 'Ёжик в тумане',
         [statusMap.yellow]: 'Работает с ограничениями',
-        [statusMap.red]: 'Временная блокировка',
+        [statusMap.red]: 'Редиска',
     },
     statusHint: {
         [statusMap.green]: 'Этот пользователь просто наслаждается VPN и ничто не предвещает беды',
         [statusMap.black]: 'Этот пользователь ни разу не подключился к VPN',
         [statusMap.grey]: 'Этот пользователь не подключился к VPN в этом месяце',
         [statusMap.yellow]: 'Скорость этого пользователя снижена до 256 кб\\сек из-за превышения лимита трафика',
-        [statusMap.red]: 'Пользователь заблокирован на [оставшееся время] за [тип нарушения]',
+        [statusMap.red]: 'Пользователь заблокирован',
     },
     statusColor: {
         [statusMap.green]: 'status-green',

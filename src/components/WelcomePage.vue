@@ -1,46 +1,52 @@
-<template lang="pug">
-include ../assets/pug/base
-WelcomePageStepOne(
-	v-if="step===1"
-	@close="closeComponent"
-	@triggerNextStep ="triggerNextSteps()"
-	@highlight="highlightElement()")
-WelcomePageStepTwo(
-	v-if="step===2"
-	:buttonPosition="firstUserProfileCardPosition"
-	@close="closeComponent()"
-	@triggerStepFive ="triggerNextSteps()"
-	@highlight="highlightElement()"
-	@darkenElements="darkenElement()")
-WelcomePageStepThree(
-	v-if="step===3"
-	:buttonPosition="buttonPositionForWelcomePageStepTwo"
-	@highlight="highlightElement()"
-	@darkenElements="darkenElement()"
-	@triggerStepThree ="triggerNextSteps()"
-	@close="closeComponent()")
-WelcomePageStepFour(
-	v-if="step===4"
-	@close="closeComponent()"
-	@highlight="highlightElement()"
-	@triggerStepFour ="triggerNextSteps()")
-WelcomePageStepFive(
-	v-if="step===5"
-	:buttonPosition="secondUserProfileCardPosition"
-	@close="closeComponent()"
-	@triggerStepSix ="triggerNextSteps()"
-	@highlight="highlightElement()"
-	@darkenElements="darkenElement()")
-WelcomePageStepSix(
-	v-if="step===6"
-	:buttonPosition="searchButtonPosition"
-	@close="closeComponent()"
-	@triggerStepSeven ="triggerNextSteps()"
-	@highlight="highlightElement()"
-	@darkenElements="darkenElement()")
-WelcomePageStepSeven(
-	v-if="step===7"
-	@close="closeComponent()")
+<template>
+	<WelcomePageStepOne
+		v-if="step===1"
+		@close="closeComponent"
+		@triggerNextStep ="triggerNextSteps()"
+		@highlight="highlightElement()"
+	/>
+	<WelcomePageStepTwo
+		v-if="step===2"
+		:buttonPosition="firstUserProfileCardPosition"
+		@close="closeComponent()"
+		@triggerStepFive ="triggerNextSteps()"
+		@highlight="highlightElement()"
+		@darkenElements="darkenElement()"
+	/>
+	<WelcomePageStepThree
+		v-if="step===3"
+		:buttonPosition="buttonPositionForWelcomePageStepTwo"
+		@highlight="highlightElement()"
+		@darkenElements="darkenElement()"
+		@triggerStepThree ="triggerNextSteps()"
+		@close="closeComponent()"
+	/>
+	<WelcomePageStepFour
+		v-if="step===4"
+		@close="closeComponent()"
+		@highlight="highlightElement()"
+		@triggerStepFour ="triggerNextSteps()"
+	/>
+	<WelcomePageStepFive
+		v-if="step===5"
+		:buttonPosition="secondUserProfileCardPosition"
+		@close="closeComponent()"
+		@triggerStepSix ="triggerNextSteps()"
+		@highlight="highlightElement()"
+		@darkenElements="darkenElement()"
+	/>
+	<WelcomePageStepSix
+		v-if="step===6"
+		:buttonPosition="searchButtonPosition"
+		@close="closeComponent()"
+		@triggerStepSeven ="triggerNextSteps()"
+		@highlight="highlightElement()"
+		@darkenElements="darkenElement()"
+	/>
+	<WelcomePageStepSeven
+		v-if="step===7"
+		@close="closeComponent()"
+	/>
 </template>
 
 <script setup>
