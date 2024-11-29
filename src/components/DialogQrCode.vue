@@ -1,82 +1,90 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay(@click="close")
-	+e.alert
-		+e.close(@click="close")
-			SvgIcon(name="icon-close")
-		+e.name
-			| {{ userName }}
-		QRCodeVue3(
-			v-if="showQrCode"
-			:width="500",
-			:height="500",
-			:qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
-			:value="qrCode",
-			:imageOptions="{ hideBackgroundDots: true, imageSize: 0.3, margin: 0}",
-			:dotsOptions={
-				type: 'rounded',
-				color: '#1D4365',
-			},
-			fileExt="svg"
-			myclass="qr-code"
-			:backgroundOptions="{ color: 'transparent' }",
-			:cornersSquareOptions="{ type: 'extra-rounded', color: '#1D4365' }",
-			:cornersDotOptions="{ type: undefined, color: '#1D4365' }",
-		)
-		+e.emoji(v-else)
-			SvgIcon(name="icon-emoji-happy")
-		+e.title.qr-title
-			| Настройки для VPN готовы!
-		+e.subtitle(v-if="showQrCode")
-			| Скачайте, скопируйте или<br>активируйте ее&nbsp;по&nbsp;QR-коду
-			+e.SPAN.tunnel
-				| Название туннеля: <b>{{ tunnelName }}</b>
-		+e.subtitle.popup__subtitle--minimize-margin(v-else)
-			| Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
-		//+e.subtitle
-		//	| {{ vpnName }}:&nbsp;
-		//	+e.SPAN
-		//		+e.A(:href="osLink", target="_blank")
-		//			| {{ osLink }}
-		+e.buttons--qr(v-if="props.configName !== 'VPNGenConfig'" )
-			+e.BUTTON(class="button button--option2 popup__action no-border", @click="others")
-				+e.SPAN
-					| Другие варианты
-			+e.A(class="button button--option2 popup__action", :href="buttonHref", :download="buttonDownload")
-				+e.button-img
-					SvgIcon(name="download")
-				+e.SPAN
-					| Скачать данные
-		+e.outline-block(v-else)
-			//+e.outline-header
-			//	| Ссылка конфига:
-			+e.outline-link(@click="copyText")
-				+e.INPUT(ref="outlineLinkRef" :value="outlineLink" readonly="readonly")
-					| {{ outlineLink }}
-				+e.SPAN
-					SvgIcon(name="icon-copy")
-				+e.P(v-show="linkCopy") Скопировано
-			+e.SPAN.outline-footer
-				| Ты не сможешь перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
-			+e.buttons--qr
-				+e.BUTTON.button.button--option2(@click="copyText")
-					+e.SPAN
-						SvgIcon(name="link")
-						| Копировать ссылку
-				+e.BUTTON.button.button--option2(@click="share")
-					+e.SPAN
-						SvgIcon(name="icon-share")
-						| Поделиться
-		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
-			| {{ linkCopyResult }}
+<template>
+	<div class="popup">
+		<div class="popup__overlay" @click="close" />
+		<div class="popup__alert">
+			<div class="popup__close" @click="close">
+				<SvgIcon name="icon-close" />
+			</div>
+			<div class="popup__name">
+				{{ userName }}
+			</div>
+			<QRCodeVue3
+				v-if="showQrCode"
+				:width="500"
+				:height="500"
+				:qrOptions="{ typeNumber: 0, mode: 'Byte', errorCorrectionLevel: 'H' }"
+				:value="qrCode"
+				:imageOptions="{ hideBackgroundDots: true, imageSize: 0.3, margin: 0}"
+				:dotsOptions="{
+					type: 'rounded',
+					color: '#1D4365',
+				}"
+				fileExt="svg"
+				myclass="qr-code"
+				:backgroundOptions="{ color: 'transparent' }"
+				:cornersSquareOptions="{ type: 'extra-rounded', color: '#1D4365' }"
+				:cornersDotOptions="{ type: undefined, color: '#1D4365' }"
+			/>
+			<div class="popup__emoji" v-else>
+				<SvgIcon name="icon-emoji-happy" />
+			</div>
+			<div class="popup__title qr-title">
+				Готово!
+			</div>
+			<div class="popup__subtitle" v-if="showQrCode">
+				Скачайте, скопируйте или<br>активируйте ее&nbsp;по&nbsp;QR-коду
+				<span class="tunnel">
+					Название туннеля: <b>{{ tunnelName }}</b>
+				</span>
+			</div>
+			<div class="popup__subtitle popup__subtitle--minimize-margin" v-else>
+				Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
+			</div>
+			<!--<div class="popup__subtitle">-->
+			<!--	{{ vpnName }}: -->
+			<!--	<span>-->
+			<!--		<a :href="osLink" target="_blank">{{ osLink }}</a>-->
+			<!--	</span>-->
+			<!--</div>-->
+			<div class="popup__buttons popup__buttons--qr" v-if="props.configName !== 'VPNGenConfig'">
+				<button class="button button--option2 popup__action no-border" @click="others">
+					<span>Другие варианты</span>
+				</button>
+				<a class="button button--option2 popup__action" :href="buttonHref" :download="buttonDownload">
+					<span class="popup__button-img">
+						<SvgIcon name="download" />
+					</span>
+					<span>Скачать данные</span>
+				</a>
+			</div>
+			<div class="popup__outline-block" v-else>
+				<!--<div class="popup__outline-header">Ссылка конфига:</div>-->
+				<div class="popup__buttons popup__buttons--qr">
+					<button class="popup__button button button--option2" @click="copyText">
+						<span>
+							<SvgIcon name="link" />
+							Копировать ссылку
+						</span>
+					</button>
+					<button v-if="window.location.protocol === 'https:'" class="popup__button button button--option2" @click="share">
+						<span>
+							<SvgIcon name="icon-share" />
+							Поделиться
+						</span>
+					</button>
+				</div>
+			</div>
+			<div class="popup__link-copy-result" v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}">
+				{{ linkCopyResult }}
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
 import QRCodeVue3 from 'qrcode-vue3';
 import SvgIcon from './SvgIcon.vue';
-// import { dialogQrDic as dic } from '../const/dialog.ts';
 import { dialogOsCards } from '../const/dialog.ts';
 
 const props = defineProps({
@@ -113,7 +121,7 @@ const copyText = () => {
 	}
 
 	linkCopy.value = true;
-	const text = `Перейди по ссылке и следуй инструкциям ${outlineLinkRef.value.value}`;
+	const text = outlineLinkRef.value.value;
 	const tempElement = document.createElement('textarea');
 	tempElement.value = text;
 	document.body.appendChild(tempElement);

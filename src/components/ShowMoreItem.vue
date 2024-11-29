@@ -1,13 +1,13 @@
 <template>
-       	<div class="profile__accordion-question"
-						 :class="{'profile__accordion-question--open':isExpanded}"
-						 @click="emit('setExpandedQuestionIndex')"
-						 v-html="title">
-				</div>
-        <div class="profile__accordion-responsion"
-						 :class="{'profile__accordion-responsion--open':isExpanded}" >
-            <p v-for="(answer) in extraContent" v-html="answer"></p>
-        </div>
+  <div
+    class="profile__accordion-question"
+		:class="{'profile__accordion-question--open':isExpanded}"
+		@click="emit('setExpandedQuestionIndex')"
+		v-html="title"
+  />
+  <div class="profile__accordion-responsion" :class="{'profile__accordion-responsion--open':isExpanded}">
+    <p v-for="(answer) in extraContent" v-html="answer"></p>
+  </div>
 </template>
 
 <script setup>

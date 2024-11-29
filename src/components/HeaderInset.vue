@@ -1,36 +1,46 @@
-<template lang="pug">
-include ../assets/pug/base
-include ../assets/pug/data
-+b.HEADER.header--inset
-	+e.container
-		RouterLink(class="header__logo" to="/")
-			SvgIcon(name="logo-vpn")
-		RouterLink(:class="`header__notifications ${message.length ? 'header__notifications--message' : ''}`" to="/notifications"  :data-total="message.length")
-			SvgIcon(name="icon-ring")
-		HeaderMessage(
-			v-if="showMessage"
-			:message="message"
-			@toggle="toggleMessage"
-		)
-		+e.content(v-if="false")
-			+e.NAV.nav
-				each link in data.headerInset.link
-					+e.A.link(href=link.href)
-						!=link.text
-			+e.language
-				+e.BUTTON.lang(type="button", @click="openLangMenu")
-					SvgIcon(name="lang-de")
-				+e.lang-menu(:class="showLangMenu ? 'active' : ''")
-					for item in data.headerInset.langList
-						+e.A.lang-item(href=item.href)
-							+e.lang-img
-								SvgIcon(name=`lang-${item.img}`)
-							+e.lang-name
-								!=item.lang
-			+e.BUTTON.burger(type="button")
-				+e.SPAN
-				+e.SPAN
-				+e.SPAN
+<template>
+	<header class="header header--inset">
+		<div class="header__container">
+			<RouterLink class="header__logo" to="/">
+				<SvgIcon name="logo-vpn"/>
+			</RouterLink>
+			<RouterLink :class="`header__notifications ${message.length ? 'header__notifications--message' : ''}`" to="/notifications"  :data-total="message.length">
+				<SvgIcon name="icon-ring"/>
+			</RouterLink>
+			<HeaderMessage
+				v-if="showMessage"
+				:message="message"
+				@toggle="toggleMessage"
+			/>
+		 <div class="header__content" v-if="false">
+			 <nav class="header__nav">
+				 <template v-for="link in data.headerInset.link">
+					 <a :href="link.href" class="header__link">{{ link.text }}</a>
+				 </template>
+				 <div class="header__language">
+					 <button class="header__lang" @click="openLangMenu">
+						 <SvgIcon name="header__lang-de"/>
+					 </button>
+					 <div class="header__lang-menu" :class="{'active': showLangMenu}">
+						 <template v-for="item in data.headerInset.langList">
+							 <a :href="item.href" class="header__lang-item">
+								 <div class="header__lang-img">
+									 <SvgIcon :name="`lang-${item.lang}`" />
+								 </div>
+								 <span class="header__lang-name">{{item.lang}}</span>
+							 </a>
+						 </template>
+					 </div>
+				 </div>
+			  </nav>
+				<button class="header__burger">
+					<span/>
+					<span/>
+					<span/>
+				</button>
+		 </div>
+		</div>
+	</header>
 </template>
 
 <script setup>
@@ -39,6 +49,7 @@ import { RouterLink } from 'vue-router'
 import axios from "axios";
 import SvgIcon from './SvgIcon.vue';
 import HeaderMessage from "@/components/HeaderMessage.vue";
+import data from "@/assets/helpers/data.ts";
 
 let apiLink = "";
 if (process.env.NODE_ENV === "development") {
@@ -76,7 +87,7 @@ const toggleMessage = async () => {
   if (showMessage.value) {
     await axios.post(`${apiLink}/messages/${message.value[0].id}/read`);
 
-	getMessage();
+	await getMessage();
   }
 
   showMessage.value = !showMessage.value;

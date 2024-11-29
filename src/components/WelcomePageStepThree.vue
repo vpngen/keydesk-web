@@ -1,18 +1,22 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-  +e.overlay.welcome
-  +e.alert.welcome-add(ref='startLine')
-    +e.title.save-title.welcome-add
-      | Нажмите тут для добавления конфигурации.
-    +e.title.save-title.welcome-add
-      | На каждое устройство нужна отдельная конфигурация!
-    +e.button.welcome
-      +button('Далее', 'button', 'welcome')(@click="triggerStepThree")
-  +e.fake-area(ref='endLine')
-  +e.text.welcome.bottom-close
-    a(@click="close")
-      | Пропустить
+<template>
+	<div class="popup popup--welcome">
+	  <div class="popup__overlay welcome" />
+	  <div class="popup__alert welcome-add" ref="startLine">
+	    <div class="popup__title save-title welcome-add">
+	      Нажмите тут для добавления конфигурации.
+	    </div>
+	    <div class="popup__title save-title welcome-add">
+	      На каждое устройство нужна отдельная конфигурация!
+	    </div>
+	    <div class="popup__button welcome">
+		    <button class="button button--welcome" @click="triggerStepThree">Далее</button>
+	    </div>
+	  </div>
+	  <div class="popup__fake-area" ref="endLine" />
+	  <div class="popup__text welcome bottom-close">
+		  <a @click="close">Пропустить</a>
+	  </div>
+	</div>
 </template>
 
 <script setup>

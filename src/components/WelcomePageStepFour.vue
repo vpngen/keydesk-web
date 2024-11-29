@@ -1,34 +1,46 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay.welcome
-	+e.overlay.qr
-	+e.alert.welcome-qr(ref="endLine")
-		+e.close
-			SvgIcon(name="icon-close")
-		+e.icon-qr-code
-			SvgIcon(name="icon-qr-code")
-		+e.title.qr-title
-			| Конфигурация готова!
-		+e.subtitle.qr-subtitle
-			| Скачайте, скопируйте или<br>активируйте ее по QR-коду
-		+e.buttons.qr-buttons
-			+e.BUTTON(class="button button--option2 popup__action no-border")
-				+e.SPAN
-					| Копировать данные
-			+e.A(class="button button--option2 popup__action")
-				+e.button-img
-					SvgIcon(name="download")
-				+e.SPAN
-					| Скачать данные
-	+e.alert.welcome-qr-description(ref="startLine")
-		+e.title.qr-title-description
-			| Конфигурация создана! Скопируй, скачай или открой через QR  данные для нового устройства
-		+e.button.welcome
-			+button('Далее', 'button', 'welcome')(@click="triggerStepFour")
-	+e.text.welcome.bottom-close
-		a(@click="close")
-			| Пропустить
+<template>
+	<div class="popup popup--welcome">
+		<div class="popup__overlay welcome" />
+		<div class="popup__overlay qr"/>
+		<div class="popup__alert welcome-qr" ref="endLine">
+			<div class="popup__close">
+				<SvgIcon name="icon-close" />
+			</div>
+			<div class="popup__icon-qr-code">
+				<SvgIcon name="icon-qr-code" />
+			</div>
+			<div class="popup__title qr-title">
+				Конфигурация готова!
+			</div>
+			<div class="popup__subtitle qr-subtitle">
+				Скачайте, скопируйте или<br>активируйте ее по QR-коду
+			</div>
+			<div class="popup__buttons qr-buttons">
+				<button class="popup__button button--option2 popup__action no-border">
+					<span>Копировать данные</span>
+				</button>
+				<a class="popup__button button--option2 popup__action">
+					<span class="popup__button-img">
+						<SvgIcon name="download" />
+					</span>
+					<span>Скачать данные</span>
+				</a>
+			</div>
+		</div>
+		<div class="popup__alert welcome-qr-description" ref="startLine">
+			<div class="popup__title qr-title-description">
+				Конфигурация создана! Скопируй, скачай или открой через QR  данные для нового устройства
+			</div>
+			<div class="popup__button welcome">
+				<button class="button button--welcome" @click="triggerStepFour">Далее</button>
+			</div>
+		</div>
+		<div class="popup__text welcome bottom-close">
+			<a @click="close">
+				Пропустить
+			</a>
+		</div>
+	</div>
 </template>
 
 <script setup>
