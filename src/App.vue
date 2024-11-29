@@ -1,8 +1,8 @@
-<template lang='pug'>
-HeaderInset
-RouterView
-Footer
-TheLoader
+<template>
+	<HeaderInset />
+	<RouterView />
+	<Footer />
+	<TheLoader />
 </template>
 
 <script setup>

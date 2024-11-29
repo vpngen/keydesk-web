@@ -1,21 +1,20 @@
-<template lang="pug">
-include ../assets/pug/base
-include ../assets/pug/data
-+b.FOOTER.footer
-	+e.content
-		each link in data.footer.link
-			+e.A.link(href="#")(v-if="false")
-				!=link
-
-	+e.copyright
-		| `&copy;&nbsp;{{ currentDate.getFullYear() }}&nbsp;IEDN`
-
-    
+<template>
+	<footer class="footer">
+		<div class="footer__content">
+			<template v-for="link in data.footer.link">
+				<a href="#" class="footer__link" v-if="false">
+					{{ link }}
+				</a>
+			</template>
+		</div>
+		<div class="footer__copyright">
+			@ {{ currentDate.getFullYear() }} IEDN
+		</div>
+	</footer>
 </template>
-        
-<script setup>
 
+<script setup>
+import data from "@/assets/helpers/data.ts";
 const currentDate = new Date
 
 </script>
-          

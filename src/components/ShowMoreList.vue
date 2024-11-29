@@ -1,16 +1,16 @@
 <template>
-    <div class="profile__show-more-container">
-        <div class="profile__show-more-column profile__show-more-column--mobile">
-            <ShowMoreItem
-                v-for="(card, index) in cardsList"
-                :key="index"
-                :title="card.question"
-                :extraContent="card.answers"
-                :isExpanded="expandedQuestionIndex===index"
-                @setExpandedQuestionIndex = setExpandedQuestionIndex(index);
-            />
-        </div>
+	<div class="profile__show-more-container">
+    <div class="profile__show-more-column profile__show-more-column--mobile">
+      <ShowMoreItem
+        v-for="(card, index) in cardsList"
+        :key="index"
+        :title="card.question"
+        :extraContent="card.answers"
+        :isExpanded="expandedQuestionIndex===index"
+        @setExpandedQuestionIndex = setExpandedQuestionIndex(index);
+      />
     </div>
+	</div>
 </template>
 
 <script setup>

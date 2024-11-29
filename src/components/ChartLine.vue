@@ -1,6 +1,5 @@
-<template lang="pug">
-include ../assets/pug/base
-Line(id="chartLine" :data="chartNewData" :options="chartOptions")
+<template>
+	<Line id="chartLine" :data="chartNewData" :options="chartOptions"/>
 </template>
 
 <script setup>

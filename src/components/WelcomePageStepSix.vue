@@ -1,16 +1,19 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay.welcome
-	+e.alert.welcome-search(ref='startLine')
-		+e.title.save-title
-			| Здесь можно искать конфигурации по части имени. Пригодится, когда бригада вырастет
-		+e.button.welcome-search
-			+button('Далее', 'button', 'welcome')(@click="triggerStepSeven")
-	+e.text.welcome.bottom-close
-		a(@click="close")
-			| Пропустить
-	+e.fake-area(ref='endLine')
+<template>
+	<div class="popup popup--welcome">
+		<div class="popup__overlay welcome" />
+		<div class="popup__alert welcome-search" ref="startLine">
+			<div class="popup__title save-title">
+				Здесь можно искать конфигурации по части имени. Пригодится, когда бригада вырастет
+			</div>
+			<div class="popup__button welcome-search">
+				<button class="button button--welcome" @click="triggerStepSeven">Далее</button>
+			</div>
+		</div>
+		<div class="popup__text welcome bottom-close">
+			<a @click="close">Пропустить</a>
+		</div>
+		<div class="popup__fake-area" ref="endLine" />
+	</div>
 </template>
 
 <script setup>

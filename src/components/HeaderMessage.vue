@@ -1,16 +1,16 @@
-<template lang="pug">
-include ../assets/pug/base
-include ../assets/pug/data
-+b.header__message(@click="toggle")
-	+e.message-close
-		SvgIcon(name="icon-close")
-	+e.message-icon
-		SvgIcon(name="icon-logo-impotant")
-	+e.message-description
-		+e.message-title
-			| {{ message[0].title }}
-		+e.message-text
-			| {{ message[0].text }}
+<template>
+	<div class="header__message" @click="toggle">
+		<div class="header__message-close">
+			<SvgIcon name="icon-close" />
+		</div>
+		<div class="header__message-icon">
+			<SvgIcon name="icon-logo-impotant" />
+		</div>
+		<div class="header__message-description">
+			<div class="header__message-title">{{ message[0].title }}</div>
+			<div class="header__message-text">{{ message[0].text }}</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -29,4 +29,5 @@ const emit = defineEmits([
 const toggle = () => {
 	emit('toggle');
 };
+
 </script>

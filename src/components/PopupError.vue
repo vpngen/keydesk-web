@@ -1,19 +1,29 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-  +e.overlay.error
-  +e.alert.error
-    +e.icon-sad-error
-    +e.title.error
-      | Похоже что-то пошло не так
-    +e.text.error
-      | Попробуй обновить страницу и повторить то, что ты делаешь.
-    +e.text.error
-      span
-        | А если все равно не получится - свяжись с нами тут:
-      span
-        a.popup__error-link(href="https://t.me/vpngensupportbot" target="_blank")
-          |  VPN Generator Support
-      span
-        |  и расскажи подробно что произошло. Мы поможем:)
+<template>
+	<div class="popup">
+	  <div class="popup__overlay error" />
+	  <div class="popup__alert error">
+	    <div class="popup__icon-sad-error" />
+	    <div class="popup__title error">
+	      Похоже что-то пошло не так
+	    </div>
+	    <div class="popup__text error">
+	      Попробуй обновить страницу и повторить то, что ты делаешь.
+	    </div>
+	    <div class="popup__text error">
+	      <span>
+	        А если все равно не получится - свяжись с нами тут:
+	      </span>
+	      <span>
+	        <a href="https://t.me/vpngensupportbot" class="popup__error-link" target="_blank">
+	           VPN Generator Support
+	        </a>
+	      </span>
+	      <span>
+	         и расскажи подробно что произошло. Мы поможем:)
+	      </span>
+	    </div>
+	  </div>
+	</div>
 </template>
+<script setup lang="ts">
+</script>

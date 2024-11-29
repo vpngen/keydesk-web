@@ -1,50 +1,70 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay(@click="close")
-	+e.alert
-		+e.name
-			| {{ userName }}
-		+e.close(@click="close")
-			SvgIcon(name="icon-close")
-		+e.emoji
-			SvgIcon(name="icon-emoji-happy")
-		+e.title.qr-title
-			| {{ clientLabel }}-конфиг готов!
-		+e.subtitle.popup__subtitle--minimize-margin
-			| Отдай ссылку на клиент и {{ downloadLabel }} другу. Нужно установить {{ displayedClientName }} и добавить туда {{ downloadLabel }}
-		+e.subtitle
-			| Ссылка на клиент:&nbsp
-			+e.SPAN
-				+e.A(:href="clientLink", target="_blank")
-					| &nbsp;{{ clientLink }}
-		+e.buttons.qr-buttons(v-if="clientName !== 'outline'")
-			+e.A(class="button button--option2 popup__action"  @click="back")
-				+e.SPAN
-					| Другие варианты
-			+e.A(class="button button--option2 popup__action", :href="buttonHref", :download="buttonDownload")
-				+e.button-img
-					SvgIcon(name="download")
-				+e.SPAN
-					| Скачать файл
-		+e.outline-block(v-else)
-			+e.outline-header
-				| Ссылка конфига:
-			+e.outline-link
-				+e(ref="outlineLinkRef")
-					| {{ outlineLink }}
-			+e.buttons--qr
-				+e.BUTTON(class="button button--option2 popup__action no-border" @click="back")
-					+e.SPAN
-						| Другие варианты
-				+e.A(class="button button--option2 popup__action button__outline" :class="{'disabled': !isLinkCopied}" @click="copyLink(outlineLinkRef)" :disabled="!isLinkCopied")
-					+e.button-img
-						SvgIcon(name="link")
-					+e.SPAN
-						| {{ linkButtonText }}
-		+e.link-copy-result(v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}")
-			| {{ linkCopyResult }}
-
+<template>
+	<div class="popup">
+		<div class="popup__overlay" @click="close" />
+		<div class="popup__alert">
+			<div class="popup__name">
+				{{ userName }}
+			</div>
+			<div class="popup__close" @click="close">
+				<SvgIcon name="icon-close" />
+			</div>
+			<div class="popup__emoji">
+				<SvgIcon name="icon-emoji-happy" />
+			</div>
+			<div class="popup__title qr-title">
+				{{ clientLabel }}-конфиг готов!
+			</div>
+			<div class="popup__subtitle popup__subtitle--minimize-margin">
+				Отдай ссылку на клиент и {{ downloadLabel }} другу. Нужно установить {{ displayedClientName }} и добавить туда {{ downloadLabel }}
+			</div>
+			<div class="popup__subtitle">
+				Ссылка на клиент:&nbsp
+				<span>
+					<a :href="clientLink" target="_blank">
+						| &nbsp;{{ clientLink }}
+					</a>
+				</span>
+			</div>
+			<div class="popup__buttons qr-buttons" v-if="clientName !== 'outline'">
+				<a class="button button--option2 popup__action" @click="back">
+					<span>Другие варианты</span>
+				</a>
+				<a class="button button--option2 popup__action" :href="buttonHref" :download="buttonDownload">
+					<span class="popup__button-img">
+						<SvgIcon name="download" />
+					</span>
+					<span>Скачать файл</span>
+				</a>
+			</div>
+			<div class="popup__outline-block" v-else>
+				<div class="popup__outline-header">
+					Ссылка конфига:
+				</div>
+				<div class="popup__outline-link">
+					<div ref="outlineLinkRef">
+						{{ outlineLink }}
+					</div>
+				</div>
+				<div class="popup__buttons popup__buttons--qr">
+					<button class="button button--option2 popup__action no-border" @click="back">
+						<span>Другие варианты</span>
+					</button>
+					<a class="button button--option2 popup__action button__outline" :class="{'disabled': !isLinkCopied}"
+					   @click="copyLink(outlineLinkRef)" :disabled="!isLinkCopied">
+						<span class="popup__button-img">
+							<SvgIcon name="link" />
+						</span>
+						<span>
+							{{ linkButtonText }}
+						</span>
+					</a>
+				</div>
+			</div>
+			<div class="popup__link-copy-result" v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}">
+				{{ linkCopyResult }}
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>

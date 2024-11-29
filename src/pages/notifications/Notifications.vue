@@ -1,9 +1,9 @@
-<template lang="pug">
-include ../../assets/pug/base.pug
-
-+b.MAIN.home
-  +e.SECTION.section--notifications
-    Notifications
+<template>
+	<main class="home">
+	  <section class="home__section home__section--notifications">
+	    <Notifications />
+	  </section>
+	</main>
 </template>
 
 <script setup>
