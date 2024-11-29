@@ -1,18 +1,18 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay.welcome
-	+e.alert.welcome-save(ref='startLine')
-		+e.title.save-title
-			| Это аккаунт бригадира. Его можно восстановить только через 6 слов и имя.
-		+e.title.save-title
-			| Если ты их не сохранил - сделай это прямо сейчас!
-		+e.button.welcome-save
-			+button('Все, сохранил(-а)!', 'button', 'welcome')(@click="triggerStepFive")
-	+e.text.welcome.bottom-close
-		a(@click="close")
-			| Пропустить
-	+e.fake-area(ref='endLine')
+<template>
+	<div class="popup popup--welcome">
+		<div class="popup__overlay welcome" />
+		<div class="popup__alert welcome-save" ref="startLine">
+			<div class="popup__title save-title">Это аккаунт бригадира. Его можно восстановить только через 6 слов и имя.</div>
+			<div class="popup__title save-title">Если ты их не сохранил - сделай это прямо сейчас!</div>
+			<div class="popup__button welcome-save">
+				<button class="button button--welcome" @click="triggerStepFive">Все, сохранил(-а)!</button>
+			</div>
+		</div>
+		<div class="popup__text welcome bottom-close">
+			<a @click="close">Пропустить</a>
+		</div>
+		<div class="popup__fake-area" ref="endLine" />
+	</div>
 </template>
 
 <script setup>

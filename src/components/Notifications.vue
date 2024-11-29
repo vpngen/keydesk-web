@@ -1,44 +1,56 @@
-<template lang="pug">
-include ../assets/pug/base
-include ../assets/pug/data
-+b.notifications
-	+e.headline
-		+e.H2.title
-			!=data.notifications.title
-			+e.SPAN(v-if="total") ({{ total }})
-		+e.filter-block
-			FiltersPanelNotifications(
-				:statusList="statusList",
-				:selectedFilterSort="selectedFilterSort",
-				:selectedFilterStatus="selectedFilterStatus",
-				@update:selectedFilterSort="selectedFilterSort = $event",
-				@update:selectedFilterStatus="selectedFilterStatus = $event")
-	+e.messages
-		+e.message(
-			v-for="(message, index) in messages",
-			:key="message.id",
-			:ref="message.id",
-			:data-id="message.id",
-			:class="message.is_read ? 'notifications__message--read': message.priority >= HIGH_PRIORITY ? 'notifications__message--important' : ''"
-			@click="togglePopupHandler")
-			+e.message-icon
-				SvgIcon(:name="!message.is_read && message.priority >= HIGH_PRIORITY ? 'icon-logo-impotant' : 'icon-logo'")
-			+e.message-description
-				+e.message-title
-					| {{ message.title }}
-				+e.message-date
-					| {{ filterDate(message.time) }}
-				+e.message-text
-					| {{ message.text.substring(0, 100) }}
-			+e.message-button
-				+button('Подробнее', 'button', 'notifications', false, false)
-		+e.message-load(ref="messageLoad")
-
-PopupNotifications(
-	v-if="showPopupNotifications"
-	:message="messagePopup"
-	@toggle="togglePopupHandler"
-)
+<template>
+	<div class="notifications">
+		<div class="notifications__headline">
+			<h2 class="notifications__title">
+				{{data.notifications.title}}
+				<span v-if="total">{{total}}</span>
+			</h2>
+			<div class="notifications__filter-block">
+				<FiltersPanelNotifications
+					:statusList="statusList"
+					:selectedFilterSort="selectedFilterSort"
+					:selectedFilterStatus="selectedFilterStatus"
+					@update:selectedFilterSort="selectedFilterSort = $event"
+					@update:selectedFilterStatus="selectedFilterStatus = $event"
+				/>
+			</div>
+		</div>
+		<div class="notifications__messages">
+			<template v-for="(message, index) in messages" :key="message.id">
+				<div
+					class="notifications__message"
+					:class="{'notifications__message--read': message.is_read,'notifications__message--important': message.priority >= HIGH_PRIORITY}"
+					:data-id="message.id"
+					:ref="message.id"
+					@click="togglePopupHandler"
+				>
+						<div class="notifications__message-icon">
+							<SvgIcon :name="!message.is_read && message.priority >= HIGH_PRIORITY ? 'icon-logo-impotant' : 'icon-logo'"/>
+						</div>
+						<div class="notifications__message-description">
+							<div class="notifications__message-title">
+								{{ message.title }}
+							</div>
+							<div class="notifications__message-date">
+								{{ filterDate(message.time) }}
+							</div>
+							<div class="notifications__message-text">
+								{{ message.text.substring(0, 100) }}
+							</div>
+						</div>
+						<div class="notifications__message-button">
+							<button class="button button--notifications">Подробнее</button>
+						</div>
+				</div>
+			</template>
+			<div class="notifications__message-load" ref="messageLoad" />
+		</div>
+	</div>
+	<PopupNotifications
+		v-if="showPopupNotifications"
+		:message="messagePopup"
+		@toggle="togglePopupHandler"
+	/>
 </template>
 
 <script setup>
@@ -48,6 +60,7 @@ import { sortingMap, statusMap } from "@/assets/constants/profileConstants.js";
 import SvgIcon from "./SvgIcon.vue";
 import FiltersPanelNotifications from "@/components/FiltersPanelNotifications.vue";
 import PopupNotifications from "@/components/PopupNotifications.vue";
+import data from '@/assets/helpers/data.ts';
 
 let apiLink = "";
 if (process.env.NODE_ENV === "development") {

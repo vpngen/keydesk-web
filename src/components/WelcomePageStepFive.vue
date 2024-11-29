@@ -1,18 +1,22 @@
-<template lang="pug">
-include ../assets/pug/base
-+b.popup
-	+e.overlay.welcome
-	+e.alert.welcome-delete(ref='startLine')
-		+e.title.save-title
-			| Это созданные тобой пользователи. Их можно спокойно удалять, пересоздавать. Твой лимит - 250 конфигураций.
-		+e.title.save-title
-			| Здесь выводится информация о последнем посещении, лимитах и статусе
-		+e.button.welcome-delete
-			+button('Далее', 'button', 'welcome')(@click="triggerStepSix")
-	+e.text.welcome.bottom-close.top
-		a(@click="close")
-			| Пропустить
-	+e.fake-area(ref='endLine')
+<template>
+	<div class="popup popup--welcome">
+		<div class="popup__overlay welcome" />
+		<div class="popup__alert welcome-delete" ref="startLine">
+			<div class="popup__title save-title">
+				Это созданные тобой пользователи. Их можно спокойно удалять, пересоздавать. Твой лимит - 250 конфигураций.
+			</div>
+			<div class="popup__title save-title">
+				Здесь выводится информация о последнем посещении, лимитах и статусе
+			</div>
+			<div class="popup__button welcome-delete">
+				<button class="button button--welcome" @click="triggerStepSix">Далее</button>
+			</div>
+		</div>
+		<div class="popup__text welcome bottom-close top">
+			<a @click="close">Пропустить</a>
+		</div>
+		<div class="popup__fake-area" ref="endLine" />
+	</div>
 </template>
 
 <script setup>
