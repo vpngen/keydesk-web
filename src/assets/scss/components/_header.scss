@@ -11,17 +11,67 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: vc(16) vc(30);
+		padding-left: vc(30);
 		width: 100%;
+		height: vc(50);
 
 		@include tablet {
-			padding: vc(24) vc(25);
+			padding-left: vc(25);
+			height: vc(72);
 		}
 
 		@include desktop {
 			margin: 0 auto;
-			padding: vc(22) vc(40);
+			padding-left: vc(40);
+			height: vc(72);
 		}
+	}
+
+	&__school {
+		height: 100%;
+		width: vc(170);
+
+		@include tablet {
+			width: vc(225);
+		}
+
+		@include desktop {
+			width: vc(225);
+		}
+	}
+
+	&__school-button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: vc(10);
+		width: 100%;
+		height: 100%;
+		background-color: #0085FF;
+		color: $color-white;
+		font-size: vc(12);
+		font-weight: 700;
+		line-height: 1;
+
+		@include tablet {
+			font-size: vc(14);
+		}
+
+		@include desktop {
+			font-size: vc(16);
+		}
+	}
+
+	&__school-icon {
+		width: vc(24);
+		height: vc(24);
+	}
+
+	&__right {
+		display: flex;
+		align-items: center;
+		gap: vc(16);
+		height: 100%;
 	}
 
 	&__logo {
@@ -64,7 +114,7 @@
 		height: vc(24);
 		color: $color-shark;
 		transition: color calc($duration-normal / 2);
-		
+
 		&:active {
 			color: $color-azure-radiance;
 		}
@@ -151,7 +201,7 @@
 		}
 
 		@include tablet {
-			right: vc(26);
+			right: vc(240);
 			top: vc(76);
 			width: vc(382);
 
@@ -161,7 +211,7 @@
 		}
 
 		@include desktop {
-			right: vc(40);
+			right: vc(240);
 			top: vc(82);
 			width: vc(440);
 
@@ -219,7 +269,7 @@
 		}
 
 		@include desktop {
-			width: vc(337 );
+			width: vc(337);
 		}
 	}
 

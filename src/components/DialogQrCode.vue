@@ -59,6 +59,16 @@
 			</div>
 			<div class="popup__outline-block" v-else>
 				<!--<div class="popup__outline-header">Ссылка конфига:</div>-->
+				<div class="popup__outline-link" @click="copyText">
+					<input ref="outlineLinkRef" :value="outlineLink" readonly="readonly"/>
+					<span>
+						<SvgIcon name="icon-copy" />
+					</span>
+					<p v-show="linkCopy">Скопировано</p>
+				</div>
+				<span class="popup__outline-footer">
+					Ты не сможешь сам перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
+				</span>
 				<div class="popup__buttons popup__buttons--qr">
 					<button class="popup__button button button--option2" @click="copyText">
 						<span>

@@ -17,6 +17,14 @@
 import { onMounted, ref, watchEffect } from 'vue';
 import ShowMoreItem from "@/components/ShowMoreItem.vue";
 
+const props = defineProps({
+    title: {
+		type: String,
+		required: false,
+	},
+    isShown: { type: Boolean }
+});
+
 const expandedQuestionIndex = ref(null);
 
 const cardsList = ref([
@@ -105,14 +113,6 @@ watchEffect(() => {
     if(props.isShown) {
         expandedQuestionIndex.value = null;
     };
-});
-
-const props = defineProps({
-    title: {
-		type: String,
-		required: false,
-	},
-    isShown: { type: Boolean }
 });
 
 const setExpandedQuestionIndex = (index) => {
