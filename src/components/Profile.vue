@@ -346,14 +346,22 @@ import Swiper from 'swiper';
 import 'swiper/css';
 import DialogOther from "@/components/DialogOther.vue";
 import data from "../assets/helpers/data.ts";
+import { useUsersStore } from "@/store/users";
+import { storeToRefs } from "pinia";
 
-let buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton;
 
+
+const usersStore = useUsersStore();
+const {usersList} = storeToRefs(usersStore);
+
+const buttonAddUser = ref(null);
+const firstUserProfileCard = ref(null);
+const secondUserProfileCard = ref(null);
+const searchButton = ref(null);
 const filterUserText = ref('');
 const token = ref(null);
 const titleDialogQrCode = ref('');
 const userData = ref({});
-const usersList = ref([]);
 const isError = ref(false);
 const selectedFilterSort = ref(sortingMap.dateAsc);
 const selectedFilterStatus = ref(statusMap.all);
@@ -393,7 +401,7 @@ onMounted(()=>{
 })
 
 const initSwiperData = () => {
-	const deviceSwiper = new Swiper('.profile__data', {
+	new Swiper('.profile__data', {
 		slidesPerView: "auto",
 		spaceBetween: 0,
 		loop: false,
@@ -402,7 +410,7 @@ const initSwiperData = () => {
 }
 
 const initSwiperDirections = () => {
-	const deviceSwiper = new Swiper('.profile__directions-cards', {
+	 new Swiper('.profile__directions-cards', {
 		slidesPerView: "auto",
 		spaceBetween: 0,
 		loop: false,
@@ -533,11 +541,6 @@ const getToken = async () => {
 	}).finally(() => {
 		loadingService.hide();
 	});
-
-	buttonAddUser = ref(null);
-	firstUserProfileCard = ref(null);
-	secondUserProfileCard = ref(null);
-	searchButton = ref(null);
 }
 
 getToken();
