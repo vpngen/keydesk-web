@@ -46,11 +46,13 @@
 			<div class="notifications__message-load" ref="messageLoad" />
 		</div>
 	</div>
-	<PopupNotifications
-		v-if="showPopupNotifications"
-		:message="messagePopup"
-		@toggle="togglePopupHandler"
-	/>
+	<teleport to="#app">
+		<PopupNotifications
+			v-if="showPopupNotifications"
+			:message="messagePopup"
+			@toggle="togglePopupHandler"
+		/>
+	</teleport>
 </template>
 
 <script setup>

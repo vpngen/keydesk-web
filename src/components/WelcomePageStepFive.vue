@@ -3,10 +3,13 @@
 		<div class="popup__overlay welcome" />
 		<div class="popup__alert welcome-delete" ref="startLine">
 			<div class="popup__title save-title">
-				Это созданные тобой пользователи. Их можно спокойно удалять, пересоздавать. Твой лимит - 250 конфигураций.
+				Это созданные тобой пользователи. Если нужно, их даже можно удалять. Твой лимит - 250 ключей (пользователей)..
+			</div>
+			<div class="popup__title save-title red">
+				Обязательно за первую неделю подключи 5 пользователей, или мы удалим твою бригаду<br>¯\_(ツ)_/¯
 			</div>
 			<div class="popup__title save-title">
-				Здесь выводится информация о последнем посещении, лимитах и статусе
+				Здесь выводится информация о последнем посещении, лимитах и статусе 
 			</div>
 			<div class="popup__button welcome-delete">
 				<button class="button button--welcome" @click="triggerStepSix">Далее</button>

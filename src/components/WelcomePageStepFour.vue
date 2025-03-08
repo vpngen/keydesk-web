@@ -6,30 +6,53 @@
 			<div class="popup__close">
 				<SvgIcon name="icon-close" />
 			</div>
-			<div class="popup__icon-qr-code">
-				<SvgIcon name="icon-qr-code" />
+			<div class="popup__name">
+				220 Шаловливый Кример
 			</div>
+			
+			<div class="popup__emoji" >
+				<SvgIcon name="icon-emoji-happy" />
+			</div>
+
 			<div class="popup__title qr-title">
-				Конфигурация готова!
+				Настройки для VPN готовы!
 			</div>
-			<div class="popup__subtitle qr-subtitle">
-				Скачайте, скопируйте или<br>активируйте ее по QR-коду
+
+			<div class="popup__subtitle popup__subtitle--minimize-margin">
+				Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
 			</div>
-			<div class="popup__buttons qr-buttons">
-				<button class="popup__button button--option2 popup__action no-border">
-					<span>Копировать данные</span>
-				</button>
-				<a class="popup__button button--option2 popup__action">
-					<span class="popup__button-img">
-						<SvgIcon name="download" />
-					</span>
-					<span>Скачать данные</span>
-				</a>
-			</div>
+
+			<div class="popup__outline-block">
+				
+				<div class="popup__outline-link" >
+					<input ref="outlineLinkRef" value="http://152.89.168.95/vgc://afokaglkslfjlsdfsldkfsdfksjdflksdjflsqweq2..." readonly="readonly"/>
+					<span>
+						<SvgIcon name="icon-copy" />
+					</span>				
+				</div>
+				<span class="popup__outline-footer">
+					Ты не сможешь сам перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
+				</span>
+				<div class="popup__buttons popup__buttons--qr">
+					<button class="popup__button button button--option2">
+						<span>
+							<SvgIcon name="link" />
+							Копировать ссылку
+						</span>
+					</button>
+					<button  class="popup__button button button--option2">
+						<span>
+							<SvgIcon name="icon-share" />
+							Поделиться
+						</span>
+					</button>
+				</div>
+			</div>			
 		</div>
 		<div class="popup__alert welcome-qr-description" ref="startLine">
 			<div class="popup__title qr-title-description">
-				Конфигурация создана! Скопируй, скачай или открой через QR  данные для нового устройства
+				Настройки VPN для нового пользователя созданы!
+				<br>Скопируй и поделись ими!
 			</div>
 			<div class="popup__button welcome">
 				<button class="button button--welcome" @click="triggerStepFour">Далее</button>
