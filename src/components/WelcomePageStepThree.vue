@@ -3,10 +3,8 @@
 	  <div class="popup__overlay welcome" />
 	  <div class="popup__alert welcome-add" ref="startLine">
 	    <div class="popup__title save-title welcome-add">
-	      Нажмите тут для добавления конфигурации.
-	    </div>
-	    <div class="popup__title save-title welcome-add">
-	      На каждое устройство нужна отдельная конфигурация!
+				Нажми тут для добавления ключа.<br>
+	      На каждое устройство нужен отдельный ключ! 
 	    </div>
 	    <div class="popup__button welcome">
 		    <button class="button button--welcome" @click="triggerStepThree">Далее</button>

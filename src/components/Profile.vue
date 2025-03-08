@@ -38,7 +38,7 @@
 				<SvgIcon name="icon-status-deactive" />
 			</div>
 			<div class="profile__message-text">
-				Бригада будет закрыта, в&nbsp;случае, если в&nbsp;текущем месяце насчитывается меньше 5&nbsp;активных пользователей
+				Через неделю после создания бригада будет закрыта, если в ней будет меньше 5 активных пользователей
 			</div>
 			<div class="profile__message-close" @click="messageClose = true">
 				<SvgIcon name="icon-close" />
@@ -207,7 +207,7 @@
 				<div class="profile__tab" data-tab="2" v-show="showTab === 2">
 					<div class="profile__directions">
 						<div class="profile__directions-title">
-							Выбор по устройству
+							Выбор по устройству для основного протокола и клиента
 						</div>
 						<div class="profile__directions-cards swiper-container">
 							<div class="profile__directions-wrapper swiper-wrapper">
@@ -231,9 +231,9 @@
 									<a class="profile__directions-slide swiper-slide" :href="card.href" target="_blank">
 										<div class="profile__directions-image" :class="`icon-${card.image}`" />
 										<div class="profile__directions-label">
-											{{ card.label }} {{card.image}}
+											{{ card.label }}
 										</div>
-										<div class="directions-arrow" />
+										<div class="profile__directions-arrow" />
 									</a>
 								</template>
 							</div>
@@ -276,53 +276,55 @@
 			</div>
 		</div>
 	</div>
-	<DialogUser v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser"/>
-	<DialogOs
-		v-if="showDialogOs"
-		@close="toggleDialogOsHandler"
-		@next="openDialogQrCodeHandler"
-		@skip="skipDialogConfig"
-	/>
-	<DialogOther
-		v-if="showDialogOther"
-		:chosenClient="chosenClient"
-		@close="toggleDialogOtherHandler"
-		@next="switchDialogConfigHandler"
-		@back="openDialogQrCodeHandler('linux')"
-	/>
-	<DialogQrCode
-		v-if="showDialogQrCode"
-		:configName="configName"
-		:userData="userData"
-		:title="titleDialogQrCode"
-		:chosenOS="chosenOS"
-		@close="closeDialogQrCodeHandler"
-		@others="returnToOthersHandler"
-	/>
-	<DialogConstruction
-		v-if="showDialogConstruction"
-		:till="tillConstruction"
-		:message="messageConstruction"
-	/>
-	<DialogConfig
-		v-if="showDialogConfig"
-		:clientName="chosenClient"
-		:userData="userData"
-		@close="togleDialogConfigHandler"
-		@back="switchDialogConfigHandler"
-	/>
-	<WelcomePage
-		v-if="usersList.length && !isInstructionHidden"
-		@getUsers="getUsers()"
-		@toggleDisable="toggleDisableAll"
-		@highlightElement="highlightElement"
-		@darkenElement="darkenElement"
-		:elementStepTwo="firstUserProfileCard"
-		:elementStepThree="buttonAddUser"
-		:elementStepFive="secondUserProfileCard"
-		:elementStepSix="searchButton"
-	/>
-	<PopupError v-if="isError" />
+	<teleport to="#app">
+		<DialogUser v-if="showDialogUser" :userId="deletedUserId" @close="closeDialogUser" @removeUser="removeUser"/>
+		<DialogOs
+			v-if="showDialogOs"
+			@close="toggleDialogOsHandler"
+			@next="openDialogQrCodeHandler"
+			@skip="skipDialogConfig"
+		/>
+		<DialogOther
+			v-if="showDialogOther"
+			:chosenClient="chosenClient"
+			@close="toggleDialogOtherHandler"
+			@next="switchDialogConfigHandler"
+			@back="openDialogQrCodeHandler('linux')"
+		/>
+		<DialogQrCode
+			v-if="showDialogQrCode"
+			:configName="configName"
+			:userData="userData"
+			:title="titleDialogQrCode"
+			:chosenOS="chosenOS"
+			@close="closeDialogQrCodeHandler"
+			@others="returnToOthersHandler"
+		/>
+		<DialogConstruction
+			v-if="showDialogConstruction"
+			:till="tillConstruction"
+			:message="messageConstruction"
+		/>
+		<DialogConfig
+			v-if="showDialogConfig"
+			:clientName="chosenClient"
+			:userData="userData"
+			@close="togleDialogConfigHandler"
+			@back="switchDialogConfigHandler"
+		/>
+		<WelcomePage
+			v-if="usersList.length && !isInstructionHidden"
+			@getUsers="getUsers()"
+			@toggleDisable="toggleDisableAll"
+			@highlightElement="highlightElement"
+			@darkenElement="darkenElement"
+			:elementStepTwo="firstUserProfileCard"
+			:elementStepThree="buttonAddUser"
+			:elementStepFive="secondUserProfileCard"
+			:elementStepSix="searchButton"
+		/>
+		<PopupError v-if="isError" />
+	</teleport>
 </template>
 
 <script setup>

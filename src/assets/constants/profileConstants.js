@@ -164,39 +164,44 @@ export const profileDirectionsCards = {
         {
             label: 'Windows',
             image: 'windows',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.8qrc3gvqfvjz',
+            href: 'https://bit.ly/VPNgenWindowsH',
         },
         {
             label: 'MacOS',
             image: 'macos',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.29gd7ig16m2i',
+            href: 'https://bit.ly/VPNgenMacH',
         },
         {
             label: 'iOS',
             image: 'ios',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.c0l38dd4lv2l',
+            href: 'https://bit.ly/VPNgeniOSH',
         },
         {
             label: 'Android',
             image: 'android',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.x8esnktg3dd6',
+            href: 'https://bit.ly/VPNgenAndroidH',
         },
         {
             label: '*nix',
             image: 'linux',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit#heading=h.ibx71rx6io83',
+            href: 'https://bit.ly/VPNgenLinuxH',
         },
     ],
     selectByProtocol: [
         {
-            label: 'Outline',
-            image: 'outline',
-            href: 'https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk',
+            label: 'ShadowSocks',
+            image: 'shadowsocks',
+            href: 'https://docs.google.com/document/d/1mrXZJo1AqXJeSjdZH5A6SAchmCMUmPzxosIzqZPJ95E/',
         },
         {
-            label: 'Amnezia',
-            image: 'amnezia',
-            href: 'https://docs.google.com/document/d/1pEwntDJwM8fYQ5DGxTHGjjXmnQ_YYkxF2HCKywEeVa0/',
+            label: 'Vless',
+            image: 'vless',
+            href: 'https://docs.google.com/document/d/186oOAva4L93F8SWY8GZazvYxwDp-M5jvfPR4XzQ4v10/',
+        },
+        {
+            label: 'VGC',
+            image: 'vgs',
+            href: 'https://docs.google.com/document/d/14qRXMj7zqJu3s2aiOglM8dLiQUFav9FOrwfMOyFfiTY/',
         },
     ]
 };

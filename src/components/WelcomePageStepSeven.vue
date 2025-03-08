@@ -6,6 +6,11 @@
 			<div class="popup__title welcome-congrats">
 				Теперь ты полноценный повелитель ключницы!
 			</div>
+			<div class="popup__text">
+				Подпишись на наш канал, там интересно!<br><a href="https://t.me/vpngen" target="_blank">VPN Generator</a>
+			</div>
+			<div class="popup__text">Если вдруг что-то не получится, то обращайся в поддрежку<br>
+				<a href="https://t.me/vpngensupportbot" target="_blank">VPN Generator Support</a></div>
 			<div class="popup__button welcome">
 				<button class="button button--welcome" @click="emit('close')">Пойду раздавать конфиги</button>
 			</div>
