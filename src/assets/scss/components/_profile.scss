@@ -956,7 +956,7 @@
 		box-shadow: 0 0 vc(4) rgba(79, 79, 79, 0.25);
 		min-width: 100%;
 		background-color: $color-white;
-		
+
 		span {
 			position: relative;
 			z-index: 1;
@@ -966,7 +966,7 @@
 			font-size: vc(12);
 			line-height: vc(15);
 			white-space: nowrap;
-			
+
 			&::first-letter {
 				text-transform: uppercase;
 			}
@@ -1152,7 +1152,7 @@
 	}
 
 	&__directions {
-		
+
 	}
 
 	&__directions-title {
@@ -1229,6 +1229,21 @@
 				background: $color-catskill-white url($url-image + 'png/icon-amnezia.png') no-repeat center center;
 				background-size: contain;
 			}
+
+			&.icon-shadowsocks {
+				background: $color-catskill-white url($url-image + 'png/icon-shadowsocks.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-vless {
+				background: $color-catskill-white url($url-image + 'png/icon-vless.png') no-repeat center center;
+				background-size: contain;
+			}
+
+			&.icon-vgs {
+				background: $color-catskill-white url($url-image + 'png/icon-vgc.png') no-repeat center center;
+				background-size: contain;
+			}
 		}
 
 		&:active {
@@ -1242,17 +1257,17 @@
 					background: $color-catskill-white url($url-image + 'png/icon-macos-active.png') no-repeat center center;
 					background-size: contain;
 				}
-	
+
 				&.icon-ios {
 					background: $color-catskill-white url($url-image + 'png/icon-ios-active.png') no-repeat center center;
 					background-size: contain;
 				}
-	
+
 				&.icon-android {
 					background: $color-catskill-white url($url-image + 'png/icon-android-active.png') no-repeat center center;
 					background-size: contain;
 				}
-	
+
 				&.icon-linux {
 					background: $color-catskill-white url($url-image + 'png/icon-linux-active.png') no-repeat center center;
 					background-size: contain;
@@ -1265,6 +1280,21 @@
 
 				&.icon-amnezia {
 					background: $color-catskill-white url($url-image + 'png/icon-amnezia-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-shadowsocks {
+					background: $color-catskill-white url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-vless {
+					background: $color-catskill-white url($url-image + 'png/icon-vless-active.png') no-repeat center center;
+					background-size: contain;
+				}
+
+				&.icon-vgs {
+					background: $color-catskill-white url($url-image + 'png/icon-vgc-active.png') no-repeat center center;
 					background-size: contain;
 				}
 			}
@@ -1282,17 +1312,17 @@
 						background: $color-catskill-white url($url-image + 'png/icon-macos-active.png') no-repeat center center;
 						background-size: contain;
 					}
-		
+
 					&.icon-ios {
 						background: $color-catskill-white url($url-image + 'png/icon-ios-active.png') no-repeat center center;
 						background-size: contain;
 					}
-		
+
 					&.icon-android {
 						background: $color-catskill-white url($url-image + 'png/icon-android-active.png') no-repeat center center;
 						background-size: contain;
 					}
-		
+
 					&.icon-linux {
 						background: $color-catskill-white url($url-image + 'png/icon-linux-active.png') no-repeat center center;
 						background-size: contain;
@@ -1302,9 +1332,24 @@
 						background: $color-catskill-white url($url-image + 'png/icon-outline-active.png') no-repeat center center;
 						background-size: contain;
 					}
-	
+
 					&.icon-amnezia {
 						background: $color-catskill-white url($url-image + 'png/icon-amnezia-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					&.icon-shadowsocks {
+						background: $color-catskill-white url($url-image + 'png/icon-shadowsocks-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					&.icon-vless {
+						background: $color-catskill-white url($url-image + 'png/icon-vless-active.png') no-repeat center center;
+						background-size: contain;
+					}
+
+					&.icon-vgs {
+						background: $color-catskill-white url($url-image + 'png/icon-vgc-active.png') no-repeat center center;
 						background-size: contain;
 					}
 				}
