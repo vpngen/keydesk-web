@@ -38,7 +38,7 @@
 				<SvgIcon name="icon-status-deactive" />
 			</div>
 			<div class="profile__message-text">
-				Через неделю после создания бригада будет закрыта, если в ней будет меньше 5 активных пользователей
+				Через неделю после создания бригада будет закрыта, если в ней будет меньше 10 активных пользователей
 			</div>
 			<div class="profile__message-close" @click="messageClose = true">
 				<SvgIcon name="icon-close" />
