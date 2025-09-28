@@ -10,6 +10,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "core-js": "^3.39.0",
+    "jwt-decode": "3.1.2",
     "leader-line-new": "^1.1.9",
     "pinia": "^2.3.0",
     "qrcode-vue3": "^1.4.17",
