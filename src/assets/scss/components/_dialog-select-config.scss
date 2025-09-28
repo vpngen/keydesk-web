@@ -1,0 +1,227 @@
+.dialog-select-config {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: vc(60);
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(19, 19, 19, 0.96);
+    backdrop-filter: blur(6.25px);
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    max-width: vc(665);
+    width: 100%;
+    background: transparent;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: vc(24) vc(16) vc(4);
+    margin-bottom: vc(40);
+  }
+
+  &__title {
+    font-family: 'Public Sans', sans-serif;
+    font-weight: 700;
+    font-size: vc(28);
+    line-height: 1;
+    color: $color-white;
+    letter-spacing: -0.56px;
+    margin: 0;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    padding: 0;
+    width: vc(32);
+    height: vc(32);
+    color: $color-white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: row;
+    gap: vc(12);
+    align-items: center;
+
+    @include mobile {
+      flex-direction: column;
+      gap: vc(20);
+    }
+  }
+
+  &__card {
+    position: relative;
+    width: vc(325);
+    height: vc(287);
+    border-radius: vc(20);
+    padding: vc(53) vc(40);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: $duration-normal;
+    background-color: #00000038;
+    border: 1px solid #FFF293;
+
+    @include desktop {
+      &:hover {
+        background-color: #2D2C2AB2;
+      }
+    }
+
+    &--vip {
+      background: transparent;
+      border: 2px solid transparent;
+      border-image: url('../images/vip/border-vpn-vip.svg') 50% / 100%;
+      box-shadow: -27px 50px 100px 0px #fff293;
+    }
+  }
+
+  &__card-header {
+    text-align: center;
+  }
+
+  &__card-title {
+    font-family: $font-raleway;
+    font-weight: 800;
+    font-size: vc(16);
+    line-height: 1;
+    margin: 0;
+
+    .dialog-select-config__card--basic & {
+      color: #d5d2bf;
+    }
+
+    .dialog-select-config__card--vip & {
+      color: #fff293;
+    }
+  }
+
+  &__card-features {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    p {
+      font-family: $font-raleway;
+      font-weight: 700;
+      font-size: vc(14);
+      line-height: vc(18);
+      color: #fff293;
+      margin: 0 0 vc(4);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__card-price {
+    margin-bottom: vc(20);
+  }
+
+  &__card-price-text {
+    font-family: $font-raleway;
+    font-weight: 700;
+    font-size: vc(14);
+    line-height: 1;
+
+    .dialog-select-config__card--basic & {
+      color: $color-white;
+    }
+
+    .dialog-select-config__card--vip & {
+      color: #fff293;
+    }
+  }
+
+  &__card-button {
+    border-radius: vc(5);
+    padding: vc(8) vc(16);
+    font-family: $font-raleway;
+    font-weight: 500;
+    font-size: vc(12);
+    line-height: 1;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &--basic {
+      border: 1px solid $color-white;
+      color: $color-white;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+    }
+
+    &--vip {
+      border: 1px solid #fff293;
+      color: #fff293;
+
+      &:hover {
+        background: rgba(255, 242, 147, 0.1);
+      }
+    }
+  }
+
+  @include mobile {
+    padding: vc(20);
+
+    &__content {
+      max-width: 100%;
+    }
+
+    &__options {
+      gap: vc(16);
+    }
+
+    &__card {
+      width: 100%;
+      max-width: vc(320);
+    }
+  }
+}
+
+.vip {
+  .popup__name {
+    color: #828283;
+  }
+
+  .popup__outline-link {
+    background: #141414;
+
+    input {
+      color: #FFF293;
+    }
+  }
+}
+
+
+
