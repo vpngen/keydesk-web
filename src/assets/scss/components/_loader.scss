@@ -73,8 +73,10 @@
   &__logo {
     width: vc(84);
     height: vc(39);
-    background: url($url-image + 'svg/loader-logo.svg') no-repeat center center;
-    background-size: contain;
+    background-color: currentColor;
+    color: #1D4365;
+    mask: url($url-image + 'svg/loader-logo.svg') no-repeat center center;
+    mask-size: contain;
 
     @include mobile {
       width: vc(63);
@@ -85,8 +87,10 @@
   &__active-circle {
     width: vc(300);
     height: vc(300);
-    background: url($url-image + 'svg/loader-active-circle.svg') no-repeat center center;
-    background-size: cover;
+    background-color: currentColor;
+    color: #0094FF;
+    mask: url($url-image + 'svg/loader-active-circle.svg') no-repeat center center;
+    mask-size: cover;
     position: absolute;
     top: 17%;
     left: 17%;
@@ -101,8 +105,49 @@
   }
 
   @keyframes bubble {
-    0%   { transform: scale(1, 1); }
-    50%  { transform: scale(1.35, 1.35); }
-    100%  { transform: scale(1, 1); }
+    0% {
+      transform: scale(1, 1);
+    }
+    50% {
+      transform: scale(1.35, 1.35);
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+}
+
+.vip .loader {
+  $p: &;
+
+  &__overlay {
+    background: #131313A8;
+    backdrop-filter: blur(6.25px);
+  }
+
+  &__container {
+    background-color: transparent;
+    backdrop-filter: none;
+
+    &-overlay {
+      background: #131313;
+    }
+  }
+
+  &__container-overlay {
+    background-color: transparent;
+    filter: blur(112px);
+  }
+
+  &__content {
+    color: #000000;
+  }
+
+  &__logo {
+    color: #000000;
+  }
+
+  &__active-circle {
+    color: #FFF293;
   }
 }

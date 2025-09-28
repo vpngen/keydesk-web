@@ -9,18 +9,18 @@
 */
 
 @function str-split($string, $separator) {
-	$split-arr: ();
-	$index: str-index($string, $separator);
+  $split-arr: ();
+  $index: str-index($string, $separator);
 
-	@while $index != null {
-		$item: str-slice($string, 1, $index - 1);
-		$split-arr: append($split-arr, $item);
-		$string: str-slice($string, $index + 1);
-		$index: str-index($string, $separator);
-	}
+  @while $index != null {
+    $item: str-slice($string, 1, $index - 1);
+    $split-arr: append($split-arr, $item);
+    $string: str-slice($string, $index + 1);
+    $index: str-index($string, $separator);
+  }
 
-	// stylelint-disable-next-line
-	$split-arr: append($split-arr, $string);
+  // stylelint-disable-next-line
+  $split-arr: append($split-arr, $string);
 
-	@return $split-arr;
+  @return $split-arr;
 }
