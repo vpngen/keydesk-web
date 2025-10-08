@@ -39,7 +39,7 @@
         </div>
       </div>
     </div>
-    <div v-if="isInstructionHidden && messageShow" class="profile__message">
+    <div v-if="!isVIP && isInstructionHidden && messageShow" class="profile__message">
       <div class="profile__message-icon">
         <SvgIcon name="icon-status-deactive"/>
       </div>
