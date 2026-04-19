@@ -12,10 +12,10 @@
         <SvgIcon name="icon-emoji-happy-vip"/>
       </div>
       <div class="popup__title qr-title">
-        Твой хеви-лухари VIP-ключ!
+        {{ t('cabinet.dialogVipConfig.title') }}
       </div>
       <div class="popup__subtitle popup__subtitle--minimize-margin">
-        Жми на ссылку и врывайся в интернет со скоростями, недоступными простым смертным и РКН.
+        {{ t('cabinet.dialogVipConfig.subtitle') }}
       </div>
 
       <div class="popup__outline-block">
@@ -24,20 +24,20 @@
           <span>
             <SvgIcon name="icon-copy"/>
           </span>
-          <p v-show="linkCopy">Скопировано</p>
+          <p v-show="linkCopy">{{ t('cabinet.dialogVipConfig.copiedShort') }}</p>
         </div>
         <span class="popup__outline-footer">
         </span>
         <div class="popup__buttons popup__buttons--qr">
           <button class="popup__button button button--option2" @click="copyText">
             <SvgIcon name="link"/>
-            Копировать ссылку
+            {{ t('cabinet.dialogVipConfig.copyLink') }}
           </button>
           <button v-if="window.location.protocol === 'https:'" class="popup__button button button--option2"
                   @click="share">
 						<span>
 							<SvgIcon name="icon-share"/>
-							Поделиться
+							{{ t('cabinet.dialogVipConfig.share') }}
 						</span>
           </button>
         </div>
@@ -53,6 +53,9 @@
 <script setup>
 import {ref} from 'vue';
 import SvgIcon from './SvgIcon.vue';
+import {useI18n} from 'vue-i18n';
+
+const {t} = useI18n();
 
 const props = defineProps({
   title: {
@@ -100,16 +103,16 @@ const close = () => {
 };
 
 const share = () => {
-  const shareText = `Перейди по ссылке и следуй инструкциям \n\n${props.vipConfig}`;
+  const shareText = t('cabinet.dialogVipConfig.shareBody', {link: props.vipConfig});
 
   if (navigator.share) {
     navigator.share({
-      title: 'Ссылка на инструкцию',
+      title: t('cabinet.dialogVipConfig.shareTitle'),
       text: shareText
     })
   } else {
     isLinkCopied.value = false;
-    linkCopyResult.value = 'Не поддерживается твоим браузером';
+    linkCopyResult.value = t('cabinet.dialogVipConfig.shareUnsupported');
   }
 }
 </script>

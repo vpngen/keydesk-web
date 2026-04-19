@@ -2,8 +2,8 @@
   <div class="notifications">
     <div class="notifications__headline">
       <h2 class="notifications__title">
-        {{ data.notifications.title }}
-        <span v-if="total">{{ total }}</span>
+        {{ t('cabinet.notificationsPage.title') }}
+        <span v-if="total">&nbsp;{{ total }}</span>
       </h2>
       <div class="notifications__filter-block">
         <FiltersPanelNotifications
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="notifications__messages">
-      <template v-for="(message, index) in messages" :key="message.id">
+      <template v-for="message in messages" :key="message.id">
         <div
           :ref="message.id"
           :class="{'notifications__message--read': message.is_read,'notifications__message--important': message.priority >= HIGH_PRIORITY}"
@@ -40,7 +40,7 @@
             </div>
           </div>
           <div class="notifications__message-button">
-            <button class="button button--notifications">Подробнее</button>
+            <button class="button button--notifications" type="button">{{ t('cabinet.notificationsPage.details') }}</button>
           </div>
         </div>
       </template>
@@ -59,12 +59,14 @@
 <script setup>
 import {inject, ref, watch} from "vue";
 import axios from "axios";
+import {useI18n} from "vue-i18n";
 import {sortingMap, statusMap} from "@/assets/constants/profileConstants.js";
 import SvgIcon from "./SvgIcon.vue";
 import FiltersPanelNotifications from "@/components/FiltersPanelNotifications.vue";
 import PopupNotifications from "@/components/PopupNotifications.vue";
-import data from '@/assets/helpers/data.ts';
 import {apiLink} from "@/const/api";
+
+const {t} = useI18n();
 
 const messageLimit = ref(10);
 const messageStatus = ref('');

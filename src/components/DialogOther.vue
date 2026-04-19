@@ -6,10 +6,10 @@
 				<SvgIcon name="icon-close" />
 			</div>
 			<div class="popup__title">
-				Выберите тип конфига
+				{{ t('cabinet.dialogOther.title') }}
 			</div>
 			<div class="popup__cards">
-				<div class="popup__card" v-for="card in cards" :class="{ 'is-active': cardType === card.value }" @click="selectCard(card.value)">
+				<div class="popup__card" v-for="card in cards" :key="card.value" :class="{ 'is-active': cardType === card.value }" @click="selectCard(card.value)">
 					<div class="popup__card-icon card-icon--container">
 						<div :class="`icon-0${card.value}`" />
 					</div>
@@ -20,10 +20,10 @@
 			</div>
 			<div class="popup__buttons popup__buttons--os">
 				<button class="button button--option2 popup__action os-button os-color" @click="next">
-					<span>Далее</span>
+					<span>{{ t('cabinet.dialogOther.next') }}</span>
 				</button>
 				<button class="button button--option2 popup__action no-border os-button" @click="back">
-					<span>Назад</span>
+					<span>{{ t('cabinet.dialogOther.back') }}</span>
 				</button>
 			</div>
 		</div>
@@ -34,6 +34,9 @@
 import { ref } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 import { dialogOtherCards as cards } from '../const/dialog.ts';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 let cardType = ref('amnezia');
 

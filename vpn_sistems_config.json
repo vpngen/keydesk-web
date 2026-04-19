@@ -45,6 +45,7 @@
   "vpn_name": {
     "WireguardConfig": "WireGuard",
     "AmnzOvcConfig": "AmneziaVPN",
-    "OutlineConfig": "Outline"
+    "OutlineConfig": "Outline",
+    "VPNGenConfig": "Конфиг ключницы"
   }
 }

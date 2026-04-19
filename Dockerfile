@@ -1,6 +1,7 @@
 # syntax=docker/dockerfile:1
 # https://cli.vuejs.org/guide/deployment.html#docker-nginx
-FROM cr.yandex/crprnotkh7r44umnfrio/node:14.19.3-buster AS build
+# Node >= 16 (vue-i18n@9, Vue CLI 5). При отсутствии тега в registry — зеркалируйте node:18.20.4-bullseye.
+FROM cr.yandex/crprnotkh7r44umnfrio/node:18.20.4-bullseye AS build
 COPY . /src
 RUN cd /src && \
 	yarn install && \

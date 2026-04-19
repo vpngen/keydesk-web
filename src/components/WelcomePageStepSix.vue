@@ -3,14 +3,14 @@
 		<div class="popup__overlay welcome" />
 		<div class="popup__alert welcome-search" ref="startLine">
 			<div class="popup__title save-title">
-				Здесь можно искать конфигурации по части имени. Пригодится, когда бригада вырастет
+				{{ t('cabinet.welcome.step6.line1') }}
 			</div>
 			<div class="popup__button welcome-search">
-				<button class="button button--welcome" @click="triggerStepSeven">Далее</button>
+				<button class="button button--welcome" type="button" @click="triggerStepSeven">{{ t('cabinet.welcome.common.next') }}</button>
 			</div>
 		</div>
 		<div class="popup__text welcome bottom-close">
-			<a @click="close">Пропустить</a>
+			<a @click="close">{{ t('cabinet.welcome.common.skip') }}</a>
 		</div>
 		<div class="popup__fake-area" ref="endLine" />
 	</div>
@@ -18,7 +18,10 @@
 
 <script setup>
 import {ref, watchEffect} from "vue";
+import {useI18n} from 'vue-i18n';
 import generateLines from "@/assets/helpers/animations";
+
+const {t} = useI18n();
 
 const props = defineProps({
 	buttonPosition: {

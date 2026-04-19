@@ -1847,7 +1847,8 @@
     background-color: #1C1C1C;
     color: $color-white;
 
-    &.is-select {
+    &.is-select,
+    &:hover {
       border-color: $color-gold;
     }
   }

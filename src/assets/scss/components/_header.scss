@@ -15,15 +15,30 @@
     width: 100%;
     height: vc(56);
 
+    .vip &,
+    .welcome & {
+      padding-right: vc(30);
+    }
+
     @include tablet {
       padding-left: vc(25);
       height: vc(72);
+
+      .vip &,
+      .welcome & {
+        padding-right: vc(25);
+      }
     }
 
     @include desktop {
       margin: 0 auto;
       padding-left: vc(40);
       height: vc(72);
+
+      .vip &,
+      .welcome & {
+        padding-right: vc(40);
+      }
     }
   }
 
@@ -36,6 +51,11 @@
 
     @include mobile {
       width: vc(182);
+      margin-left: vc(-100);
+    }
+
+    .welcome & {
+      display: none;
     }
   }
 
@@ -74,9 +94,14 @@
     display: flex;
     align-items: center;
     height: 100%;
+    gap: vc(10);
+
+    @include tablet {
+      gap: vc(25);
+    }
 
     @include desktop {
-      gap: vc(10);
+      gap: vc(40);
     }
   }
 
@@ -119,10 +144,8 @@
     width: vc(24);
     height: vc(24);
     transition: color calc($duration-normal / 2);
-    margin-right: vc(30);
 
     @include tablet {
-      margin-right: vc(25);
       &::before {
         right: vc(2);
         top: vc(-1);
@@ -132,7 +155,6 @@
     }
 
     @include desktop {
-      margin-right: vc(40);
       &::before {
         right: vc(2);
         top: vc(-1);
@@ -143,6 +165,10 @@
 
     &:active {
       color: $color-azure-radiance;
+
+      .vip & {
+        color: $color-gold;
+      }
     }
 
     &--message {
@@ -178,7 +204,15 @@
 
       &:hover {
         color: $color-azure-radiance;
+
+        .vip & {
+          color: $color-gold;
+        }
       }
+    }
+
+    .welcome & {
+      display: none;
     }
   }
 
@@ -532,6 +566,76 @@
     @include desktop {
       width: vc(30);
       height: vc(30);
+    }
+  }
+
+  &--inset {
+    #{$p}__lang {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: vc(6);
+      width: auto;
+      height: auto;
+      opacity: 1;
+      overflow: visible;
+      border-radius: 0;
+      justify-content: flex-start;
+
+      svg {
+        width: auto;
+        height: auto;
+      }
+    }
+
+    #{$p}__lang-btn {
+      font-size: vc(18);
+      letter-spacing: 0.04em;
+      color: $color-biscay;
+      cursor: pointer;
+      transition: color $duration-normal;
+
+      .vip & {
+        color: $color-white;
+      }
+
+      @include desktop {
+        font-size: vc(22);
+      }
+    }
+
+    #{$p}__lang-btn:hover {
+      color: $color-azure-radiance;
+
+      .vip & {
+        color: $color-gold;
+      }
+    }
+
+    #{$p}__lang-btn--active {
+      color: $color-azure-radiance;
+
+      .vip & {
+        color: $color-gold;
+      }
+    }
+
+    #{$p}__lang-separator {
+      font-size: vc(18);
+      color: $color-biscay;
+
+      .vip & {
+        color: $color-white;
+      }
+
+      @include desktop {
+        font-size: vc(22);
+      }
+    }
+
+    .welcome & {
+      z-index: 25;
     }
   }
 
