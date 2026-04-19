@@ -8,6 +8,7 @@ import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, Point
 import {Line} from 'vue-chartjs';
 import {useProfileStore} from "@/store/profile";
 import {storeToRefs} from "pinia";
+import {useI18n} from 'vue-i18n';
 
 ChartJS.register(
   CategoryScale,
@@ -19,6 +20,11 @@ ChartJS.register(
   Legend
 )
 
+const FALLBACK_MONTH_NAMES = [
+  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
+]
+
 const props = defineProps({
   stats: Object,
   select: Number
@@ -27,12 +33,32 @@ const props = defineProps({
 const profileStore = useProfileStore();
 const {isVIP} = storeToRefs(profileStore);
 
-const defaultMonth = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-const statsMonth = props.stats.ActiveUsers.map(month => defaultMonth[month.Month - 1]);
-const statsActiveUsersValue = {data: props.stats.ActiveUsers.map(activeUsers => activeUsers.Value)};
-const statsTotalUsersValue = {data: props.stats.TotalUsers.map(totalUsers => totalUsers.Value)};
-const statsTotalTrafficValue = {data: props.stats.TotalTrafficGB.map(totalTrafficGB => totalTrafficGB.Value)};
-const chartStyle = {
+const {tm} = useI18n();
+
+const monthNames = computed(() => {
+  const m = tm('cabinet.chart.monthNames');
+  return Array.isArray(m) && m.length === 12 ? m : FALLBACK_MONTH_NAMES;
+});
+
+const chartLabels = computed(() => {
+  const list = props.stats?.ActiveUsers;
+  if (!list?.length) {
+    return [];
+  }
+  return list.map((month) => monthNames.value[month.Month - 1] ?? '');
+});
+
+const statsActiveUsersValue = computed(() => ({
+  data: props.stats?.ActiveUsers?.map((activeUsers) => activeUsers.Value) ?? [],
+}));
+const statsTotalUsersValue = computed(() => ({
+  data: props.stats?.TotalUsers?.map((totalUsers) => totalUsers.Value) ?? [],
+}));
+const statsTotalTrafficValue = computed(() => ({
+  data: props.stats?.TotalTrafficGB?.map((totalTrafficGB) => totalTrafficGB.Value) ?? [],
+}));
+
+const chartStyle = computed(() => ({
   tension: 0.4,
   borderWidth: 1,
   borderColor: isVIP.value ? '#FFF293' : '#000000',
@@ -42,36 +68,45 @@ const chartStyle = {
   pointHoverRadius: 5,
   pointBorderColor: isVIP.value ? '#FFF293' : '#000',
   segment: {
-    borderDash: ctx => ctx.p1DataIndex === 11 ? [6, 6] : undefined
-  }
-};
+    borderDash: (ctx) => ctx.p1DataIndex === 11 ? [6, 6] : undefined,
+  },
+}));
 
-const chartNewData = computed(() => {
-  return chartObject[props.select - 1];
+const chartObject = computed(() => {
+  const labels = chartLabels.value;
+  const style = chartStyle.value;
+  return [
+    {
+      labels,
+      datasets: [
+        {...statsActiveUsersValue.value, ...style},
+      ],
+    },
+    {
+      labels,
+      datasets: [
+        {...statsTotalUsersValue.value, ...style},
+      ],
+    },
+    {
+      labels,
+      datasets: [
+        {...statsTotalTrafficValue.value, ...style},
+      ],
+    },
+  ];
 });
 
-const chartObject = [
-  {
-    labels: statsMonth,
-    datasets: [
-      {...statsActiveUsersValue, ...chartStyle}
-    ]
-  },
-  {
-    labels: statsMonth,
-    datasets: [
-      {...statsTotalUsersValue, ...chartStyle}
-    ]
-  },
-  {
-    labels: statsMonth,
-    datasets: [
-      {...statsTotalTrafficValue, ...chartStyle}
-    ]
+const chartNewData = computed(() => {
+  const idx = (props.select ?? 1) - 1;
+  const list = chartObject.value;
+  if (!list[idx]) {
+    return {labels: [], datasets: [{data: [], ...chartStyle.value}]};
   }
-];
+  return list[idx];
+});
 
-const chartOptions = {
+const chartOptions = computed(() => ({
   responsive: true,
   maintainAspectRatio: false,
   plugins: {
@@ -91,7 +126,7 @@ const chartOptions = {
         left: 20,
         right: 20,
         top: 8,
-        bottom: 8
+        bottom: 8,
       },
       caretPadding: 10,
       caretSize: 7,
@@ -101,12 +136,10 @@ const chartOptions = {
       displayColors: false,
       callbacks: {
         title: function () {
-          let title = false;
-
-          return title;
-        }
-      }
-    }
+          return false;
+        },
+      },
+    },
   },
   scales: {
     x: {
@@ -123,10 +156,10 @@ const chartOptions = {
         font: {
           family: '"Raleway", sans-serif',
           size: 10,
-          lineHeight: 1.2
+          lineHeight: 1.2,
         },
-        color: isVIP.value ? '#FFF293' : '#8f8f8f'
-      }
+        color: isVIP.value ? '#FFF293' : '#8f8f8f',
+      },
     },
     y: {
       beginAtZero: true,
@@ -145,11 +178,11 @@ const chartOptions = {
         font: {
           family: '"Raleway", sans-serif',
           size: 10,
-          lineHeight: 1.2
+          lineHeight: 1.2,
         },
-        color: isVIP.value ? '#FFF293' : '#8f8f8f'
-      }
-    }
-  }
-};
+        color: isVIP.value ? '#FFF293' : '#8f8f8f',
+      },
+    },
+  },
+}));
 </script>

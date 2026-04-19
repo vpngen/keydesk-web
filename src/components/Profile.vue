@@ -2,7 +2,7 @@
   <div class="profile">
     <div class="profile__headline">
       <h2 class="profile__title">
-        {{ data.profile.headline.title }} {{ usersList?.length ? usersList[0].UserName : 'Brigadier' }}
+        {{ t('cabinet.profile.hello') }}{{ usersList?.length ? displayName(usersList[0].UserName) : t('cabinet.profile.brigadierFallback') }}
       </h2>
       <div class="profile__search">
         <div class="profile__filter-block">
@@ -22,18 +22,18 @@
               v-model="filterUserText"
               :disabled="highlightedElementProperties.searchButton.disabled"
               class="profile__search-input"
-              placeholder="Поиск"
+              :placeholder="t('cabinet.profile.searchPlaceholder')"
               type="text"
             />
             <button :disabled="highlightedElementProperties.searchButton.disabled" class="button button--search-button">
-              {{ data.profile.headline.search }}
+              {{ t('cabinet.profile.search') }}
             </button>
           </div>
           <div class="profile__add-button">
             <button id="welcome-add-end" ref="buttonAddUser"
                     :class="highlightedElementProperties.buttonAddUser.highlight"
                     :disabled="highlightedElementProperties.buttonAddUser.disabled" class="button"
-                    @click="addUserHandler">{{ data.profile.headline.button }}
+                    @click="addUserHandler">{{ t('cabinet.profile.add') }}
             </button>
           </div>
         </div>
@@ -44,7 +44,7 @@
         <SvgIcon name="icon-status-deactive"/>
       </div>
       <div class="profile__message-text">
-        Через неделю после создания бригада будет закрыта, если в ней будет меньше 10 активных пользователей
+        {{ t('cabinet.profile.warningMessage') }}
       </div>
       <div class="profile__message-close" @click="messageClose = true">
         <SvgIcon name="icon-close"/>
@@ -70,7 +70,7 @@
           :index="index + 1"
           :is_vip="true"
           :monthly-quota-remaining-g-b="100000"
-          :user-name="`VIP-ключ #${index+1}`"
+          :user-name="t('cabinet.profile.vipKey', { n: index + 1 })"
           class="profile__card--vip"
           status="green"
           @open-dialog-user="openDialogUser"
@@ -98,33 +98,33 @@
           <SvgIcon name='icon-add'/>
         </div>
         <p class="profile__add-text">
-          Добавить<br>пользователя
+          {{ t('cabinet.profile.addUserLine1') }}<br>{{ t('cabinet.profile.addUserLine2') }}
         </p>
       </div>
     </div>
     <div class="profile__data swiper-container">
       <h2 class="profile__title">
-        {{ data.profile.title }}
+        {{ t('cabinet.profile.dataCollectionTitle') }}
       </h2>
       <div class="profile__select swiper-wrapper">
         <div class="profile__option swiper-slide">
           <button :class="{'is-select': showTab === 1}" class="button button--option1" data-button="1"
-                  @click="showTab = 1">Статистика бригады
+                  @click="showTab = 1">{{ t('cabinet.tabs.stats') }}
           </button>
         </div>
         <div class="profile__option swiper-slide">
           <button :class="{'is-select': showTab === 2}" class="button button--option1" data-button="2"
-                  @click="showTab = 2">Инструкции
+                  @click="showTab = 2">{{ t('cabinet.tabs.instructions') }}
           </button>
         </div>
         <div class="profile__option swiper-slide">
           <button :class="{'is-select': showTab === 3}" class="button button--option1" data-button="3"
-                  @click="showTab = 3">Какие данные мы собираем?
+                  @click="showTab = 3">{{ t('cabinet.tabs.data') }}
           </button>
         </div>
         <div class="profile__option swiper-slide">
           <button :class="{'is-select': showTab === 4}" class="button button--option3" data-button="4"
-                  @click="showTab = 4">FAQ
+                  @click="showTab = 4">{{ t('cabinet.tabs.faq') }}
           </button>
         </div>
       </div>
@@ -133,27 +133,27 @@
           <div class="profile__chart">
             <div class="profile__chart-graph">
               <div class="profile__chart-title">
-                За год&nbsp;
+                {{ t('cabinet.chart.year') }}&nbsp;
                 <div class="profile__chart-select">
 									<span v-if="chartSelect === 1" @click.stop="chartSelectShow = chartSelectShow.value ? false : true">
-										кол-во активных пользователей
+										{{ t('cabinet.chart.activeUsers') }}
 									</span>
                   <span v-if="chartSelect === 2" @click.stop="chartSelectShow = chartSelectShow.value ? false : true">
-										общее кол-во пользователей
+										{{ t('cabinet.chart.totalUsers') }}
 									</span>
                   <span v-if="chartSelect === 3" @click.stop="chartSelectShow = chartSelectShow.value ? false : true">
-										объем трафика
+										{{ t('cabinet.chart.traffic') }}
 									</span>
                 </div>
                 <div v-if="chartSelectShow" ref="chartOptionsRef" class="profile__chart-options">
 									<span v-if="chartSelect !== 1" @click.stop="chartSelected(1)">
-										кол-во активных пользователей
+										{{ t('cabinet.chart.activeUsers') }}
 									</span>
                   <span v-if="chartSelect !== 2" @click.stop="chartSelected(2)">
-										общее кол-во пользователей
+										{{ t('cabinet.chart.totalUsers') }}
 									</span>
                   <span v-if="chartSelect !== 3" @click.stop="chartSelected(3)">
-										объем трафика
+										{{ t('cabinet.chart.traffic') }}
 									</span>
                 </div>
               </div>
@@ -165,7 +165,7 @@
             </div>
             <div class="profile__chart-data">
               <div class="profile__chart-title">
-                Текущий месяц
+                {{ t('cabinet.chart.currentMonth') }}
               </div>
               <div class="profile__chart-buttons">
                 <button :class="{'is-select': chartSelect === 1}" class="profile__chart-button"
@@ -176,8 +176,8 @@
 											<SvgIcon :name="iconActiveUsers"/>
 											</span>
 									</span>
-                  <span class="chart-text">
-										Кол-во активных пользователей
+                  <span class="profile__chart-text">
+										{{ t('cabinet.chart.activeUsersShort') }}
 									</span>
                 </button>
                 <button :class="{'is-select': chartSelect === 2}" class="profile__chart-button"
@@ -189,7 +189,7 @@
 											</span>
 									</span>
                   <span class="profile__chart-text">
-										Общее кол-во пользователей
+										{{ t('cabinet.chart.totalUsersShort') }}
 									</span>
                 </button>
                 <button :class="{'is-select': chartSelect === 3}" class="profile__chart-button"
@@ -201,7 +201,7 @@
 										</span>
 									</span>
                   <span class="profile__chart-text">
-										Объем трафика
+										{{ t('cabinet.chart.trafficShort') }}
 									</span>
                 </button>
               </div>
@@ -211,7 +211,7 @@
         <div v-show="showTab === 2" class="profile__tab" data-tab="2">
           <div class="profile__directions">
             <div class="profile__directions-title">
-              Выбор по устройству для основного протокола и клиента
+              {{ t('cabinet.directions.byDevice') }}
             </div>
             <div class="profile__directions-cards swiper-container">
               <div class="profile__directions-wrapper swiper-wrapper">
@@ -227,7 +227,7 @@
               </div>
             </div>
             <div class="profile__directions-title">
-              Выбор по протоколу
+              {{ t('cabinet.directions.byProtocol') }}
             </div>
             <div class="profile__directions-cards swiper-container">
               <div class="profile__directions-wrapper swiper-wrapper">
@@ -248,16 +248,16 @@
           <div class="profile__table">
             <div class="profile__table-head">
               <div class="profile__table-title">
-                Тип данных
+                {{ t('cabinet.dataTable.type') }}
               </div>
               <div class="profile__table-column">
-                Юзер
+                {{ t('cabinet.dataTable.user') }}
               </div>
               <div class="profile__table-column">
-                Бригадир
+                {{ t('cabinet.dataTable.brigadier') }}
               </div>
             </div>
-            <template v-for="line in data.dataCollection">
+            <template v-for="line in dataCollectionLines">
               <div class="profile__table-line">
                 <div class="profile__table-title">
                   {{ line.type }}
@@ -272,10 +272,7 @@
             </template>
           </div>
           <p class="profile__chart-note">
-            Нам эти данные не&nbsp;нужны, но&nbsp;это минимально необходимый по&nbsp;закону набор данных для
-            запросов властей юрисдикций VPN-серверов. Все данные защищены шифрованием с&nbsp;ключом, разделенным между
-            командой посуточно побригадно, таким образом, что расшифровать ключ можно только при согласии большинства
-            держателей ключа и&nbsp;расшифровываться будет ровно&nbsp;то, что запросят.
+            {{ t('cabinet.dataNote') }}
           </p>
         </div>
         <div v-show="showTab === 4" class="profile__tab" data-tab="4">
@@ -349,6 +346,9 @@
 
 <script setup>
 import {computed, inject, onMounted, onUnmounted, ref} from "vue";
+import {useI18n} from 'vue-i18n';
+import {useDisplayPersonName} from '@/composables/useDisplayPersonName';
+import {personNameMatchesFilter} from '@/utils/personNameDisplay';
 import axios from 'axios';
 import ProfileCard from './ProfileCard.vue';
 import ChartLine from './ChartLine.vue';
@@ -368,7 +368,6 @@ import useClickOutside from '@/assets/hooks/useClickOutside.js';
 import Swiper from 'swiper';
 import 'swiper/css';
 import DialogOther from "@/components/DialogOther.vue";
-import data from "../assets/helpers/data.ts";
 import {useUsersStore} from "@/store/users";
 import {storeToRefs} from "pinia";
 import {useProfileStore} from "@/store/profile";
@@ -376,6 +375,9 @@ import {apiLink} from "@/const/api";
 import DialogSelectConfig from "@/components/DialogSelectConfig.vue";
 import DialogVipConfig from './DialogVipConfig.vue';
 
+const {t, tm, locale} = useI18n();
+const {displayName} = useDisplayPersonName();
+const dataCollectionLines = computed(() => tm('cabinet.dataCollection') || []);
 
 const profileStore = useProfileStore();
 const usersStore = useUsersStore();
@@ -690,8 +692,8 @@ const filteredUsers = computed(() => {
         break;
     }
 
-    userListCopy = userListCopy.filter(user =>
-      user.UserName.toLowerCase().includes(filter.toLowerCase())
+    userListCopy = userListCopy.filter((user) =>
+      personNameMatchesFilter(user.UserName, filter, locale.value)
     );
 
     return [firstElement, ...userListCopy]
@@ -724,7 +726,7 @@ const openViewKey = (vipUserIndex) => {
   const vipUser = vipUsersList.value[vipUserIndex];
   console.log(vipUser);
   userData.value = {
-    title: `VIP-ключ #${vipUserIndex + 1}`,
+    title: t('cabinet.profile.vipKey', {n: vipUserIndex + 1}),
     vipConfig: vipUser.good_content,
     userId: vipUser.user_id
   };

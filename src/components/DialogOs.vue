@@ -6,33 +6,36 @@
 				<SvgIcon name="icon-close" />
 			</div>
 			<div class="popup__title">
-				Выберите тип устройства
+				{{ t('cabinet.dialogOs.title') }}
 			</div>
 			<div class="popup__cards">
-				<div class="popup__card" v-for="card in cards" :class="{ 'is-active': cardOs === card.value }" @click="selectCard(card.value)">
+				<div class="popup__card" v-for="card in cards" :key="card.value" :class="{ 'is-active': cardOs === card.value }" @click="selectCard(card.value)">
 					<div class="popup__card-icon">
-						<SvgIcon :name="`icon-0{card.value}`" />
+						<SvgIcon :name="`icon-0${card.value}`" />
 					</div>
 					<div class="popup__card-text">
-						{{ card.label }}
+						{{ t(`cabinet.osLabels.${card.value}`) }}
 					</div>
 				</div>
 			</div>
 			<div class="popup__buttons popup__buttons--os"></div>
 				<button class="button button--option2 popup__action os-button os-color" @click="next">
-					<span>Далее</span>
+					<span>{{ t('cabinet.dialogOs.next') }}</span>
 				</button>
 				<button class="button button--option2 popup__action no-border os-button" @click="skip">
-					<span>Пропустить</span>
+					<span>{{ t('cabinet.dialogOs.skip') }}</span>
 				</button>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { watchEffect, ref } from 'vue';
+import { ref } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 import { dialogOsCards as cards } from '../const/dialog.ts';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 let cardOs = ref('windows');
 
