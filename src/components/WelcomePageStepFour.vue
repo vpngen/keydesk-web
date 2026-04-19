@@ -7,7 +7,7 @@
 				<SvgIcon name="icon-close" />
 			</div>
 			<div class="popup__name">
-				220 Шаловливый Кример
+				{{ t('cabinet.welcome.step4.demoUserName') }}
 			</div>
 			
 			<div class="popup__emoji" >
@@ -15,11 +15,11 @@
 			</div>
 
 			<div class="popup__title qr-title">
-				Настройки для VPN готовы!
+				{{ t('cabinet.welcome.step4.readyTitle') }}
 			</div>
 
 			<div class="popup__subtitle popup__subtitle--minimize-margin">
-				Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
+				{{ t('cabinet.welcome.step4.shareHint') }}
 			</div>
 
 			<div class="popup__outline-block">
@@ -31,19 +31,19 @@
 					</span>				
 				</div>
 				<span class="popup__outline-footer">
-					Ты не сможешь сам перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
+					{{ t('cabinet.welcome.step4.linkFooter') }}
 				</span>
 				<div class="popup__buttons popup__buttons--qr">
-					<button class="popup__button button button--option2">
+					<button class="popup__button button button--option2" type="button">
 						<span>
 							<SvgIcon name="link" />
-							Копировать ссылку
+							{{ t('cabinet.welcome.step4.copyLink') }}
 						</span>
 					</button>
-					<button  class="popup__button button button--option2">
+					<button class="popup__button button button--option2" type="button">
 						<span>
 							<SvgIcon name="icon-share" />
-							Поделиться
+							{{ t('cabinet.welcome.step4.share') }}
 						</span>
 					</button>
 				</div>
@@ -51,16 +51,16 @@
 		</div>
 		<div class="popup__alert welcome-qr-description" ref="startLine">
 			<div class="popup__title qr-title-description">
-				Настройки VPN для нового пользователя созданы!
-				<br>Скопируй и поделись ими!
+				{{ t('cabinet.welcome.step4.descriptionTitle') }}
+				<br>{{ t('cabinet.welcome.step4.descriptionSub') }}
 			</div>
 			<div class="popup__button welcome">
-				<button class="button button--welcome" @click="triggerStepFour">Далее</button>
+				<button class="button button--welcome" type="button" @click="triggerStepFour">{{ t('cabinet.welcome.common.next') }}</button>
 			</div>
 		</div>
 		<div class="popup__text welcome bottom-close">
 			<a @click="close">
-				Пропустить
+				{{ t('cabinet.welcome.common.skip') }}
 			</a>
 		</div>
 	</div>
@@ -69,7 +69,10 @@
 <script setup>
 import SvgIcon from './SvgIcon.vue';
 import {onMounted, ref} from "vue";
+import {useI18n} from 'vue-i18n';
 import generateLines from "@/assets/helpers/animations";
+
+const {t} = useI18n();
 
 const emit = defineEmits(['close', 'initElementsContainerData']);
 const startLine = ref(null);

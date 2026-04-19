@@ -3,7 +3,7 @@
 		<div class="popup__overlay" @click="close" />
 		<div class="popup__alert">
 			<div class="popup__name">
-				{{ userName }}
+				{{ displayName(userName) }}
 			</div>
 			<div class="popup__close" @click="close">
 				<SvgIcon name="icon-close" />
@@ -12,13 +12,13 @@
 				<SvgIcon name="icon-emoji-happy" />
 			</div>
 			<div class="popup__title qr-title">
-				{{ clientLabel }}-конфиг готов!
+				{{ t('cabinet.dialogConfig.ready', { client: clientLabel }) }}
 			</div>
 			<div class="popup__subtitle popup__subtitle--minimize-margin">
-				Отдай ссылку на клиент и {{ downloadLabel }} другу. Нужно установить {{ displayedClientName }} и добавить туда {{ downloadLabel }}
+				{{ giveSubtitle }}
 			</div>
 			<div class="popup__subtitle">
-				Ссылка на клиент:&nbsp
+				{{ t('cabinet.dialogConfig.clientLink') }}&nbsp
 				<span>
 					<a :href="clientLink" target="_blank">
 						| &nbsp;{{ clientLink }}
@@ -27,18 +27,18 @@
 			</div>
 			<div class="popup__buttons qr-buttons" v-if="clientName !== 'outline'">
 				<a class="button button--option2 popup__action" @click="back">
-					<span>Другие варианты</span>
+					<span>{{ t('cabinet.dialogConfig.otherOptions') }}</span>
 				</a>
 				<a class="button button--option2 popup__action" :href="buttonHref" :download="buttonDownload">
 					<span class="popup__button-img">
 						<SvgIcon name="download" />
 					</span>
-					<span>Скачать файл</span>
+					<span>{{ t('cabinet.dialogConfig.downloadFile') }}</span>
 				</a>
 			</div>
 			<div class="popup__outline-block" v-else>
 				<div class="popup__outline-header">
-					Ссылка конфига:
+					{{ t('cabinet.dialogConfig.configLink') }}
 				</div>
 				<div class="popup__outline-link">
 					<div ref="outlineLinkRef">
@@ -47,7 +47,7 @@
 				</div>
 				<div class="popup__buttons popup__buttons--qr">
 					<button class="button button--option2 popup__action no-border" @click="back">
-						<span>Другие варианты</span>
+						<span>{{ t('cabinet.dialogConfig.otherOptions') }}</span>
 					</button>
 					<a class="button button--option2 popup__action button__outline" :class="{'disabled': !isLinkCopied}"
 					   @click="copyLink(outlineLinkRef)" :disabled="!isLinkCopied">
@@ -70,9 +70,14 @@
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
 import SvgIcon from './SvgIcon.vue';
+import { useI18n } from 'vue-i18n';
+import { useDisplayPersonName } from '@/composables/useDisplayPersonName';
 const configList = require('../../vpn_sistems_config.json');
 const clientLink = ref();
 import { dialogOtherCards as cards } from '../const/dialog.ts';
+
+const { t } = useI18n();
+const { displayName } = useDisplayPersonName();
 
 const props = defineProps({
 	userData: {
@@ -91,18 +96,25 @@ const clientKey =ref(null);
 const isLinkCopied =ref(true);
 const outlineLinkRef = ref('');
 const linkCopyResult = ref('');
-const linkButtonText = ref('Скопировать');
+const linkJustCopied = ref(false);
+
+const linkButtonText = computed(() =>
+	linkJustCopied.value ? t('cabinet.dialogConfig.copied') : t('cabinet.dialogConfig.copy')
+);
 
 const shareConfig = () => {
-	const shareText = `Перейди по ссылке и следуй инструкциям ${clientLink.value}, Добавь туда свою конфигурацию ${outlineLink.value}, Инструкция https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit`
+	const shareText = t('cabinet.dialogConfig.shareBundle', {
+		clientLink: clientLink.value,
+		outline: outlineLink.value,
+	});
 
 	if (navigator.share) {
 		navigator.share({
-			title: 'Ссылки на клиент, конфиг, инструкцию',
+			title: t('cabinet.dialogConfig.shareTitle'),
 			text: shareText
 		})
 	} else {
-		navigator.clipboard.writeText('Не поддерживается твоим браузером')
+		navigator.clipboard.writeText(t('cabinet.dialogConfig.clipboardUnsupported'))
 	}
 }
 
@@ -111,14 +123,21 @@ const clientLabel = computed(() => {
 	return card ? card.label : '';
 });
 
-const downloadLabel = computed(() => {
-	return props.clientName === 'outline' ? 'ссылку' : 'файл';
+const downloadWord = computed(() => {
+	return props.clientName === 'outline' ? t('cabinet.dialogQr.resourceLink') : t('cabinet.dialogQr.resourceFile');
 });
 
 const displayedClientName = computed(() => {
 	const card = cards.find(card => card.value === props.clientName);
 	return card ? card.client : '';
 });
+
+const giveSubtitle = computed(() =>
+	t('cabinet.dialogConfig.give', {
+		resource: downloadWord.value,
+		app: displayedClientName.value,
+	})
+);
 
 const outlineLink = computed(() => {
 	return props.clientName === 'outline' ? props.userData[clientKey.value].AccessKey : ''
@@ -129,15 +148,15 @@ const copyLink = async (target) => {
 		try {
 			await navigator.clipboard.writeText(target.innerText);
 			isLinkCopied.value = true;
-			linkButtonText.value = 'Скопировано'
-			linkCopyResult.value = 'Ссылка скопирована в буфер обмена!'
+			linkJustCopied.value = true;
+			linkCopyResult.value = t('cabinet.dialogConfig.copySuccess')
 		} catch (error) {
 			isLinkCopied.value = false;
-			linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+			linkCopyResult.value = t('cabinet.dialogConfig.copyFail')
 		}
 	} else {
 		isLinkCopied.value = false;
-		linkCopyResult.value = 'Копирование не поддерживается твоим устройством. Скопируй пожалуйста ссылку ручками:)'
+		linkCopyResult.value = t('cabinet.dialogConfig.copyFail')
 	}
 }
 

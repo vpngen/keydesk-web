@@ -12,7 +12,7 @@
 	      {{ message[0].text }}
 	    </div>
 	    <div class="popup__notifications-button" @click="toggle">
-		    <button class="button button--ok">Окей</button>
+		    <button class="button button--ok" type="button">{{ t('cabinet.notificationsPage.ok') }}</button>
 	    </div>
 	  </div>
 	</div>
@@ -20,6 +20,9 @@
 
 <script setup>
 import SvgIcon from './SvgIcon.vue';
+import {useI18n} from 'vue-i18n';
+
+const {t} = useI18n();
 
 const props = defineProps({
 	message: {

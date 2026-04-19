@@ -1,0 +1,342 @@
+{
+  "cabinet": {
+    "header": {
+      "vipSquad": "Squad",
+      "vipBanner": "YOU ARE SUPER VIP NOW — ENJOY"
+    },
+    "lang": {
+      "ru": "RU",
+      "en": "EN"
+    },
+    "profile": {
+      "hello": "Hi, ",
+      "brigadierFallback": "Brigadier",
+      "searchPlaceholder": "Search",
+      "search": "Search",
+      "add": "Add",
+      "addUserLine1": "Add",
+      "addUserLine2": "user",
+      "dataCollectionTitle": "Data we collect",
+      "vipKey": "VIP key #{n}",
+      "warningMessage": "One week after creation your squad will be closed if it has fewer than 10 active users"
+    },
+    "filters": {
+      "sort": "Sort:",
+      "status": "Status:",
+      "allStatuses": "All statuses"
+    },
+    "sort": {
+      "nameAsc": "Alphabetically (A–Z)",
+      "nameAscShort": "(A–Z)",
+      "nameDesc": "Alphabetically (Z–A)",
+      "nameDescShort": "(Z–A)",
+      "dateAsc": "By creation date (oldest first)",
+      "dateDesc": "By creation date (newest first)"
+    },
+    "notificationsSort": {
+      "priorityAsc": "By priority (ascending)",
+      "priorityAscShort": "(0–10)",
+      "priorityDesc": "By priority (descending)",
+      "priorityDescShort": "(10–0)"
+    },
+    "messageNotificationStatus": {
+      "red": {
+        "name": "Important"
+      },
+      "green": {
+        "name": "Other"
+      }
+    },
+    "notificationsPage": {
+      "title": "Messages",
+      "details": "Details",
+      "ok": "OK"
+    },
+    "welcome": {
+      "common": {
+        "skip": "Skip",
+        "next": "Next"
+      },
+      "step1": {
+        "title": "Learn how to use your VPN server",
+        "letsGo": "Let's go",
+        "dismiss": "No thanks, I’ll manage on my own"
+      },
+      "step2": {
+        "line1": "This is the brigadier account. It can only be restored with the 6 words and the name.",
+        "line2": "If you haven’t saved them — do it right now!",
+        "saved": "Done, I’ve saved them!"
+      },
+      "step3": {
+        "line1": "Tap here to add a key.",
+        "line2": "Each device needs its own key!"
+      },
+      "step4": {
+        "demoUserName": "220 Playful Crimer",
+        "readyTitle": "VPN settings are ready!",
+        "shareHint": "Share the link below with a friend. They should open it and follow the instructions.",
+        "linkFooter": "You can’t open this link yourself while on your VPN — that’s how we protect your key from being overwritten",
+        "copyLink": "Copy link",
+        "share": "Share",
+        "descriptionTitle": "VPN settings for the new user have been created!",
+        "descriptionSub": "Copy and share them!"
+      },
+      "step5": {
+        "line1": "These are users you’ve created. You can remove them if needed. Your limit is 250 keys (users)..",
+        "warning": "You must connect 10 users within the first week, or we’ll remove your squad",
+        "line3": "Here you’ll see last visit, limits, and status"
+      },
+      "step6": {
+        "line1": "Search configs by part of the name — handy when your squad grows"
+      },
+      "step7": {
+        "title": "You’re now a full-fledged key vault master!",
+        "subscribe": "Subscribe to our channel — good stuff there!",
+        "channelLink": "VPN Generator",
+        "support": "If anything goes wrong, contact support",
+        "supportLink": "VPN Generator Support",
+        "done": "Off to share configs"
+      }
+    },
+    "userStatus": {
+      "green": {
+        "name": "All good!",
+        "hint": "This user is happily using the VPN with no issues"
+      },
+      "black": {
+        "name": "Dead soul",
+        "hint": "This user has never connected to the VPN"
+      },
+      "grey": {
+        "name": "Hedgehog in the fog",
+        "hint": "This user has not connected to the VPN this month"
+      },
+      "yellow": {
+        "name": "Limited",
+        "hint": "This user's speed is reduced to 256 kb/s due to traffic limit"
+      },
+      "red": {
+        "name": "Blocked",
+        "hint": "User is blocked"
+      }
+    },
+    "card": {
+      "lastVisit": "Last visit",
+      "lastVisitVip": "Recently",
+      "trafficLimit": "Traffic limit",
+      "statusLabel": "Status:",
+      "remove": "Remove",
+      "viewKey": "View key"
+    },
+    "tabs": {
+      "stats": "Squad statistics",
+      "instructions": "Instructions",
+      "data": "What data do we collect?",
+      "faq": "FAQ"
+    },
+    "chart": {
+      "year": "Past year",
+      "activeUsers": "active users",
+      "totalUsers": "total users",
+      "traffic": "traffic volume",
+      "currentMonth": "Current month",
+      "activeUsersShort": "Active users",
+      "totalUsersShort": "Total users",
+      "trafficShort": "Traffic volume",
+      "monthNames": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "directions": {
+      "byDevice": "Choose by device for the main protocol and client",
+      "byProtocol": "Choose by protocol"
+    },
+    "dataTable": {
+      "type": "Data type",
+      "user": "User",
+      "brigadier": "Brigadier"
+    },
+    "dataCollection": [
+      {
+        "type": "Source IP address",
+        "user": "10 weeks",
+        "brigadier": "10 weeks"
+      },
+      {
+        "type": "IP addresses of visited sites",
+        "user": "10 weeks",
+        "brigadier": "10 weeks"
+      },
+      {
+        "type": "Telegram ID",
+        "user": "",
+        "brigadier": "When contacting support: 1 week; when requesting brigadier config: 2 days; permanently if the user is banned."
+      },
+      {
+        "type": "Cookies",
+        "user": "",
+        "brigadier": "Cookies for the key cabinet inside the VPN connection"
+      },
+      {
+        "type": "Phone number",
+        "user": "",
+        "brigadier": ""
+      },
+      {
+        "type": "URLs of visited sites",
+        "user": "",
+        "brigadier": ""
+      },
+      {
+        "type": "Location data",
+        "user": "",
+        "brigadier": ""
+      }
+    ],
+    "dataNote": "We do not need this data ourselves, but it is the minimum set required by law for requests from authorities in VPN server jurisdictions. All data is encrypted with a key split across the team per day and per squad so the key can only be decrypted with majority consent of key holders, and only what is requested will be decrypted.",
+    "faq": [
+      {
+        "question": "How do I see how much traffic I have left?",
+        "answers": [
+          "The remainder is shown on your user card (the first card in the list)"
+        ]
+      },
+      {
+        "question": "How can a user know how much traffic they have left?",
+        "answers": ["They ask you, and you check their card"]
+      },
+      {
+        "question": "Which country is my server in?",
+        "answers": [
+          "Definitely outside Russia/Belarus, in a country with rule of law. We know exactly where yours is, but we will not tell you :)"
+        ]
+      },
+      {
+        "question": "How much traffic do I get in total?",
+        "answers": [
+          "Each user gets 100 GB. Limits reset at the start of each month.",
+          "If you are SUPER-VIP with an unlimited key — full freedom, no caps."
+        ]
+      },
+      {
+        "question": "How many devices can connect to one key cabinet?",
+        "answers": [
+          "One key cabinet can hold up to 250 configs at once. If you are nearing the limit, remove inactive users (see statuses “dead soul” and “hedgehog in the fog”)."
+        ]
+      },
+      {
+        "question": "Can I choose the country I connect to?",
+        "answers": [
+          "Not in the current version. Our focus is your safety; we rotate IPs regularly."
+        ]
+      },
+      {
+        "question": "What if someone gets my name and six words or my file — what happens to me, my squad, and you?",
+        "answers": [
+          "If a stranger gets your login and six words, they can reissue the brigadier config. The old one is disabled immediately and you lose the squad.",
+          "Users you added may be deleted. IPs could theoretically be enriched via providers, but outsiders still cannot see traffic.",
+          "We are not at risk."
+        ]
+      },
+      {
+        "question": "What if I forgot/lost the six magic words and/or brigadier name? What happens to my users?",
+        "answers": [
+          "If you are reading this here, your username is on the first card.",
+          "No one can restore the six words — not even with a puppy held hostage.",
+          "You can manage the squad until you lose the config file. Support can use the brigadier name.",
+          "If the file is gone, the squad is on its own; you cannot help those you shared configs with.",
+          "We suggest reissuing the squad and redistributing keys — your choice :)"
+        ]
+      }
+    ],
+    "dialogOs": {
+      "title": "Choose device type",
+      "next": "Next",
+      "skip": "Skip"
+    },
+    "dialogOther": {
+      "title": "Choose config type",
+      "next": "Next",
+      "back": "Back"
+    },
+    "osLabels": {
+      "windows": "Windows",
+      "macos": "MacOS",
+      "ios": "iOS",
+      "android": "Android",
+      "linux": "Linux",
+      "other": "Other"
+    },
+    "dialogQr": {
+      "done": "Done!",
+      "subtitleQr": "Download, copy, or activate via QR code",
+      "tunnelPrefix": "Tunnel name:",
+      "subtitleOutline": "Share the link below with a friend. They should open it and follow the steps.",
+      "otherOptions": "Other options",
+      "downloadData": "Download",
+      "copiedShort": "Copied",
+      "outlineFooter": "You cannot open this link yourself while on your VPN — we protected your key from being overwritten",
+      "copyLink": "Copy link",
+      "share": "Share",
+      "shareTitle": "Instruction link",
+      "shareBody": "Open the link and follow the instructions \n\n{link}",
+      "shareUnsupported": "Not supported in your browser",
+      "resourceLink": "the link",
+      "resourceFile": "the file"
+    },
+    "dialogVipConfig": {
+      "title": "Your heavy-luxury VIP key!",
+      "subtitle": "Tap the link and get online at speeds mere mortals — and blocking — can’t match.",
+      "copiedShort": "Copied",
+      "copyLink": "Copy link",
+      "share": "Share",
+      "shareTitle": "Instruction link",
+      "shareBody": "Open the link and follow the instructions \n\n{link}",
+      "shareUnsupported": "Not supported in your browser"
+    },
+    "dialogConfig": {
+      "ready": "{client} config is ready!",
+      "give": "Send your friend the client link and {resource}. They need to install {app} and add {resource} there",
+      "clientLink": "Client link:",
+      "configLink": "Config link:",
+      "otherOptions": "Other options",
+      "downloadFile": "Download file",
+      "copy": "Copy",
+      "copied": "Copied",
+      "shareTitle": "Client, config, and instruction links",
+      "clipboardUnsupported": "Not supported in your browser",
+      "copySuccess": "Link copied to clipboard!",
+      "copyFail": "Copy is not supported on your device. Please copy the link manually :)",
+      "shareBundle": "Open the link and follow the steps: {clientLink}. Add your configuration: {outline}. Guide: https://docs.google.com/document/d/1QsX0fNUW1XvlSAT2ZMHLC__iPXRTssyQEev4Udhz3hk/edit"
+    },
+    "dialogSelectConfig": {
+      "title": "Choose configuration",
+      "basicTitle": "Standard VPN",
+      "free": "Free",
+      "vipTitle": "VIP CONFIGURATION",
+      "vipF1": "MAXIMUM SPEED",
+      "vipF2": "UNLIMITED TRAFFIC",
+      "vipF3": "VERY LUXURY",
+      "choose": "Choose"
+    },
+    "dialogUser": {
+      "confirmDelete": "Are you sure you want to remove this user?",
+      "cancel": "Cancel",
+      "delete": "Remove",
+      "torrentTitle": "You downloaded too many torrent files.",
+      "accessRestored": "Access will be restored in:",
+      "ok": "OK"
+    }
+  }
+}
