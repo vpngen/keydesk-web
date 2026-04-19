@@ -86,6 +86,7 @@ function getElementData(el, position) {
 
 onMounted(() => {
 	document.body.style.overflow = 'hidden';
+	document.querySelector('#app').classList.add('welcome');
 	emit('toggleDisable');
 })
 
@@ -179,5 +180,6 @@ const closeComponent = () => {
 	localStorage.setItem('isInstructionHidden', 'true');
 	emit('getUsers');
 	document.body.style.overflow = 'auto';
+	document.querySelector('#app').classList.remove('welcome');
 }
 </script>

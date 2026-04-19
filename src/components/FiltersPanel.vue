@@ -4,7 +4,7 @@
       <button class="sort-filter__button" type="button" @click.stop="openSortMenu">
         <div class="sort-filter">
           <div class="filter-component__title">
-            Сортировка:
+            {{ t('cabinet.filters.sort') }}
           </div>
           <template v-if="!getSortingOptionItem(currentSorting)?.textLabel">
             <SvgIcon :name="currentSorting" class="sort-filter__icon"/>
@@ -13,7 +13,7 @@
             <span class="sort-filter__text-label"> {{ getSortingOptionItem(currentSorting)?.textLabel }} </span>
           </template>
           <div ref="sortOptionRef" :class="{ active: showSortMenu }" class="sort-filter__filter-menu">
-            <template v-for="(option, index) in sortingList" :key="index">
+            <template v-for="(option, index) in sortingListI18n" :key="index">
               <a class="sort-filter__filter-item" href="#" @click.stop="setSorting(sortingMap[option.label])">
                 <span class="sort-filter__filter-name">{{ option.name }}</span>
               </a>
@@ -25,18 +25,18 @@
     <button class="status-filter__button" type="button" @click.stop="openStatusMenu">
       <div class="status-filter">
         <div class="filter-component__title">
-          Статус:
+          {{ t('cabinet.filters.status') }}
         </div>
         <span :class="['status-filter__icon', 'main-icon', currentStatus]"/>
         <div ref="sortStatusRef" :class="{ active: showStatusMenu }" class="status-filter__filter-menu">
           <a class="status-filter__filter-item" href="#" @click.stop="setStatus('all')">
             <span :class="['status-filter__icon', 'all']"/>
-            <span class="status-filter__filter-name">Все статусы</span>
+            <span class="status-filter__filter-name">{{ t('cabinet.filters.allStatuses') }}</span>
           </a>
           <template v-for="(status, index) in props.statusList" :key="index">
             <a class="status-filter__filter-item" href="#" @click.stop="setStatus(statusMap[status])">
               <span :class="['status-filter__icon', statusMap[status]]"/>
-              <span class="status-filter__filter-name">{{ profileCardStatus.statusName[status] }}</span>
+              <span class="status-filter__filter-name">{{ t(`cabinet.userStatus.${status}.name`) }}</span>
             </a>
           </template>
         </div>
@@ -46,10 +46,34 @@
 </template>
 
 <script setup>
-import {profileCardStatus, sortingList, sortingMap, statusMap} from '@/assets/constants/profileConstants.js'
-import {ref} from 'vue';
+import {sortingMap, statusMap} from '@/assets/constants/profileConstants.js'
+import {computed, ref} from 'vue';
 import useClickOutside from '@/assets/hooks/useClickOutside.js';
 import SvgIcon from "@/components/SvgIcon.vue";
+import {useI18n} from 'vue-i18n';
+
+const {t} = useI18n();
+
+const sortingListI18n = computed(() => [
+  {
+    name: t('cabinet.sort.nameAsc'),
+    label: sortingMap.nameAsc,
+    textLabel: t('cabinet.sort.nameAscShort'),
+  },
+  {
+    name: t('cabinet.sort.nameDesc'),
+    label: sortingMap.nameDesc,
+    textLabel: t('cabinet.sort.nameDescShort'),
+  },
+  {
+    name: t('cabinet.sort.dateAsc'),
+    label: sortingMap.dateAsc,
+  },
+  {
+    name: t('cabinet.sort.dateDesc'),
+    label: sortingMap.dateDesc,
+  },
+]);
 
 const sortOptionRef = ref(null)
 const sortStatusRef = ref(null)
@@ -111,7 +135,7 @@ const setSorting = (sortingOption) => {
 };
 
 const getSortingOptionItem = (label) => {
-  return sortingList.find(option => option.label === label)
+  return sortingListI18n.value.find(option => option.label === label)
 }
 
 </script>

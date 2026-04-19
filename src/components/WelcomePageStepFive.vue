@@ -3,20 +3,20 @@
 		<div class="popup__overlay welcome" />
 		<div class="popup__alert welcome-delete" ref="startLine">
 			<div class="popup__title save-title">
-				Это созданные тобой пользователи. Если нужно, их даже можно удалять. Твой лимит - 250 ключей (пользователей)..
+				{{ t('cabinet.welcome.step5.line1') }}
 			</div>
 			<div class="popup__title save-title red">
-				Обязательно за первую неделю подключи 10 пользователей, или мы удалим твою бригаду<br>¯\_(ツ)_/¯
+				{{ t('cabinet.welcome.step5.warning') }}<br>¯\_(ツ)_/¯
 			</div>
 			<div class="popup__title save-title">
-				Здесь выводится информация о последнем посещении, лимитах и статусе 
+				{{ t('cabinet.welcome.step5.line3') }}
 			</div>
 			<div class="popup__button welcome-delete">
-				<button class="button button--welcome" @click="triggerStepSix">Далее</button>
+				<button class="button button--welcome" type="button" @click="triggerStepSix">{{ t('cabinet.welcome.common.next') }}</button>
 			</div>
 		</div>
 		<div class="popup__text welcome bottom-close top">
-			<a @click="close">Пропустить</a>
+			<a @click="close">{{ t('cabinet.welcome.common.skip') }}</a>
 		</div>
 		<div class="popup__fake-area" ref="endLine" />
 	</div>
@@ -24,7 +24,10 @@
 
 <script setup>
 import {ref, watchEffect} from "vue";
+import {useI18n} from 'vue-i18n';
 import generateLines from "@/assets/helpers/animations";
+
+const {t} = useI18n();
 
 const props = defineProps({
 	buttonPosition: {

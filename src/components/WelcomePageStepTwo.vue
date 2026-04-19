@@ -2,14 +2,14 @@
 	<div class="popup popup--welcome">
 		<div class="popup__overlay welcome" />
 		<div class="popup__alert welcome-save" ref="startLine">
-			<div class="popup__title save-title">Это аккаунт бригадира. Его можно восстановить только через 6 слов и имя.</div>
-			<div class="popup__title save-title">Если ты их не сохранил - сделай это прямо сейчас!</div>
+			<div class="popup__title save-title">{{ t('cabinet.welcome.step2.line1') }}</div>
+			<div class="popup__title save-title">{{ t('cabinet.welcome.step2.line2') }}</div>
 			<div class="popup__button welcome-save">
-				<button class="button button--welcome" @click="triggerStepFive">Все, сохранил(-а)!</button>
+				<button class="button button--welcome" type="button" @click="triggerStepFive">{{ t('cabinet.welcome.step2.saved') }}</button>
 			</div>
 		</div>
 		<div class="popup__text welcome bottom-close">
-			<a @click="close">Пропустить</a>
+			<a @click="close">{{ t('cabinet.welcome.common.skip') }}</a>
 		</div>
 		<div class="popup__fake-area" ref="endLine" />
 	</div>
@@ -18,7 +18,10 @@
 <script setup>
 
 import {ref, watchEffect} from "vue";
+import {useI18n} from 'vue-i18n';
 import generateLines from "@/assets/helpers/animations";
+
+const {t} = useI18n();
 
 const props = defineProps({
 	buttonPosition: {

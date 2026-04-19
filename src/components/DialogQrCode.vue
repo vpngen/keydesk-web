@@ -6,7 +6,7 @@
         <SvgIcon name="icon-close"/>
       </div>
       <div class="popup__name">
-        {{ userName }}
+        {{ displayName(userName) }}
       </div>
       <QRCodeVue3
         v-if="showQrCode"
@@ -29,16 +29,17 @@
         <SvgIcon name="icon-emoji-happy"/>
       </div>
       <div class="popup__title qr-title">
-        Готово!
+        {{ t('cabinet.dialogQr.done') }}
       </div>
       <div v-if="showQrCode" class="popup__subtitle">
-        Скачайте, скопируйте или<br>активируйте ее&nbsp;по&nbsp;QR-коду
+        {{ t('cabinet.dialogQr.subtitleQr') }}
         <span class="tunnel">
-					Название туннеля: <b>{{ tunnelName }}</b>
+					{{ t('cabinet.dialogQr.tunnelPrefix') }} <b>{{ tunnelName }}</b>
 				</span>
+        <span v-if="vpnName" class="tunnel">{{ vpnName }}</span>
       </div>
       <div v-else class="popup__subtitle popup__subtitle--minimize-margin">
-        Поделись с другом ссылкой ниже. Ему нужно перейти по ней и следовать инструкциям.
+        {{ t('cabinet.dialogQr.subtitleOutline') }}
       </div>
       <!--<div class="popup__subtitle">-->
       <!--	{{ vpnName }}: -->
@@ -48,13 +49,13 @@
       <!--</div>-->
       <div v-if="props.configName !== 'VPNGenConfig'" class="popup__buttons popup__buttons--qr">
         <button class="button button--option2 popup__action no-border" @click="others">
-          <span>Другие варианты</span>
+          <span>{{ t('cabinet.dialogQr.otherOptions') }}</span>
         </button>
         <a :download="buttonDownload" :href="buttonHref" class="button button--option2 popup__action">
 					<span class="popup__button-img">
 						<SvgIcon name="download"/>
 					</span>
-          <span>Скачать данные</span>
+          <span>{{ t('cabinet.dialogQr.downloadData') }}</span>
         </a>
       </div>
       <div v-else class="popup__outline-block">
@@ -64,21 +65,21 @@
           <span>
 						<SvgIcon name="icon-copy"/>
 					</span>
-          <p v-show="linkCopy">Скопировано</p>
+          <p v-show="linkCopy">{{ t('cabinet.dialogQr.copiedShort') }}</p>
         </div>
         <span class="popup__outline-footer">
-					Ты не сможешь сам перейти по этой ссылке под своим VPN, так мы защитили твой ключ от перезаписи
+					{{ t('cabinet.dialogQr.outlineFooter') }}
 				</span>
         <div class="popup__buttons popup__buttons--qr">
           <button class="popup__button button button--option2" @click="copyText">
             <SvgIcon name="link"/>
-            Копировать ссылку
+            {{ t('cabinet.dialogQr.copyLink') }}
           </button>
           <button v-if="window.location.protocol === 'https:'" class="popup__button button button--option2"
                   @click="share">
 						<span>
 							<SvgIcon name="icon-share"/>
-							Поделиться
+							{{ t('cabinet.dialogQr.share') }}
 						</span>
           </button>
         </div>
@@ -95,7 +96,12 @@
 import {computed, ref, watchEffect} from 'vue';
 import QRCodeVue3 from 'qrcode-vue3';
 import SvgIcon from './SvgIcon.vue';
-import {dialogOsCards} from '../const/dialog.ts';
+import {useI18n} from 'vue-i18n';
+import {displayVpnNameFromConfig} from '@/utils/vpnConfigDisplay';
+import {useDisplayPersonName} from '@/composables/useDisplayPersonName';
+
+const {t, locale} = useI18n();
+const {displayName} = useDisplayPersonName();
 
 const props = defineProps({
   userData: {
@@ -145,31 +151,25 @@ const copyText = () => {
 };
 
 const share = () => {
-  const shareText = `Перейди по ссылке и следуй инструкциям \n\n${outlineLink.value}`;
+  const shareText = t('cabinet.dialogQr.shareBody', {link: outlineLink.value});
 
   if (navigator.share) {
     navigator.share({
-      title: 'Ссылка на инструкцию',
+      title: t('cabinet.dialogQr.shareTitle'),
       text: shareText
     })
   } else {
     isLinkCopied.value = false;
-    linkCopyResult.value = 'Не поддерживается твоим браузером';
+    linkCopyResult.value = t('cabinet.dialogQr.shareUnsupported');
   }
 }
 
-const resourceType = computed(() => {
-  return props.configName === 'VPNGenConfig' ? 'ссылку' : 'файл';
-});
-
-const osLabel = computed(() => {
-  const osCard = dialogOsCards.find(card => card.value === props.chosenOS.value);
-  return osCard ? osCard.label : '';
-});
-
 const osLink = computed(() => {
   const chosenConfig = props.configName ? props.configName : 'WireguardConfig';
-  return configList.links_defaults[props.chosenOS][chosenConfig];
+  const osKey = typeof props.chosenOS === 'object' && props.chosenOS?.value != null
+    ? props.chosenOS.value
+    : props.chosenOS;
+  return configList.links_defaults[osKey]?.[chosenConfig];
 });
 
 const outlineLink = computed(() => {
@@ -177,7 +177,7 @@ const outlineLink = computed(() => {
 })
 
 const vpnName = computed(() => {
-  return configList.vpn_name[props.configName]
+  return displayVpnNameFromConfig(props.configName, configList.vpn_name, locale.value);
 })
 
 watchEffect(() => {
