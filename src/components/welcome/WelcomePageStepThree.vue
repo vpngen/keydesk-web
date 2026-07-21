@@ -32,30 +32,23 @@ const props = defineProps({
 });
 const startLine = ref(null);
 const endLine = ref(null);
-const { applySizePositionOptions, firstLine, secondLine, thirdLine } = generateLines(startLine, endLine,
-		{endSocket: 'bottom'},
-		{endSocket: 'bottom'},
-		{endSocket: 'bottom'});
+const {applySizePositionOptions, removeLine} = generateLines(startLine, endLine, {endSocket: 'bottom'});
 
 watchEffect(() => {
-	applySizePositionOptions(endLine, props.buttonPosition)
-})
+	applySizePositionOptions(endLine, props.buttonPosition);
+});
 
 const emit = defineEmits(['close']);
 
 const close = () => {
-  emit('close');
-	firstLine.value.remove();
-	secondLine.value.remove();
-	thirdLine.value.remove();
+	emit('close');
+	removeLine();
 	emit('darkenElements');
 };
 
 const triggerStepThree = () => {
 	emit('triggerStepThree');
-	firstLine.value.remove();
-	secondLine.value.remove();
-	thirdLine.value.remove();
+	removeLine();
 	emit('darkenElements');
 };
 </script>

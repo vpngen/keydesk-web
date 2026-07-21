@@ -6,7 +6,7 @@
 		v-html="title"
   />
   <div class="profile__accordion-responsion" :class="{'profile__accordion-responsion--open':isExpanded}">
-    <p v-for="(answer) in extraContent" v-html="answer"></p>
+    <p v-for="answer in extraContent" :key="answer" v-html="answer"></p>
   </div>
 </template>
 

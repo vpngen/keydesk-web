@@ -1,9 +1,11 @@
+import 'normalize.css'
+import 'virtual:svg-icons-register'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import { createPinia } from 'pinia'
-import loadingService from "@/assets/services/loading-service";
 import { setupI18n } from './i18n'
+import {setupAxiosInterceptors} from './utils/axiosInterceptors';
 
 async function bootstrap() {
   const i18n = await setupI18n()
@@ -12,8 +14,8 @@ async function bootstrap() {
   const pinia = createPinia()
 
   app.config.globalProperties.window = window
-  app.provide('loadingService', loadingService);
   app.use(pinia)
+  setupAxiosInterceptors()
   app.use(i18n)
   app.use(router);
   app.mount('#app');

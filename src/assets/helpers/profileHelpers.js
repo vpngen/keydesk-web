@@ -1,24 +1,18 @@
-export const generateHighlightedElementProperties = (buttonAddUser, firstUserProfileCard, secondUserProfileCard, searchButton) => {
-    return {
-        buttonAddUser: {
-            disabled: false,
-            highlight: '',
-            ref:  buttonAddUser,
-        },
-        firstUserProfileCard: {
-            disabled: false,
-            highlight: '',
-            ref: firstUserProfileCard,
-        },
-        secondUserProfileCard: {
-            disabled: false,
-            highlight: '',
-            ref: secondUserProfileCard,
-        },
-        searchButton: {
-            disabled: false,
-            highlight: '',
-            ref: searchButton,
-        },
-    }
-}
+export const generateHighlightedElementProperties = () => ({
+    buttonAddUser: {
+        disabled: false,
+        highlight: '',
+    },
+    firstUserProfileCard: {
+        disabled: false,
+        highlight: '',
+    },
+    secondUserProfileCard: {
+        disabled: false,
+        highlight: '',
+    },
+    searchButton: {
+        disabled: false,
+        highlight: '',
+    },
+});

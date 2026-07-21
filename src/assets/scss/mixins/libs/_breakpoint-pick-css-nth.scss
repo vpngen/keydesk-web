@@ -1,3 +1,8 @@
+@use "sass:list";
+@use "sass:map";
+@use "breakpoint-map-merge";
+@use "list-css-nth";
+
 /**
 * In each $list pair of $breakpoint: $value replaces all values with 'inherit'
 * except for one in $index position
@@ -17,12 +22,12 @@
 */
 
 @function breakpointPickCssNth($list, $index, $default: inherit) {
-  @each $breakpoint, $value in $list {
-    $value: set-nth($default $default $default $default, $index, css-nth($value, $index));
-    $list: map-merge($list, ($breakpoint: $value));
-  }
+	@each $breakpoint, $value in $list {
+		$value: list.set-nth($default $default $default $default, $index, list-css-nth.css-nth($value, $index));
+		$list: map.merge($list, ($breakpoint: $value));
+	}
 
-  @return $list;
+	@return $list;
 }
 
 /**
@@ -38,10 +43,10 @@
 */
 
 @function breakpoint-pick-top-bottom($list, $default: inherit) {
-  @return breakpointMapMerge(
-                  breakpointPickCssNth($list, 1),
-                  breakpointPickCssNth($list, 3)
-  );
+	@return breakpoint-map-merge.breakpointMapMerge(
+		breakpointPickCssNth($list, 1),
+		breakpointPickCssNth($list, 3)
+	);
 }
 
 /**
@@ -57,8 +62,8 @@
 */
 
 @function breakpoint-pick-left-right($list, $default: inherit) {
-  @return breakpointMapMerge(
-                  breakpointPickCssNth($list, 2),
-                  breakpointPickCssNth($list, 4)
-  );
+	@return breakpoint-map-merge.breakpointMapMerge(
+		breakpointPickCssNth($list, 2),
+		breakpointPickCssNth($list, 4)
+	);
 }

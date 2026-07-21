@@ -1,42 +1,47 @@
+@use "../functions/sprites";
+@use "helpers";
+
+@use "sass:math";
+
 @mixin sprite-width($name, $size: normal) {
-  width: sprite-width($name, $size) * 1px;
+	width: sprites.sprite-width($name, $size) * 1px;
 }
 
 @mixin sprite-height($name, $size: normal) {
-  height: sprite-height($name, $size) * 1px;
+	height: sprites.sprite-height($name, $size) * 1px;
 }
 
 @mixin sprite-background-image($name, $size: normal) {
-  background-image: url("../images/#{sprite-image($name, $size)}");
+	background-image: url("../images/#{sprites.sprite-image($name, $size)}");
 }
 
 @mixin sprite-background-position($name, $size: normal) {
-  background-position: (sprite-x($name, $size) * -1px) (sprite-y($name, $size) * -1px);
+	background-position: (sprites.sprite-x($name, $size) * -1px) (sprites.sprite-y($name, $size) * -1px);
 }
 
 @mixin sprite-background-size($name, $size: normal) {
-  background-size: (sprite-total-width($name, $size) * 1px) (sprite-total-height($name, $size) * 1px);
+	background-size: (sprites.sprite-total-width($name, $size) * 1px) (sprites.sprite-total-height($name, $size) * 1px);
 }
 
 @mixin sprite-background($name, $size: normal) {
-  $image: url("../images/#{sprite-image($name, $size)}");
-  $position: (sprite-x($name, $size) * -1px) (sprite-y($name, $size) * -1px);
-  $size: (sprite-total-width($name, $size) * 1px) (sprite-total-height($name, $size) * 1px);
+	$image: url("../images/#{sprites.sprite-image($name, $size)}");
+	$position: (sprites.sprite-x($name, $size) * -1px) (sprites.sprite-y($name, $size) * -1px);
+	$size: (sprites.sprite-total-width($name, $size) * 1px) (sprites.sprite-total-height($name, $size) * 1px);
 
-  background: $image $position / $size no-repeat;
+	background: $image math.div($position, $size) no-repeat;
 }
 
 @mixin sprite($name) {
-  // stylelint-disable order/order
-  display: inline-block;
-  vertical-align: middle;
+	// stylelint-disable order/order
+	display: inline-block;
+	vertical-align: middle;
 
-  @include sprite-width($name, normal);
-  @include sprite-height($name, normal);
-  @include sprite-background($name, normal);
+	@include sprite-width($name, normal);
+	@include sprite-height($name, normal);
+	@include sprite-background($name, normal);
 
-  @include retina {
-    @include sprite-background-image($name, retina);
-  }
-  // stylelint-enable order/order
+	@include helpers.retina {
+		@include sprite-background-image($name, retina);
+	}
+	// stylelint-enable order/order
 }

@@ -1,76 +1,78 @@
+@use "mixins/breakpoint";
+
 .is-hidden {
-  // stylelint-disable-next-line declaration-no-important
-  display: none !important;
+	// stylelint-disable-next-line declaration-no-important
+	display: none !important;
 }
 
 .is-flex {
-  // stylelint-disable-next-line declaration-no-important
-  display: flex !important;
+	// stylelint-disable-next-line declaration-no-important
+	display: flex !important;
 }
 
 .is-block {
-  // stylelint-disable-next-line declaration-no-important
-  display: block !important;
+	// stylelint-disable-next-line declaration-no-important
+	display: block !important;
 }
 
 .is-hide {
-  // stylelint-disable-next-line declaration-no-important
-  opacity: 0;
+	// stylelint-disable-next-line declaration-no-important
+	opacity: 0;
 }
 
 .for-desktop {
-  @include tablet {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.tablet {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 
-  @include mobile {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.mobile {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 }
 
 .for-tablet {
-  @include desktop {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.desktop {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 
-  @include mobile {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.mobile {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 }
 
 .for-mobile {
-  @include desktop {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.desktop {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 
-  @include tablet {
-    // stylelint-disable-next-line declaration-no-important
-    display: none !important;
-  }
+	@include breakpoint.tablet {
+		// stylelint-disable-next-line declaration-no-important
+		display: none !important;
+	}
 }
 
 .clearfix {
-  overflow: auto;
+	overflow: auto;
 
-  &::after {
-    content: "";
-    display: table;
-    clear: both;
-  }
+	&::after {
+		content: "";
+		display: table;
+		clear: both;
+	}
 }
 
 .visually-hidden {
-  position: absolute;
-  overflow: hidden;
-  margin: -1px;
-  width: 1px;
-  height: 1px;
-  clip: rect(0 0 0 0);
+	position: absolute;
+	overflow: hidden;
+	margin: -1px;
+	width: 1px;
+	height: 1px;
+	clip: rect(0 0 0 0);
 }
 
 /* stylelint-disable */

@@ -1,6 +1,6 @@
 <template>
   <div class="popup">
-    <div class="popup__overlay" @click="close"/>
+    <div class="popup__overlay"/>
     <div class="popup__alert">
       <div class="popup__emoji">
         <SvgIcon name="icon-construction"/>
@@ -25,9 +25,9 @@
 </template>
 
 <script setup>
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 
-const props = defineProps({
+defineProps({
   till: {
     type: String
   },

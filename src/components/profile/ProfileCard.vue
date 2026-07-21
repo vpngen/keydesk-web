@@ -48,6 +48,7 @@
         v-if="index !== 0 && !is_vip"
         :disabled="highlightedElementProperties?.secondUserProfileCard.disabled"
         class="profile__card-button"
+        type="button"
         @click="$emit('openDialogUser')"
       >
         {{ t('cabinet.card.remove') }}
@@ -55,6 +56,7 @@
       <button
         v-if="is_vip"
         class="profile__card-button profile__card-button--gold"
+        type="button"
         @click="$emit('openViewKey')"
       >
         {{ t('cabinet.card.viewKey') }}
@@ -74,41 +76,41 @@ const {displayName} = useDisplayPersonName();
 
 const props = defineProps({
   is_vip: {
-    required: true,
-    type: Boolean
+    type: Boolean,
+    default: false,
   },
   status: {
-    required: false,
-    type: String
+    type: String,
+    default: '',
   },
   userName: {
-    required: true,
-    type: String
+    type: String,
+    default: '',
   },
   personDescLink: {
-    required: false,
     type: String,
+    default: '',
   },
   monthlyQuotaRemainingGB: {
-    required: false,
-    type: Number
+    type: Number,
+    default: undefined,
   },
   lastVisitHour: {
-    required: false,
-    type: String
+    type: String,
+    default: '',
   },
   lastVisitSubnet: {
-    required: false,
-    type: String
+    type: String,
+    default: '',
   },
   index: {
-    required: true,
-    type: Number
+    type: Number,
+    default: 0,
   },
   highlightedElementProperties: {
-    required: true,
-    type: Object
-  }
+    type: Object,
+    default: () => ({}),
+  },
 });
 
 const statusName = computed(() =>

@@ -19,10 +19,10 @@
 				</div>
 			</div>
 			<div class="popup__buttons popup__buttons--os">
-				<button class="button button--option2 popup__action os-button os-color" @click="next">
+				<button class="button button--option2 popup__action os-button os-color" type="button" @click="next">
 					<span>{{ t('cabinet.dialogOther.next') }}</span>
 				</button>
-				<button class="button button--option2 popup__action no-border os-button" @click="back">
+				<button class="button button--option2 popup__action no-border os-button" type="button" @click="back">
 					<span>{{ t('cabinet.dialogOther.back') }}</span>
 				</button>
 			</div>
@@ -32,8 +32,8 @@
 
 <script setup>
 import { ref } from 'vue';
-import SvgIcon from './SvgIcon.vue';
-import { dialogOtherCards as cards } from '../const/dialog.ts';
+import SvgIcon from '@/components/SvgIcon.vue';
+import { dialogOtherCards as cards } from '@/const/dialog.ts';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

@@ -18,12 +18,17 @@
       "addUserLine2": "user",
       "dataCollectionTitle": "Data we collect",
       "vipKey": "VIP key #{n}",
-      "warningMessage": "One week after creation your squad will be closed if it has fewer than 10 active users"
+      "warningMessage": "One week after creation your squad will be closed if it has fewer than 5 active users"
     },
     "filters": {
       "sort": "Sort:",
       "status": "Status:",
       "allStatuses": "All statuses"
+    },
+    "pagination": {
+      "prev": "Prev",
+      "next": "Next",
+      "page": "Page {current} of {total}"
     },
     "sort": {
       "nameAsc": "Alphabetically (A–Z)",

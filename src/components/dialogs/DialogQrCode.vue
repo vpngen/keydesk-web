@@ -48,7 +48,7 @@
       <!--	</span>-->
       <!--</div>-->
       <div v-if="props.configName !== 'VPNGenConfig'" class="popup__buttons popup__buttons--qr">
-        <button class="button button--option2 popup__action no-border" @click="others">
+        <button class="button button--option2 popup__action no-border" type="button" @click="others">
           <span>{{ t('cabinet.dialogQr.otherOptions') }}</span>
         </button>
         <a :download="buttonDownload" :href="buttonHref" class="button button--option2 popup__action">
@@ -71,11 +71,14 @@
 					{{ t('cabinet.dialogQr.outlineFooter') }}
 				</span>
         <div class="popup__buttons popup__buttons--qr">
-          <button class="popup__button button button--option2" @click="copyText">
+          <button class="popup__button button button--option2" type="button" @click="copyText">
             <SvgIcon name="link"/>
             {{ t('cabinet.dialogQr.copyLink') }}
           </button>
-          <button v-if="window.location.protocol === 'https:'" class="popup__button button button--option2"
+          <button
+            v-if="window.location.protocol === 'https:'"
+            class="popup__button button button--option2"
+            type="button"
                   @click="share">
 						<span>
 							<SvgIcon name="icon-share"/>
@@ -95,10 +98,12 @@
 <script setup>
 import {computed, ref, watchEffect} from 'vue';
 import QRCodeVue3 from 'qrcode-vue3';
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 import {useI18n} from 'vue-i18n';
 import {displayVpnNameFromConfig} from '@/utils/vpnConfigDisplay';
 import {useDisplayPersonName} from '@/composables/useDisplayPersonName';
+import logoVpnImage from '@/assets/images/sprites/png/logo-vpn.png';
+import configList from '../../../vpn_sistems_config.json';
 
 const {t, locale} = useI18n();
 const {displayName} = useDisplayPersonName();
@@ -124,7 +129,6 @@ const userName = ref('');
 const tunnelName = ref('');
 const buttonHref = ref('');
 const buttonDownload = ref('');
-const configList = require('../../vpn_sistems_config.json');
 const isLinkCopied = ref(true);
 const linkCopyResult = ref('');
 const linkButtonText = ref('Скопировать');
@@ -191,7 +195,7 @@ watchEffect(() => {
   }
 });
 
-const image = require('@/assets/images/sprites/png/logo-vpn.png')
+const image = logoVpnImage;
 
 // const share = async () => {
 //   if (navigator.canShare({ files: [props.file] })) {

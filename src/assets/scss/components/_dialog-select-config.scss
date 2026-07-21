@@ -1,227 +1,222 @@
+@use "../functions/responsive";
+@use "../mixins/breakpoint";
+@use "../variables";
+
 .dialog-select-config {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: vc(60);
+	position: fixed;
+	z-index: 9999;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: responsive.vc(60);
+	inset: 0;
 
-  &__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(19, 19, 19, 0.96);
-    backdrop-filter: blur(6.25px);
-  }
+	&__overlay {
+		position: absolute;
+		background: rgba(19, 19, 19, 0.96);
+		backdrop-filter: blur(6.25px);
+		inset: 0;
+	}
 
-  &__content {
-    position: relative;
-    z-index: 1;
-    max-width: vc(665);
-    width: 100%;
-    background: transparent;
-  }
+	&__content {
+		position: relative;
+		z-index: 1;
+		width: 100%;
+		max-width: responsive.vc(665);
+		background: transparent;
+	}
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: vc(24) vc(16) vc(4);
-    margin-bottom: vc(40);
-  }
+	&__header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: responsive.vc(40);
+		padding: responsive.vc(24) responsive.vc(16) responsive.vc(4);
+	}
 
-  &__title {
-    font-family: 'Public Sans', sans-serif;
-    font-weight: 700;
-    font-size: vc(28);
-    line-height: 1;
-    color: $color-white;
-    letter-spacing: -0.56px;
-    margin: 0;
-  }
+	&__title {
+		margin: 0;
+		font-family: "Public Sans", sans-serif;
+		font-weight: 700;
+		font-size: responsive.vc(28);
+		line-height: 1;
+		letter-spacing: -0.56px;
+		color: variables.$color-white;
+	}
 
-  &__close {
-    background: none;
-    border: none;
-    padding: 0;
-    width: vc(32);
-    height: vc(32);
-    color: $color-white;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+	&__close {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		padding: 0;
+		width: responsive.vc(32);
+		height: responsive.vc(32);
+		color: variables.$color-white;
+		background: none;
+		cursor: pointer;
+	}
 
-  &__options {
-    display: flex;
-    flex-direction: row;
-    gap: vc(12);
-    align-items: center;
+	&__options {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: responsive.vc(12);
 
-    @include mobile {
-      flex-direction: column;
-      gap: vc(20);
-    }
-  }
+		@include breakpoint.mobile {
+			flex-direction: column;
+			gap: responsive.vc(20);
+		}
+	}
 
-  &__card {
-    position: relative;
-    width: vc(325);
-    height: vc(287);
-    border-radius: vc(20);
-    padding: vc(53) vc(40);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: $duration-normal;
-    background-color: #00000038;
-    border: 1px solid #FFF293;
+	&__card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid #fff293;
+		border-radius: responsive.vc(20);
+		padding: responsive.vc(53) responsive.vc(40);
+		width: responsive.vc(325);
+		height: responsive.vc(287);
+		background-color: #00000038;
+		transition: variables.$duration-normal;
+		cursor: pointer;
 
-    @include desktop {
-      &:hover {
-        background-color: #2D2C2AB2;
-      }
-    }
+		&--vip {
+			border: 2px solid transparent;
+			border-image: url(variables.$url-image + 'vip/border-vpn-vip.svg') 50% / 100%;
+			box-shadow: -27px 50px 100px 0 #fff293;
+			background: transparent;
+		}
 
-    &--vip {
-      background: transparent;
-      border: 2px solid transparent;
-      border-image: url('../images/vip/border-vpn-vip.svg') 50% / 100%;
-      box-shadow: -27px 50px 100px 0px #fff293;
-    }
-  }
+		@include breakpoint.desktop {
+			&:hover {
+				background-color: #2d2c2ab2;
+			}
+		}
+	}
 
-  &__card-header {
-    text-align: center;
-  }
+	&__card-header {
+		text-align: center;
+	}
 
-  &__card-title {
-    font-family: $font-raleway;
-    font-weight: 800;
-    font-size: vc(16);
-    line-height: 1;
-    margin: 0;
+	&__card-title {
+		margin: 0;
+		font-family: variables.$font-raleway;
+		font-weight: 800;
+		font-size: responsive.vc(16);
+		line-height: 1;
 
-    .dialog-select-config__card--basic & {
-      color: #d5d2bf;
-    }
+		.dialog-select-config__card--basic & {
+			color: #d5d2bf;
+		}
 
-    .dialog-select-config__card--vip & {
-      color: #fff293;
-    }
-  }
+		.dialog-select-config__card--vip & {
+			color: #fff293;
+		}
+	}
 
-  &__card-features {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+	&__card-features {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
 
-    p {
-      font-family: $font-raleway;
-      font-weight: 700;
-      font-size: vc(14);
-      line-height: vc(18);
-      color: #fff293;
-      margin: 0 0 vc(4);
+		p {
+			margin: 0 0 responsive.vc(4);
+			font-family: variables.$font-raleway;
+			font-weight: 700;
+			font-size: responsive.vc(14);
+			line-height: responsive.vc(18);
+			color: #fff293;
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
 
-  &__card-price {
-    margin-bottom: vc(20);
-  }
+	&__card-price {
+		margin-bottom: responsive.vc(20);
+	}
 
-  &__card-price-text {
-    font-family: $font-raleway;
-    font-weight: 700;
-    font-size: vc(14);
-    line-height: 1;
+	&__card-price-text {
+		font-family: variables.$font-raleway;
+		font-weight: 700;
+		font-size: responsive.vc(14);
+		line-height: 1;
 
-    .dialog-select-config__card--basic & {
-      color: $color-white;
-    }
+		.dialog-select-config__card--basic & {
+			color: variables.$color-white;
+		}
 
-    .dialog-select-config__card--vip & {
-      color: #fff293;
-    }
-  }
+		.dialog-select-config__card--vip & {
+			color: #fff293;
+		}
+	}
 
-  &__card-button {
-    border-radius: vc(5);
-    padding: vc(8) vc(16);
-    font-family: $font-raleway;
-    font-weight: 500;
-    font-size: vc(12);
-    line-height: 1;
-    background: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
+	&__card-button {
+		border-radius: responsive.vc(5);
+		padding: responsive.vc(8) responsive.vc(16);
+		font-family: variables.$font-raleway;
+		font-weight: 500;
+		font-size: responsive.vc(12);
+		line-height: 1;
+		background: none;
+		transition: all 0.2s ease;
+		cursor: pointer;
 
-    &--basic {
-      border: 1px solid $color-white;
-      color: $color-white;
+		&--basic {
+			border: 1px solid variables.$color-white;
+			color: variables.$color-white;
 
-      &:hover {
-        background: rgba(255, 255, 255, 0.1);
-      }
-    }
+			&:hover {
+				background: rgba(255, 255, 255, 0.1);
+			}
+		}
 
-    &--vip {
-      border: 1px solid #fff293;
-      color: #fff293;
+		&--vip {
+			border: 1px solid #fff293;
+			color: #fff293;
 
-      &:hover {
-        background: rgba(255, 242, 147, 0.1);
-      }
-    }
-  }
+			&:hover {
+				background: rgba(255, 242, 147, 0.1);
+			}
+		}
+	}
 
-  @include mobile {
-    padding: vc(20);
+	@include breakpoint.mobile {
+		padding: responsive.vc(20);
 
-    &__content {
-      max-width: 100%;
-    }
+		&__content {
+			max-width: 100%;
+		}
 
-    &__options {
-      gap: vc(16);
-    }
+		&__options {
+			gap: responsive.vc(16);
+		}
 
-    &__card {
-      width: 100%;
-      max-width: vc(320);
-    }
-  }
+		&__card {
+			width: 100%;
+			max-width: responsive.vc(320);
+		}
+	}
 }
 
 .vip {
-  .popup__name {
-    color: #828283;
-  }
+	.popup__name {
+		color: #828283;
+	}
 
-  .popup__outline-link {
-    background: #141414;
+	.popup__outline-link {
+		background: #141414;
 
-    input {
-      color: #FFF293;
-    }
-  }
+		input {
+			color: #fff293;
+		}
+	}
 }
-
-
-
