@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 import {onMounted, ref} from "vue";
 import {useI18n} from 'vue-i18n';
 import generateLines from "@/assets/helpers/animations";
@@ -78,36 +78,33 @@ const emit = defineEmits(['close', 'initElementsContainerData']);
 const startLine = ref(null);
 const endLine = ref(null);
 
-const { applySizePositionOptions, firstLine, secondLine, thirdLine } = generateLines(startLine, endLine,
-		{endSocket: 'right', startSocket: 'bottom'},
-		{endSocket: 'bottom', startSocket: 'top'},
-		{endSocket: 'bottom', startSocket: 'top'},
-		{x: '100%', y: '83%'});
+const {applySizePositionOptions, removeLine} = generateLines(
+	startLine,
+	endLine,
+	{endSocket: 'right', startSocket: 'bottom'},
+	{x: '100%', y: '83%'},
+);
 
 const initElementsContainerData = () => {
 	applySizePositionOptions(endLine, endLine);
-	window.addEventListener('resize', ()=>applySizePositionOptions(endLine, endLine));
-	window.addEventListener('scroll', ()=>applySizePositionOptions(endLine, endLine));
-}
+	window.addEventListener('resize', () => applySizePositionOptions(endLine, endLine));
+	window.addEventListener('scroll', () => applySizePositionOptions(endLine, endLine));
+};
 
 onMounted(() => {
 	if (endLine.value) {
 		initElementsContainerData(endLine.value, endLine.value);
 	}
-})
+});
 
 const close = () => {
-  emit('close');
-	firstLine.value.remove();
-	secondLine.value.remove();
-	thirdLine.value.remove();
+	emit('close');
+	removeLine();
 };
 
 const triggerStepFour = () => {
-  emit('triggerStepFour');
-	firstLine.value.remove();
-	secondLine.value.remove();
-	thirdLine.value.remove();
+	emit('triggerStepFour');
+	removeLine();
 	emit('highlight');
 };
 

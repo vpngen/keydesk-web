@@ -179,7 +179,7 @@ export const profileDirectionsCards = {
         {
             label: 'Android',
             image: 'android',
-            href: 'https://bit.ly/VPNgenAndroidH',
+            href: 'https://docs.google.com/document/d/1G_QQib5KVltfGLQJ5QYshwoSyZ_L4-iPtCAPAXHLUhY/edit?usp=sharing',
         },
         {
             label: '*nix',

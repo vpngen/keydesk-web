@@ -3,7 +3,7 @@
     <div class="profile__show-more-column profile__show-more-column--mobile">
       <ShowMoreItem
         v-for="(card, index) in cardsList"
-        :key="index"
+        :key="card.question"
         :extraContent="card.answers"
         :isExpanded="expandedQuestionIndex===index"
         :title="card.question"
@@ -14,8 +14,8 @@
 </template>
 
 <script setup>
-import {computed, onMounted, ref, watchEffect} from 'vue';
-import ShowMoreItem from "@/components/ShowMoreItem.vue";
+import {computed, onMounted, onUnmounted, ref, watch} from 'vue';
+import ShowMoreItem from "./ShowMoreItem.vue";
 import {useI18n} from 'vue-i18n';
 
 const props = defineProps({
@@ -26,15 +26,19 @@ const props = defineProps({
   isShown: {type: Boolean}
 });
 
-const {tm, locale} = useI18n();
+const {tm} = useI18n();
 
 const expandedQuestionIndex = ref(null);
+const cardColumns = ref([[], []]);
 
 const cardsList = computed(() => tm('cabinet.faq') || []);
 
-const cardColumns = ref([[], []]);
-
-const windowWidth = ref(window.innerWidth);
+watch([cardsList, () => props.isShown], () => {
+  distributeCards();
+  if (props.isShown) {
+    expandedQuestionIndex.value = null;
+  }
+});
 
 const distributeCards = () => {
   cardColumns.value = [[], []];
@@ -44,33 +48,16 @@ const distributeCards = () => {
   });
 };
 
-const handleResize = () => {
-  windowWidth.value = window.innerWidth;
-  distributeCards();
-};
-
-onMounted(() => {
-  distributeCards();
-  window.addEventListener('resize', handleResize);
-});
-
-watchEffect(() => {
-  locale.value;
-  distributeCards();
-  if (props.isShown) {
-    expandedQuestionIndex.value = null;
-  }
-
-});
-
 const setExpandedQuestionIndex = (index) => {
   expandedQuestionIndex.value = expandedQuestionIndex.value === index ? null : index;
 }
 
-const isOpen = ref(false);
+onMounted(() => {
+  distributeCards();
+  window.addEventListener('resize', distributeCards);
+});
 
-const toggleContent = () => {
-  isOpen.value = !isOpen.value;
-}
+onUnmounted(() => {
+  window.removeEventListener('resize', distributeCards);
+});
 </script>
-

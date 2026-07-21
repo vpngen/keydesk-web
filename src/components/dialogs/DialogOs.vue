@@ -18,21 +18,22 @@
 					</div>
 				</div>
 			</div>
-			<div class="popup__buttons popup__buttons--os"></div>
-				<button class="button button--option2 popup__action os-button os-color" @click="next">
+			<div class="popup__buttons popup__buttons--os">
+				<button class="button button--option2 popup__action os-button os-color" type="button" @click="next">
 					<span>{{ t('cabinet.dialogOs.next') }}</span>
 				</button>
-				<button class="button button--option2 popup__action no-border os-button" @click="skip">
+				<button class="button button--option2 popup__action no-border os-button" type="button" @click="skip">
 					<span>{{ t('cabinet.dialogOs.skip') }}</span>
 				</button>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import SvgIcon from './SvgIcon.vue';
-import { dialogOsCards as cards } from '../const/dialog.ts';
+import SvgIcon from '@/components/SvgIcon.vue';
+import { dialogOsCards as cards } from '@/const/dialog.ts';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

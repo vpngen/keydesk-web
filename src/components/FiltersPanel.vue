@@ -12,9 +12,13 @@
           <template v-else>
             <span class="sort-filter__text-label"> {{ getSortingOptionItem(currentSorting)?.textLabel }} </span>
           </template>
-          <div ref="sortOptionRef" :class="{ active: showSortMenu }" class="sort-filter__filter-menu">
-            <template v-for="(option, index) in sortingListI18n" :key="index">
-              <a class="sort-filter__filter-item" href="#" @click.stop="setSorting(sortingMap[option.label])">
+          <div
+            ref="sortOptionRef"
+            :class="{ active: showSortMenu, 'is-active': showSortMenu }"
+            class="sort-filter__filter-menu"
+          >
+            <template v-for="option in sortingListI18n" :key="option.label">
+              <a class="sort-filter__filter-item" href="#" @click.prevent.stop="setSorting(sortingMap[option.label])">
                 <span class="sort-filter__filter-name">{{ option.name }}</span>
               </a>
             </template>
@@ -28,13 +32,17 @@
           {{ t('cabinet.filters.status') }}
         </div>
         <span :class="['status-filter__icon', 'main-icon', currentStatus]"/>
-        <div ref="sortStatusRef" :class="{ active: showStatusMenu }" class="status-filter__filter-menu">
-          <a class="status-filter__filter-item" href="#" @click.stop="setStatus('all')">
+        <div
+          ref="sortStatusRef"
+          :class="{ active: showStatusMenu, 'is-active': showStatusMenu }"
+          class="status-filter__filter-menu"
+        >
+          <a class="status-filter__filter-item" href="#" @click.prevent.stop="setStatus('all')">
             <span :class="['status-filter__icon', 'all']"/>
             <span class="status-filter__filter-name">{{ t('cabinet.filters.allStatuses') }}</span>
           </a>
-          <template v-for="(status, index) in props.statusList" :key="index">
-            <a class="status-filter__filter-item" href="#" @click.stop="setStatus(statusMap[status])">
+          <template v-for="status in props.statusList" :key="status">
+            <a class="status-filter__filter-item" href="#" @click.prevent.stop="setStatus(statusMap[status])">
               <span :class="['status-filter__icon', statusMap[status]]"/>
               <span class="status-filter__filter-name">{{ t(`cabinet.userStatus.${status}.name`) }}</span>
             </a>

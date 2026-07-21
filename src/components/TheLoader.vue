@@ -15,8 +15,9 @@
 </template>
 
 <script setup>
-import {computed, inject} from "vue";
+import {storeToRefs} from 'pinia';
+import {useLoadingStore} from '@/store/loading';
 
-const loadingService = inject('loadingService');
-const isLoading = computed(() => loadingService.state.isLoading);
+const loadingStore = useLoadingStore();
+const {isLoading} = storeToRefs(loadingStore);
 </script>

@@ -1,48 +1,65 @@
-import LeaderLine from "leader-line-new";
-import {ref} from "vue";
+import LeaderLine from 'leader-line-new';
+import {ref} from 'vue';
 
-export default function generateLines(start, end, optionFirstLine, optionSecondLine, optionThirdLine, shiftOptions) {
+export default function generateLines(start, end, lineOptions, shiftOptions) {
+  const firstLine = ref();
+  const secondLine = ref();
+  const thirdLine = ref();
 
-    const firstLine = ref();
-    const secondLine = ref();
-    const thirdLine = ref();
+  const removeIfExists = (line) => {
+    if (line) line.remove();
+  };
 
-    const removeLines = (line) => {
-        line.remove()
-    }
+  const getLineOptions = (index) => Array.isArray(lineOptions)
+    ? lineOptions[index] || lineOptions[0]
+    : lineOptions;
 
-    const checkToRemoveLinesIfExists = (line) => {
-        if (line) {
-            removeLines(line)
-        }
-    }
-    const drawLines = (componentA, componentB, options, shiftOption) => {
-        return new LeaderLine(
-            componentA,
-            shiftOption ? LeaderLine.pointAnchor(componentB, shiftOptions) : componentB,
-            {dash: true, color: 'white', size: 2, positionByWindowResize: false}).setOptions(options)
-    }
+  const addLineClass = (className) => {
+    const lines = document.querySelectorAll('svg.leader-line');
+    const line = lines[lines.length - 1];
 
-    const setLine = (start, end, shiftOptions) => {
-        if (!start || !end) return
-        checkToRemoveLinesIfExists(firstLine?.value)
-        checkToRemoveLinesIfExists(secondLine?.value)
-        checkToRemoveLinesIfExists(thirdLine?.value)
-        firstLine.value = drawLines(start.value, end.value, optionFirstLine, shiftOptions)
-        secondLine.value = drawLines(start.value, end.value, optionSecondLine)
-        thirdLine.value = drawLines(start.value, end.value, optionThirdLine)
-    }
-    const applySizePositionOptions = (ref, position) => {
-        if (!position || !ref.value) {
-            return
-        }
-        ref.value.style.width = `${position.width}px`;
-        ref.value.style.top = `${position.top}px`;
-        ref.value.style.left = `${position.left}px`;
-        ref.value.style.height = `${position.height}px`;
+    line?.classList.add(className);
+  };
 
-        setTimeout(() => {  setLine(start, end, shiftOptions)}, 100)
-    }
+  const drawOne = (componentA, componentB, useShift, optionsIndex) => {
+    const line = new LeaderLine(
+      componentA,
+      useShift && shiftOptions ? LeaderLine.pointAnchor(componentB, shiftOptions) : componentB,
+      {dash: true, color: 'white', size: 2, positionByWindowResize: false}
+    ).setOptions(getLineOptions(optionsIndex) || {});
 
-    return {applySizePositionOptions, firstLine, secondLine, thirdLine, setLine}
+    addLineClass(`leader-line--${['desktop', 'tablet', 'mobile'][optionsIndex]}`);
+
+    return line;
+  };
+
+  const setLine = () => {
+    if (!start.value || !end.value) return;
+    removeIfExists(firstLine.value);
+    removeIfExists(secondLine.value);
+    removeIfExists(thirdLine.value);
+    firstLine.value = drawOne(start.value, end.value, true, 0);
+    secondLine.value = drawOne(start.value, end.value, false, 1);
+    thirdLine.value = drawOne(start.value, end.value, false, 2);
+  };
+
+  const applySizePositionOptions = (refToShape, position) => {
+    if (!position || !refToShape.value) return;
+    refToShape.value.style.width = `${position.width}px`;
+    refToShape.value.style.top = `${position.top}px`;
+    refToShape.value.style.left = `${position.left}px`;
+    refToShape.value.style.height = `${position.height}px`;
+    setTimeout(setLine, 100);
+  };
+
+  const removeLine = () => {
+    removeIfExists(firstLine.value);
+    removeIfExists(secondLine.value);
+    removeIfExists(thirdLine.value);
+    firstLine.value = null;
+    secondLine.value = null;
+    thirdLine.value = null;
+  };
+
+  return {applySizePositionOptions, setLine, removeLine};
 }

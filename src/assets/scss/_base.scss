@@ -1,81 +1,87 @@
+@use "functions/responsive";
+@use "mixins/breakpoint";
+@use "variables";
+
+@use "sass:math";
+
 :root {
-  --width-base: 385;
-  --width-current: 100vw;
-  --width-multiplier: var(--width-current) / var(--width-base);
+	--width-base: 385;
+	--width-current: 100vw;
+	--width-multiplier: var(--width-current) / var(--width-base);
 
-  @include tablet {
-    --width-base: 835;
-  }
+	@include breakpoint.tablet {
+		--width-base: 835;
+	}
 
-  @include desktop-w {
-    --width-base: 1440;
-  }
+	@include breakpoint.desktop-w {
+		--width-base: 1440;
+	}
 
-  @include desktop-xl {
-    --width-base: 1440;
-    --width-current: 1440px;
-  }
+	@include breakpoint.desktop-xl {
+		--width-base: 1440;
+		--width-current: 1440px;
+	}
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 html {
-  min-height: 100vh;
-  box-sizing: border-box;
+	min-height: 100vh;
+	box-sizing: border-box;
 }
 
 body {
-  margin: 0;
+	margin: 0;
 }
 
 #app {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
-  font-family: $font-raleway;
-  font-weight: 400;
-  font-feature-settings: 'pnum' on, 'lnum' on, 'liga' off;
-  -webkit-font-smoothing: antialiased;
-  text-decoration-skip: objects;
-  text-rendering: optimizeLegibility;
-  text-size-adjust: 100%;
-  -webkit-tap-highlight-color: transparent;
-  color: $color-biscay;
-  background: $color-catskill-white;
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	min-height: 100vh;
+	font-family: variables.$font-raleway;
+	font-weight: 400;
+	font-feature-settings: "pnum" on, "lnum" on, "liga" off;
+	-webkit-font-smoothing: antialiased;
+	text-decoration-skip: objects;
+	text-rendering: optimizelegibility;
+	text-size-adjust: 100%;
+	color: variables.$color-biscay;
+	-webkit-tap-highlight-color: transparent;
+	background: variables.$color-catskill-white;
 
-  &.vip {
-    color: $color-white;
+	.scepter {
+		position: absolute;
+		right: 0;
+		bottom: 0;
 
-    &::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: url("../images/vip/background-vip.png") $color-dark center center no-repeat;
-      background-size: cover;
-    }
-  }
+		@include breakpoint.mobile {
+			position: unset;
+			margin-top: -80px;
+			margin-left: auto;
+		}
+	}
 
-  .scepter {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+	&.vip {
+		color: variables.$color-white;
 
-    @include mobile {
-      position: unset;
-      margin-left: auto;
-      margin-top: -80px;
-    }
-  }
+		&::before {
+			content: "";
+			position: fixed;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background: url("../images/vip/background-vip.png") variables.$color-dark center center no-repeat;
+			background-size: cover;
+		}
+	}
 }
 
 h1,
@@ -85,135 +91,121 @@ h4,
 h5,
 h6,
 p {
-  margin: 0;
+	margin: 0;
 }
 
 h1 {
-  font-weight: 700;
-  font-size: vc(24);
-  line-height: (28 / 24);
+	font-weight: 700;
+	font-size: responsive.vc(24);
+	line-height: math.div(28, 24);
 
-  @include tablet {
-    font-size: vc(40);
-    line-height: (47 / 40);
-  }
+	@include breakpoint.tablet {
+		font-size: responsive.vc(40);
+		line-height: (47 * 0.025);
+	}
 
-  @include desktop {
-    font-size: vc(40);
-    line-height: (47 / 40);
-  }
+	@include breakpoint.desktop {
+		font-size: responsive.vc(40);
+		line-height: (47 * 0.025);
+	}
 }
 
 h2 {
-  font-weight: 800;
-  font-size: vc(24);
-  line-height: (28 / 24);
+	font-weight: 800;
+	font-size: responsive.vc(24);
+	line-height: math.div(28, 24);
 
-  @include tablet {
-    font-size: vc(40);
-    line-height: (47 / 40);
-  }
+	@include breakpoint.tablet {
+		font-size: responsive.vc(40);
+		line-height: (47 * 0.025);
+	}
 
-  @include desktop {
-    font-size: vc(40);
-    line-height: (47 / 40);
-  }
+	@include breakpoint.desktop {
+		font-size: responsive.vc(40);
+		line-height: (47 * 0.025);
+	}
 }
 
 h3 {
-  font-weight: 700;
-  font-size: vc(18);
-  line-height: (21 / 18);
+	font-weight: 700;
+	font-size: responsive.vc(18);
+	line-height: math.div(21, 18);
 
-  @include tablet {
-    font-weight: 500;
-    font-size: vc(41);
-    line-height: (48 / 41);
-  }
+	@include breakpoint.tablet {
+		font-weight: 500;
+		font-size: responsive.vc(41);
+		line-height: math.div(48, 41);
+	}
 
-  @include desktop {
-    font-weight: 500;
-    font-size: vc(48);
-    line-height: (56 / 48);
-  }
+	@include breakpoint.desktop {
+		font-weight: 500;
+		font-size: responsive.vc(48);
+		line-height: math.div(56, 48);
+	}
 }
 
 p {
-  font-size: vc(14);
-  line-height: (21 / 14);
+	font-size: responsive.vc(14);
+	line-height: math.div(21, 14);
 
-  @include tablet {
-    font-size: vc(16);
-    line-height: (22 / 16);
-  }
+	@include breakpoint.tablet {
+		font-size: responsive.vc(16);
+		line-height: math.div(22, 16);
+	}
 
-  @include desktop {
-    font-size: vc(18);
-    line-height: (24 / 18);
-  }
+	@include breakpoint.desktop {
+		font-size: responsive.vc(18);
+		line-height: math.div(24, 18);
+	}
 }
 
 li,
 ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 a,
 button {
-  box-sizing: border-box;
-  outline: none;
-  text-decoration: none;
-  color: currentColor;
-  cursor: pointer;
+	outline: none;
+	box-sizing: border-box;
+	text-decoration: none;
+	color: currentcolor;
+	cursor: pointer;
 }
 
 a {
-  color: currentColor;
-  transition: color $duration-normal;
-
-  &:active {
-
-  }
-
-  @include desktop {
-    &:hover {
-
-    }
-
-    &:active {
-
-    }
-  }
+	color: currentcolor;
+	transition: color variables.$duration-normal;
 }
 
 input,
 select,
 button,
 textarea {
-  display: block;
-  appearance: none;
-  border: 0;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: none;
-  background: none;
+	appearance: none;
+	display: block;
+	border: 0;
+	border-radius: 0;
+	padding: 0;
+	box-shadow: none;
+	background: none;
 }
 
 img {
-  display: block;
-  max-width: 100%;
+	display: block;
+	max-width: 100%;
 }
 
 svg {
-  width: 100%;
-  height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 menu {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .select2-selection:focus,
@@ -240,14 +232,14 @@ button:focus,
 button:visited,
 button:active,
 button:hover {
-  outline: 0;
-  outline-style: none;
+	outline: 0;
+	outline-style: none;
 }
 
 .no-scroll {
-  overflow: hidden;
+	overflow: hidden;
 
-  main {
-    pointer-events: none;
-  }
+	main {
+		pointer-events: none;
+	}
 }

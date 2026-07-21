@@ -1,80 +1,82 @@
+@use "../functions/responsive";
+@use "../mixins/breakpoint";
+@use "../variables";
+
 .support {
-  $p: &;
+	$p: &;
 
-  padding: vc(40) vc(30);
+	padding: responsive.vc(40) responsive.vc(30);
 
-  &__title {
-    margin: 0 0 vc(16);
-    text-align: center;
+	&__title {
+		margin: 0 0 responsive.vc(16);
+		text-align: center;
 
-    @include tablet {
-      margin: 0 0 vc(24);
-    }
+		@include breakpoint.tablet {
+			margin: 0 0 responsive.vc(24);
+		}
 
-    @include desktop {
-      margin: 0 0 vc(24);
-    }
-  }
+		@include breakpoint.desktop {
+			margin: 0 0 responsive.vc(24);
+		}
+	}
 
-  &__cards {
-    display: grid;
-    row-gap: vc(10);
-    column-gap: vc(20);
-    grid-auto-flow: dense;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: vc(38);
+	&__cards {
+		display: grid;
+		grid-auto-flow: dense;
+		grid-auto-rows: responsive.vc(38);
+		grid-template-columns: repeat(3, 1fr);
+		gap: responsive.vc(10) responsive.vc(20);
 
-    @include tablet {
-      row-gap: vc(15);
-      column-gap: vc(15);
-      grid-template-columns: repeat(4, 1fr);
-      grid-auto-rows: vc(75);
-    }
+		@include breakpoint.tablet {
+			grid-auto-rows: responsive.vc(75);
+			grid-template-columns: repeat(4, 1fr);
+			gap: responsive.vc(15);
+		}
 
-    @include desktop {
-      row-gap: vc(20);
-      grid-template-columns: repeat(6, 1fr);
-      grid-auto-rows: vc(85);
-    }
-  }
+		@include breakpoint.desktop {
+			grid-auto-rows: responsive.vc(85);
+			grid-template-columns: repeat(6, 1fr);
+			row-gap: responsive.vc(20);
+		}
+	}
 
-  &__card {
-    border: 1px solid $color-malibu;
-    border-radius: vc(5);
-    transition: background-color $duration-normal;
+	&__card {
+		border: 1px solid variables.$color-malibu;
+		border-radius: responsive.vc(5);
+		transition: background-color variables.$duration-normal;
 
-    &:active {
-      background-color: $color-white;
-    }
+		picture,
+		img {
+			width: 100%;
+			height: 100%;
+			font-family: "object-fit:cover";
+			object-fit: cover;
+		}
 
-    picture,
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      font-family: "object-fit:cover";
-    }
+		&:active {
+			background-color: variables.$color-white;
+		}
 
-    @include tablet {
-      border-radius: vc(10);
-    }
+		@include breakpoint.tablet {
+			border-radius: responsive.vc(10);
+		}
 
-    @include desktop {
-      border-radius: vc(10);
+		@include breakpoint.desktop {
+			border-radius: responsive.vc(10);
 
-      &:hover {
-        background-color: $color-white;
-      }
-    }
-  }
+			&:hover {
+				background-color: variables.$color-white;
+			}
+		}
+	}
 
-  @include tablet {
-    padding: vc(56) vc(25);
-  }
+	@include breakpoint.tablet {
+		padding: responsive.vc(56) responsive.vc(25);
+	}
 
-  @include desktop {
-    margin: 0 auto;
-    padding: vc(100) vc(40);
-    max-width: vc(1440);
-  }
+	@include breakpoint.desktop {
+		margin: 0 auto;
+		padding: responsive.vc(100) responsive.vc(40);
+		max-width: responsive.vc(1440);
+	}
 }

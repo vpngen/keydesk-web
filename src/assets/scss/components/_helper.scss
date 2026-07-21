@@ -1,152 +1,156 @@
+@use "../functions/responsive";
+@use "../mixins/breakpoint";
+@use "../variables";
+
 .helper {
-  $p: &;
+	$p: &;
 
-  position: relative;
-  z-index: 3;
-  padding: vc(32) vc(30) vc(56);
+	position: relative;
+	z-index: 3;
+	padding: responsive.vc(32) responsive.vc(30) responsive.vc(56);
 
-  &__description {
-    margin: 0 0 vc(24);
+	&__description {
+		margin: 0 0 responsive.vc(24);
 
-    @include tablet {
-      margin: 0 vc(20) 0 0;
-    }
+		@include breakpoint.tablet {
+			margin: 0 responsive.vc(20) 0 0;
+		}
 
-    @include desktop {
-      margin: 0 vc(115) 0 0;
-    }
-  }
+		@include breakpoint.desktop {
+			margin: 0 responsive.vc(115) 0 0;
+		}
+	}
 
-  &__title {
-    margin: 0 0 vc(8);
+	&__title {
+		margin: 0 0 responsive.vc(8);
 
-    @include tablet {
-      margin: 0 0 vc(12);
-    }
+		@include breakpoint.tablet {
+			margin: 0 0 responsive.vc(12);
+		}
 
-    @include desktop {
-      margin: 0 0 vc(16);
-    }
-  }
+		@include breakpoint.desktop {
+			margin: 0 0 responsive.vc(16);
+		}
+	}
 
-  &__text {
-    @include desktop {
-      max-width: vc(555);
-    }
-  }
+	&__text {
+		@include breakpoint.desktop {
+			max-width: responsive.vc(555);
+		}
+	}
 
-  &__form {
-    border-radius: vc(20);
-    padding: vc(24) vc(16);
-    background-color: $color-white;
+	&__form {
+		border-radius: responsive.vc(20);
+		padding: responsive.vc(24) responsive.vc(16);
+		background-color: variables.$color-white;
 
-    @include tablet {
-      padding: vc(32) vc(16);
-    }
+		@include breakpoint.tablet {
+			padding: responsive.vc(32) responsive.vc(16);
+		}
 
-    @include desktop {
-      padding: vc(32);
-    }
-  }
+		@include breakpoint.desktop {
+			padding: responsive.vc(32);
+		}
+	}
 
-  &__label {
-    display: block;
-    margin: 0 0 vc(8);
-  }
+	&__label {
+		display: block;
+		margin: 0 0 responsive.vc(8);
+	}
 
-  &__input {
-    border: 1px solid $color-malibu;
-    border-radius: vc(6);
-    padding: 0 vc(16);
-    width: 100%;
-    height: vc(45);
-    font-size: (12);
-    color: $color-black;
-    transition: border-color $duration-normal;
+	&__input {
+		border: 1px solid variables.$color-malibu;
+		border-radius: responsive.vc(6);
+		padding: 0 responsive.vc(16);
+		width: 100%;
+		height: responsive.vc(45);
+		font-size: (12);
+		color: variables.$color-black;
+		transition: border-color variables.$duration-normal;
 
-    &.is-error {
-      border-color: $color-razzmatazz;
-    }
+		&.is-error {
+			border-color: variables.$color-razzmatazz;
+		}
 
-    @include tablet {
-      width: vc(293);
-      font-size: vc(14);
-    }
+		@include breakpoint.tablet {
+			width: responsive.vc(293);
+			font-size: responsive.vc(14);
+		}
 
-    @include desktop {
-      width: vc(376);
-      font-size: vc(14);
-    }
-  }
+		@include breakpoint.desktop {
+			width: responsive.vc(376);
+			font-size: responsive.vc(14);
+		}
+	}
 
-  &__accept {
-    display: flex;
-    align-items: center;
-    margin: 0 0 vc(24);
-    font-size: vc(8);
-    line-height: (10 / 8);
-    color: $color-black;
+	&__accept {
+		display: flex;
+		align-items: center;
+		margin: 0 0 responsive.vc(24);
+		font-size: responsive.vc(8);
+		line-height: (10 * 0.125);
+		color: variables.$color-black;
 
-    input {
-      display: none;
+		input {
+			display: none;
 
-      &:checked + span {
-        background: url($url-image + 'sprites/svg/icon-checkbox.svg') no-repeat center center;
-        background-size: cover;
-      }
-    }
+			&:checked + span {
+				background: url(variables.$url-image + 'sprites/svg/icon-checkbox.svg') no-repeat center center;
+				background-size: cover;
+			}
+		}
 
-    span {
-      margin: 0 vc(8) 0 0;
-      border: 1px solid $color-malibu;
-      border-radius: vc(2);
-      width: vc(10);
-      height: vc(10);
-    }
+		span {
+			margin: 0 responsive.vc(8) 0 0;
+			border: 1px solid variables.$color-malibu;
+			border-radius: responsive.vc(2);
+			width: responsive.vc(10);
+			height: responsive.vc(10);
+		}
 
-    & .is-error + span {
-      border-color: #ed0b70;
-    }
+		.is-error + span {
+			border-color: #ed0b70;
+		}
 
-    @include desktop {
-      a {
-        text-decoration: underline;
+		@include breakpoint.desktop {
+			a {
+				text-decoration: underline;
 
-        &:hover {
-          color: $color-azure-radiance;
-        }
-      }
-    }
-  }
+				&:hover {
+					color: variables.$color-azure-radiance;
+				}
+			}
+		}
+	}
 
-  &__button {
-    width: vc(170);
-    height: vc(40);
+	&__button {
+		width: responsive.vc(170);
+		height: responsive.vc(40);
 
-    @include tablet {
-      width: vc(209);
-      height: vc(44);
-    }
+		@include breakpoint.tablet {
+			width: responsive.vc(209);
+			height: responsive.vc(44);
+		}
 
-    @include desktop {
-      width: vc(209);
-      height: vc(44);
-    }
-  }
+		@include breakpoint.desktop {
+			width: responsive.vc(209);
+			height: responsive.vc(44);
+		}
+	}
 
-  @include tablet {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: vc(32) vc(24);
-  }
+	@include breakpoint.tablet {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: responsive.vc(32) responsive.vc(24);
+	}
 
-  @include desktop {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0 auto;
-    padding: vc(32) vc(155) vc(32) vc(41);
-    max-width: vc(1440);
-  }
+	@include breakpoint.desktop {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin: 0 auto;
+		padding: responsive.vc(32) responsive.vc(155) responsive.vc(32) responsive.vc(41);
+		max-width: responsive.vc(1440);
+	}
 }

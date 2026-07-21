@@ -1,12 +1,12 @@
 <template>
   <header class="header header--inset">
     <div class="header__container">
-      <RouterLink class="header__logo" to="/">
+      <RouterLink class="header__logo" :to="{ path: '/', query: route.query }">
         <SvgIcon name="logo-vpn"/>
       </RouterLink>
       <div class="header__right">
         <RouterLink :class="`header__notifications ${message.length ? 'header__notifications--message' : ''}`"
-                    :data-total="message.length" to="/notifications">
+                    :data-total="message.length" :to="{ path: '/notifications', query: route.query }">
           <SvgIcon name="icon-ring"/>
         </RouterLink>
         <HeaderMessage v-if="showMessage" :message="message" @toggle="toggleMessage"/>
@@ -30,7 +30,7 @@
           </button>
         </div>
         <div v-if="token && !isVIP" class="header__vip">
-          <button class="header__vip-button" @click="getVipFromLink">
+          <button class="header__vip-button" type="button" @click="getVipFromLink">
             <span>VIP</span><span>-</span><span>{{ t('cabinet.header.vipSquad') }}</span>
           </button>
         </div>
@@ -45,47 +45,36 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import {RouterLink} from 'vue-router'
+import {onMounted, ref} from 'vue'
+import {RouterLink, useRoute} from 'vue-router'
 import axios from "axios";
 import SvgIcon from './SvgIcon.vue';
 import HeaderMessage from "@/components/HeaderMessage.vue";
+import {useAuthStore} from "@/store/auth";
 import {useUsersStore} from "@/store/users";
 import {useProfileStore} from "@/store/profile";
 import {storeToRefs} from 'pinia';
-import jwtDecode from 'jwt-decode'
 import {apiLink} from "@/const/api";
 import {useI18n} from 'vue-i18n'
 import {persistLocale} from '@/i18n'
+import {isConstructionError} from '@/utils/apiErrors';
 
 const {locale, t} = useI18n()
+const route = useRoute();
+const authStore = useAuthStore();
+const usersStore = useUsersStore();
+const profileStore = useProfileStore();
+const {token} = storeToRefs(authStore);
+const {usersList} = storeToRefs(usersStore);
+const {isVIP, uuid} = storeToRefs(profileStore);
+
+const message = ref([]);
+const showMessage = ref(false);
 
 const setLocale = (code) => {
   locale.value = code
   persistLocale(code)
 }
-
-const usersStore = useUsersStore();
-const profileStore = useProfileStore();
-const {usersList} = storeToRefs(usersStore);
-const {isVIP, urlVIP, uuid} = storeToRefs(profileStore);
-
-const token = ref(null);
-const message = ref([]);
-const showMessage = ref(false);
-
-const getToken = async () => {
-  await axios.post(`${apiLink}/token`)
-    .then((r) => {
-      token.value = r.data.Token;
-      const decoded = jwtDecode(token.value);
-      isVIP.value = decoded.vip;
-      urlVIP.value = decoded.vip_url;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
-
-      getMessage();
-    });
-};
 
 const getMessage = async () => {
   await axios.get(`${apiLink}/messages?read=false&priority=10&priority-op=eq`)
@@ -98,10 +87,8 @@ const getMessage = async () => {
     });
 };
 
-getToken();
-
 const getVipFromLink = () => {
-  window.open(`https://t.me/vipgenbot?start=${uuid.value}`, '_blank');
+  window.open(`https://t.me/vpngeneratorbot?start=${uuid.value}`, '_blank');
 };
 
 const toggleMessage = async () => {
@@ -113,4 +100,14 @@ const toggleMessage = async () => {
 
   showMessage.value = !showMessage.value;
 };
+
+onMounted(async () => {
+  try {
+    await authStore.fetchToken();
+    await getMessage();
+  } catch (error) {
+    if (isConstructionError(error)) return;
+    console.error(error);
+  }
+});
 </script>

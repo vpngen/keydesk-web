@@ -18,7 +18,7 @@
 				{{ giveSubtitle }}
 			</div>
 			<div class="popup__subtitle">
-				{{ t('cabinet.dialogConfig.clientLink') }}&nbsp
+				{{ t('cabinet.dialogConfig.clientLink') }}&nbsp;
 				<span>
 					<a :href="clientLink" target="_blank">
 						| &nbsp;{{ clientLink }}
@@ -26,9 +26,9 @@
 				</span>
 			</div>
 			<div class="popup__buttons qr-buttons" v-if="clientName !== 'outline'">
-				<a class="button button--option2 popup__action" @click="back">
+				<button class="button button--option2 popup__action" type="button" @click="back">
 					<span>{{ t('cabinet.dialogConfig.otherOptions') }}</span>
-				</a>
+				</button>
 				<a class="button button--option2 popup__action" :href="buttonHref" :download="buttonDownload">
 					<span class="popup__button-img">
 						<SvgIcon name="download" />
@@ -46,18 +46,23 @@
 					</div>
 				</div>
 				<div class="popup__buttons popup__buttons--qr">
-					<button class="button button--option2 popup__action no-border" @click="back">
+					<button class="button button--option2 popup__action no-border" type="button" @click="back">
 						<span>{{ t('cabinet.dialogConfig.otherOptions') }}</span>
 					</button>
-					<a class="button button--option2 popup__action button__outline" :class="{'disabled': !isLinkCopied}"
-					   @click="copyLink(outlineLinkRef)" :disabled="!isLinkCopied">
+					<button
+						class="button button--option2 popup__action button__outline"
+						:class="{ disabled: !isLinkCopied, 'is-disabled': !isLinkCopied }"
+						:disabled="!isLinkCopied"
+						type="button"
+						@click="copyLink(outlineLinkRef)"
+					>
 						<span class="popup__button-img">
 							<SvgIcon name="link" />
 						</span>
 						<span>
 							{{ linkButtonText }}
 						</span>
-					</a>
+					</button>
 				</div>
 			</div>
 			<div class="popup__link-copy-result" v-if="linkCopyResult" :class="{'popup__copy-success':isLinkCopied, 'popup__copy-error':!isLinkCopied}">
@@ -69,12 +74,13 @@
 
 <script setup>
 import { computed, ref, watchEffect } from 'vue';
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 import { useI18n } from 'vue-i18n';
 import { useDisplayPersonName } from '@/composables/useDisplayPersonName';
-const configList = require('../../vpn_sistems_config.json');
+import { dialogOtherCards as cards } from '@/const/dialog.ts';
+import configList from '../../../vpn_sistems_config.json';
+
 const clientLink = ref();
-import { dialogOtherCards as cards } from '../const/dialog.ts';
 
 const { t } = useI18n();
 const { displayName } = useDisplayPersonName();

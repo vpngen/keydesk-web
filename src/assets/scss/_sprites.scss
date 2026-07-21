@@ -1,7 +1,9 @@
-$sprites: ();
+@use "sass:map";
+@use "sprites-data";
+@use "mixins/sprites";
 
-@each $name in map-keys($sprites) {
-  .sprite-#{$name} {
-    @include sprite($name);
-  }
+@each $name in map.keys(sprites-data.$sprites) {
+	.sprite-#{$name} {
+		@include sprites.sprite($name);
+	}
 }

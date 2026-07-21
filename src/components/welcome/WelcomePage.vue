@@ -51,13 +51,14 @@
 
 <script setup>
 import {onMounted, ref} from "vue";
-import WelcomePageStepOne from "@/components/WelcomePageStepOne.vue";
-import WelcomePageStepTwo from "@/components/WelcomePageStepTwo.vue";
-import WelcomePageStepThree from "@/components/WelcomePageStepThree.vue";
-import WelcomePageStepFour from "@/components/WelcomePageStepFour.vue";
-import WelcomePageStepFive from "@/components/WelcomePageStepFive.vue";
-import WelcomePageStepSix from "@/components/WelcomePageStepSix.vue";
-import WelcomePageStepSeven from "@/components/WelcomePageStepSeven.vue";
+import WelcomePageStepOne from "@/components/welcome/WelcomePageStepOne.vue";
+import WelcomePageStepTwo from "@/components/welcome/WelcomePageStepTwo.vue";
+import WelcomePageStepThree from "@/components/welcome/WelcomePageStepThree.vue";
+import WelcomePageStepFour from "@/components/welcome/WelcomePageStepFour.vue";
+import WelcomePageStepFive from "@/components/welcome/WelcomePageStepFive.vue";
+import WelcomePageStepSix from "@/components/welcome/WelcomePageStepSix.vue";
+import WelcomePageStepSeven from "@/components/welcome/WelcomePageStepSeven.vue";
+import {safeSetItem} from "@/utils/safeStorage";
 
 const step = ref(1);
 const buttonPositionForWelcomePageStepTwo = ref(null);
@@ -81,7 +82,9 @@ const props = defineProps({
 const emit = defineEmits(['getUsers', 'toggleDisable', 'highlightElement', 'darkenElement', 'updateValue']);
 
 function getElementData(el, position) {
-	position.value = el.getBoundingClientRect();
+	const dom = el?.$el ?? el;
+	if (!dom?.getBoundingClientRect) return;
+	position.value = dom.getBoundingClientRect();
 }
 
 onMounted(() => {
@@ -146,11 +149,11 @@ const triggerNextSteps = () => {
 	step.value += 1;
 	switch (step.value) {
 		case 2: {
-			initElementsContainerData(props.elementStepTwo[0], firstUserProfileCardPosition);
+			initElementsContainerData(props.elementStepTwo, firstUserProfileCardPosition);
 			break;
 		}
 		case 3: {
-			removeElementsContainerData(props.elementStepTwo[0], firstUserProfileCardPosition);
+			removeElementsContainerData(props.elementStepTwo, firstUserProfileCardPosition);
 			initElementsContainerData(props.elementStepThree, buttonPositionForWelcomePageStepTwo);
 			break;
 		}
@@ -159,11 +162,11 @@ const triggerNextSteps = () => {
 			break;
 		}
 		case 5: {
-			initElementsContainerData(props.elementStepFive[0], secondUserProfileCardPosition);
+			initElementsContainerData(props.elementStepFive, secondUserProfileCardPosition);
 			break;
 		}
 		case 6: {
-			removeElementsContainerData(props.elementStepFive[0], secondUserProfileCardPosition);
+			removeElementsContainerData(props.elementStepFive, secondUserProfileCardPosition);
 			initElementsContainerData(props.elementStepSix, searchButtonPosition);
 			break;
 		}
@@ -177,7 +180,7 @@ const triggerNextSteps = () => {
 const closeComponent = () => {
 	step.value = 0;
 	emit('toggleDisable');
-	localStorage.setItem('isInstructionHidden', 'true');
+	safeSetItem('isInstructionHidden', 'true');
 	emit('getUsers');
 	document.body.style.overflow = 'auto';
 	document.querySelector('#app').classList.remove('welcome');
