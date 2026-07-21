@@ -10,10 +10,10 @@
       </div>
       <div class="popup__buttons">
         <div class="popup__button">
-          <button class="button button--close" @click="close">{{ t('cabinet.dialogUser.cancel') }}</button>
+          <button class="button button--close" type="button" @click="close">{{ t('cabinet.dialogUser.cancel') }}</button>
         </div>
         <div class="popup__button">
-          <button class="button button--delete" @click="removeUser">{{ t('cabinet.dialogUser.delete') }}</button>
+          <button class="button button--delete" type="button" @click="removeUser">{{ t('cabinet.dialogUser.delete') }}</button>
         </div>
       </div>
     </div>
@@ -31,14 +31,14 @@
         10:00
       </div>
       <div class="popup__button">
-        <button class="button button--ok" @click="close">{{ t('cabinet.dialogUser.ok') }}</button>
+        <button class="button button--ok" type="button" @click="close">{{ t('cabinet.dialogUser.ok') }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

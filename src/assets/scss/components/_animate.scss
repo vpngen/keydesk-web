@@ -1,8 +1,10 @@
+@use "../functions/responsive";
+
 [data-animate="fade"]:not(.is-animate) {
-  opacity: 0;
+	opacity: 0;
 }
 
 [data-animate="fade-down"]:not(.is-animate) {
-  opacity: 0;
-  transform: translateY(vc(-30));
+	opacity: 0;
+	transform: translateY(responsive.vc(-30));
 }

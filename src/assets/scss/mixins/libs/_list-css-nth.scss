@@ -1,3 +1,6 @@
+@use "sass:list";
+@use "../helpers";
+
 /**
 * Returns nth property from css property list
 *
@@ -10,12 +13,11 @@
 */
 
 @function css-nth($list, $index) {
-  $size: length($list);
+	$size: list.length($list);
 
-  @while $index > $size {
-    $index: max(1, $index - 2);
-  }
+	@while $index > $size {
+		$index: helpers.max(1, $index - 2);
+	}
 
-  @return nth($list, $index);
+	@return list.nth($list, $index);
 }
-

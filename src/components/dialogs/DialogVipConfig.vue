@@ -29,11 +29,14 @@
         <span class="popup__outline-footer">
         </span>
         <div class="popup__buttons popup__buttons--qr">
-          <button class="popup__button button button--option2" @click="copyText">
+          <button class="popup__button button button--option2" type="button" @click="copyText">
             <SvgIcon name="link"/>
             {{ t('cabinet.dialogVipConfig.copyLink') }}
           </button>
-          <button v-if="window.location.protocol === 'https:'" class="popup__button button button--option2"
+          <button
+            v-if="window.location.protocol === 'https:'"
+            class="popup__button button button--option2"
+            type="button"
                   @click="share">
 						<span>
 							<SvgIcon name="icon-share"/>
@@ -52,7 +55,7 @@
 
 <script setup>
 import {ref} from 'vue';
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/SvgIcon.vue';
 import {useI18n} from 'vue-i18n';
 
 const {t} = useI18n();

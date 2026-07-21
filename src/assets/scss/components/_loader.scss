@@ -1,153 +1,156 @@
+@use "../functions/responsive";
+@use "../mixins/breakpoint";
+@use "../variables";
+
 .loader {
-  $p: &;
+	$p: &;
 
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100vw;
-  height: 100vh;
+	position: fixed;
+	left: 0;
+	top: 0;
+	z-index: 20;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
 
-  &__overlay {
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(vc(2));
+	&__overlay {
+		position: absolute;
+		z-index: -1;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(responsive.vc(2));
 
-    &.welcome {
-      position: fixed;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    }
-  }
+		&.welcome {
+			position: fixed;
+			inset: 0;
+		}
+	}
 
-  &__container {
-    position: relative;
-    width: vc(440);
-    height: vc(440);
-    border-radius: vc(20);
-    background-color: $color-catskill-white;
-    backdrop-filter: blur(vc(34));
+	&__container {
+		position: relative;
+		border-radius: responsive.vc(20);
+		width: responsive.vc(440);
+		height: responsive.vc(440);
+		background-color: variables.$color-catskill-white;
+		backdrop-filter: blur(responsive.vc(34));
 
-    @include mobile {
-      width: vc(220);
-      height: vc(220);
-    }
+		&-overlay {
+			position: absolute;
+			z-index: -2;
+			width: 100%;
+			height: 100%;
+			background: #bcdfff;
+			filter: blur(responsive.vc(112));
+		}
 
-    &-overlay {
-      width: 100%;
-      height: 100%;
-      background: #BCDFFF;
-      filter: blur(vc(112));
-      position: absolute;
-      z-index: -2;
-    }
-  }
+		@include breakpoint.mobile {
+			width: responsive.vc(220);
+			height: responsive.vc(220);
+		}
+	}
 
-  &__content {
-    font-weight: 400;
-    font-size: vc(16);
-    line-height: vc(20);
-    color: #1D4365;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: vc(4);
-    width: 100%;
-    height: 100%;
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		font-weight: 400;
+		font-size: responsive.vc(16);
+		line-height: responsive.vc(20);
+		color: #1d4365;
+		gap: responsive.vc(4);
 
-    @include mobile {
-      font-size: vc(14);
-      line-height: vc(17);
-    }
-  }
+		@include breakpoint.mobile {
+			font-size: responsive.vc(14);
+			line-height: responsive.vc(17);
+		}
+	}
 
-  &__logo {
-    width: vc(84);
-    height: vc(39);
-    background-color: currentColor;
-    color: #1D4365;
-    mask: url($url-image + 'svg/loader-logo.svg') no-repeat center center;
-    mask-size: contain;
+	&__logo {
+		mask: url(variables.$url-image + 'svg/loader-logo.svg') no-repeat center center;
+		mask-size: contain;
+		width: responsive.vc(84);
+		height: responsive.vc(39);
+		color: #1d4365;
+		background-color: currentcolor;
 
-    @include mobile {
-      width: vc(63);
-      height: vc(29);
-    }
-  }
+		@include breakpoint.mobile {
+			width: responsive.vc(63);
+			height: responsive.vc(29);
+		}
+	}
 
-  &__active-circle {
-    width: vc(300);
-    height: vc(300);
-    background-color: currentColor;
-    color: #0094FF;
-    mask: url($url-image + 'svg/loader-active-circle.svg') no-repeat center center;
-    mask-size: cover;
-    position: absolute;
-    top: 17%;
-    left: 17%;
-    transform: translate(-50%, -50%);
-    z-index: -1;
-    animation: bubble 1100ms forwards infinite;
+	&__active-circle {
+		position: absolute;
+		left: 17%;
+		top: 17%;
+		z-index: -1;
+		mask: url(variables.$url-image + 'svg/loader-active-circle.svg') no-repeat center center;
+		mask-size: cover;
+		width: responsive.vc(300);
+		height: responsive.vc(300);
+		color: #0094ff;
+		background-color: currentcolor;
+		transform: translate(-50%, -50%);
+		animation: bubble 1100ms forwards infinite;
 
-    @include mobile {
-      width: vc(150);
-      height: vc(150);
-    }
-  }
+		@include breakpoint.mobile {
+			width: responsive.vc(150);
+			height: responsive.vc(150);
+		}
+	}
 
-  @keyframes bubble {
-    0% {
-      transform: scale(1, 1);
-    }
-    50% {
-      transform: scale(1.35, 1.35);
-    }
-    100% {
-      transform: scale(1, 1);
-    }
-  }
+	@keyframes bubble {
+		0% {
+			transform: scale(1, 1);
+		}
+
+		50% {
+			transform: scale(1.35, 1.35);
+		}
+
+		100% {
+			transform: scale(1, 1);
+		}
+	}
 }
 
 .vip .loader {
-  $p: &;
+	$p: &;
 
-  &__overlay {
-    background: #131313A8;
-    backdrop-filter: blur(6.25px);
-  }
+	&__overlay {
+		background: #131313a8;
+		backdrop-filter: blur(6.25px);
+	}
 
-  &__container {
-    background-color: transparent;
-    backdrop-filter: none;
+	&__container {
+		background-color: transparent;
+		backdrop-filter: none;
 
-    &-overlay {
-      background: #131313;
-    }
-  }
+		&-overlay {
+			background: #131313;
+		}
+	}
 
-  &__container-overlay {
-    background-color: transparent;
-    filter: blur(112px);
-  }
+	&__container-overlay {
+		background-color: transparent;
+		filter: blur(112px);
+	}
 
-  &__content {
-    color: #000000;
-  }
+	&__content {
+		color: #000;
+	}
 
-  &__logo {
-    color: #000000;
-  }
+	&__logo {
+		color: #000;
+	}
 
-  &__active-circle {
-    color: #FFF293;
-  }
+	&__active-circle {
+		color: #fff293;
+	}
 }

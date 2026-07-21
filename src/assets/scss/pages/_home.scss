@@ -1,71 +1,72 @@
+@use "../functions/responsive";
+@use "../mixins/breakpoint";
+@use "../variables";
+
 .home {
-  $p: &;
+	$p: &;
 
-  position: relative;
-  overflow: hidden;
-  width: 100%;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
 
-  &:has(.popup) {
-    z-index: 5;
-  }
+	&:has(.popup) {
+		z-index: 5;
+	}
 
-  &__section {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-  }
+	&__section {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+	}
 
-  &__decor {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    z-index: -1;
+	&__decor {
+		position: absolute;
+		z-index: -1;
+		inset: 0;
 
-    picture,
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: right top;
-      font-family: "object-fit:cover;object-position:right top";
-    }
+		picture,
+		img {
+			width: 100%;
+			height: 100%;
+			font-family: "object-fit:cover;object-position:right top";
+			object-fit: cover;
+			object-position: right top;
+		}
 
-    &--intro {
-      @include tablet {
-        bottom: vc(-107);
-      }
-    }
-  }
+		&--intro {
+			@include breakpoint.tablet {
+				bottom: responsive.vc(-107);
+			}
+		}
+	}
 
-  &__spot {
-    position: absolute;
-    left: calc(50% + #{vc(70)});
-    top: vc(150);
-    z-index: 2;
-    border-radius: 50%;
-    width: vc(210);
-    height: vc(238);
-    background-color: $color-malibu;
-    transform: translate(-50%, -50%);
-    filter: blur(vc(54));
-    mix-blend-mode: multiply;
-    transition: $duration-normal * 2 cubic-bezier(.23, 1, .32, 1);
-    pointer-events: none;
+	&__spot {
+		position: absolute;
+		left: calc(50% + #{responsive.vc(70)});
+		top: responsive.vc(150);
+		z-index: 2;
+		border-radius: 50%;
+		width: responsive.vc(210);
+		height: responsive.vc(238);
+		background-color: variables.$color-malibu;
+		filter: blur(responsive.vc(54));
+		mix-blend-mode: multiply;
+		transform: translate(-50%, -50%);
+		transition: variables.$duration-normal * 2 cubic-bezier(0.23, 1, 0.32, 1);
+		pointer-events: none;
 
-    @include tablet {
-      left: calc(50% + #{vc(260)});
-      top: vc(274);
-      width: vc(203);
-      height: vc(283);
-    }
+		@include breakpoint.tablet {
+			left: calc(50% + #{responsive.vc(260)});
+			top: responsive.vc(274);
+			width: responsive.vc(203);
+			height: responsive.vc(283);
+		}
 
-    @include desktop {
-      left: calc(50% + #{vc(360)});
-      top: vc(380);
-      width: vc(350);
-      height: vc(350);
-    }
-  }
+		@include breakpoint.desktop {
+			left: calc(50% + #{responsive.vc(360)});
+			top: responsive.vc(380);
+			width: responsive.vc(350);
+			height: responsive.vc(350);
+		}
+	}
 }

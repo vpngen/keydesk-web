@@ -31,7 +31,7 @@ function getInitialLocale() {
 
 /** Базовый путь приложения (Vue CLI `publicPath`) + путь к JSON в `public/locales/`. */
 function localeJsonUrl(filename) {
-  const raw = process.env.BASE_URL || '/'
+  const raw = import.meta.env.BASE_URL || '/'
   const base = raw.endsWith('/') ? raw : `${raw}/`
   return `${base}locales/${filename}`
 }

@@ -57,16 +57,21 @@
 </template>
 
 <script setup>
-import {inject, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 import axios from "axios";
 import {useI18n} from "vue-i18n";
 import {sortingMap, statusMap} from "@/assets/constants/profileConstants.js";
 import SvgIcon from "./SvgIcon.vue";
 import FiltersPanelNotifications from "@/components/FiltersPanelNotifications.vue";
 import PopupNotifications from "@/components/PopupNotifications.vue";
+import {useAuthStore} from "@/store/auth";
 import {apiLink} from "@/const/api";
+import {useLoadingStore} from "@/store/loading";
+import {isConstructionError} from '@/utils/apiErrors';
 
 const {t} = useI18n();
+const authStore = useAuthStore();
+const loadingStore = useLoadingStore();
 
 const messageLimit = ref(10);
 const messageStatus = ref('');
@@ -75,7 +80,6 @@ const messageTime = ref('');
 
 const HIGH_PRIORITY = 10;
 
-const token = ref(null);
 const total = ref(null);
 const showPopupNotifications = ref(false);
 const messages = ref([]);
@@ -86,23 +90,8 @@ const selectedFilterStatus = ref(statusMap.all);
 const initObserver = ref(false);
 const messageLoad = ref(null);
 
-const loadingService = inject("loadingService");
-
-const getToken = async () => {
-  loadingService.show();
-  await axios.post(`${apiLink}/token`)
-    .then((r) => {
-      token.value = r.data.Token;
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token.value}`;
-
-      getMessages();
-    });
-};
-
-getToken();
-
 const getMessages = async () => {
-  loadingService.show();
+  loadingStore.show();
   let url = `${apiLink}/messages?limit=${messageLimit.value}${messageStatus.value}${messagePriority.value}${messageTime.value}`;
   await axios.get(url)
     .then((r) => {
@@ -110,10 +99,11 @@ const getMessages = async () => {
       total.value = r.data.total;
     })
     .catch((error) => {
-      console.log(error);
+      if (isConstructionError(error)) return;
+      console.error(error);
     })
     .finally(() => {
-      loadingService.hide();
+      loadingStore.hide();
 
       if (!initObserver.value) {
         useIntersectionObserver();
@@ -217,4 +207,15 @@ watch(
     }
   }
 );
+
+onMounted(async () => {
+  try {
+    await authStore.fetchToken();
+    await getMessages();
+  } catch (error) {
+    loadingStore.hide();
+    if (isConstructionError(error)) return;
+    console.error(error);
+  }
+});
 </script>

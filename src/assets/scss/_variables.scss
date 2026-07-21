@@ -1,11 +1,11 @@
 // COLORS
 $color-dark: #181818;
-$color-blue: #78BEFF;
+$color-blue: #78beff;
 $color-black: #000;
 $color-white: #fff;
 $color-catskill-white: #eff7f8;
 $color-gill-grey: #a1aebb;
-$color-grey: #8F8F8F;
+$color-grey: #8f8f8f;
 $color-oslo-grey: #8b8f90;
 $color-silver-chalice: #b1b1b1;
 $color-silver-chalice-2: #a0a0a0;
@@ -17,11 +17,11 @@ $color-azure-radiance: #0085ff;
 $color-biscay: #1d4365;
 $color-shark: #292d32;
 $color-corn: #d4d900;
-$color-yellow: #EAE100;
-$color-red: #ff0000;
+$color-yellow: #eae100;
+$color-red: #f00;
 $color-razzmatazz: #ed0b70;
 $color-puerto-rico: #4cbfa6;
-$color-gold: #FFF293;
+$color-gold: #fff293;
 
 // FONTS
 $font-manrope: "Manrope", sans-serif;
@@ -36,5 +36,5 @@ $easing-out: ease-out;
 $easing-in: ease-in;
 
 // URL
-$url-font: "../fonts/";
-$url-image: ".~@/assets/images/";
+$url-font: "@/assets/fonts/";
+$url-image: "@/assets/images/";

@@ -1,3 +1,5 @@
+@use "str-replace";
+
 /**
 * Converts SVG into data url so that this SVG could be used as a
 * background image
@@ -7,13 +9,12 @@
 */
 
 @function svgtodataurl($code) {
-  $escaped: str-replace($code, "\\r", "");
-  $escaped: str-replace($escaped, "\\n", "");
-  $escaped: str-replace($escaped, "'", "'");
-  $escaped: str-replace($escaped, "<", "%3C");
-  $escaped: str-replace($escaped, ">", "%3E");
-  $escaped: str-replace($escaped, "#", "%23");
+	$escaped: str-replace.str-replace($code, "\\r", "");
+	$escaped: str-replace.str-replace($escaped, "\\n", "");
+	$escaped: str-replace.str-replace($escaped, "'", "'");
+	$escaped: str-replace.str-replace($escaped, "<", "%3C");
+	$escaped: str-replace.str-replace($escaped, ">", "%3E");
+	$escaped: str-replace.str-replace($escaped, "#", "%23");
 
-  @return url("data:image/svg+xml;charset=utf-8,#{$escaped}");
+	@return url("data:image/svg+xml;charset=utf-8,#{$escaped}");
 }
-
