@@ -64,7 +64,7 @@ const toastStore = useProToastStore();
 const profileStore = useProfileStore();
 
 const {paidList, forecastSum} = storeToRefs(proKeysStore);
-const {status, invoices} = storeToRefs(billingStore);
+const {status, invoices, isReal} = storeToRefs(billingStore);
 const {uuid} = storeToRefs(profileStore);
 
 const showDialogPay = ref(false);
@@ -76,6 +76,15 @@ const periodLabel = (offset) => {
   const months = tm('pro.months.short');
   return `${months[d.getMonth()]} ${d.getFullYear()}`;
 };
+
+// «2026-08» → «авг 2026» (реальные инвойсы несут ID периода).
+const periodLabelFromId = (id) => {
+  const [year, month] = String(id).split('-').map(Number);
+  const months = tm('pro.months.short');
+  return months[month - 1] ? `${months[month - 1]} ${year}` : String(id);
+};
+
+const formatIsoDate = (iso) => (iso ? formatDate(new Date(iso)) : '—');
 
 const dueDanger = computed(() => status.value !== 'paid');
 const dueText = computed(() => (status.value === 'paid' ? money(0) : money(forecastSum.value)));
@@ -101,6 +110,28 @@ const invoiceCards = computed(() => {
     tone: 'plain',
     payable: false,
   });
+
+  // Реальный режим: список keydesk уже содержит и текущий, и прошлые инвойсы.
+  if (isReal.value) {
+    invoices.value.forEach((invoice, idx) => {
+      const payable = invoice.status === 'awaiting' || invoice.status === 'overdue';
+      cards.push({
+        num: invoice.num,
+        period: periodLabelFromId(invoice.periodId),
+        created: formatIsoDate(invoice.createdAt),
+        paidAt: formatIsoDate(invoice.paidAtIso),
+        keys: invoice.keys,
+        sum: money(invoice.sum),
+        status: invoice.status,
+        tone: invoice.status === 'awaiting' ? 'issued' : invoice.status === 'overdue' ? 'overdue' : 'plain',
+        alt: !payable && idx % 2 === 1,
+        sumDanger: payable,
+        payable,
+      });
+    });
+
+    return cards;
+  }
 
   if (status.value !== 'paid') {
     cards.push({

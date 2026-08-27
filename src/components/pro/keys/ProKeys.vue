@@ -311,6 +311,7 @@ const confirmAction = async () => {
 
 const payInvoice = async () => {
   await billingStore.payCurrentInvoice();
+  await proKeysStore.fetchKeys();
   showDialogPay.value = false;
   toastStore.show(t('pro.toasts.invoicePaid'));
 };

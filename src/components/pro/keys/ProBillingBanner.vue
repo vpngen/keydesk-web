@@ -46,12 +46,23 @@ const route = useRoute();
 const proKeysStore = useProKeysStore();
 const billingStore = useProBillingStore();
 const {keysList, paidList, forecastSum, freeCount} = storeToRefs(proKeysStore);
-const {status} = storeToRefs(billingStore);
+const {status, currentInvoice} = storeToRefs(billingStore);
 
 const isOpen = ref(false);
 
 const hasPay = computed(() => status.value !== 'paid');
 const hasNote = computed(() => status.value === 'overdue' || status.value === 'suspended');
+
+// Реальный текущий инвойс (keydesk) даёт точные даты и сумму; в мок-режиме
+// значения синтезируются как в макете.
+const invoiceSum = computed(() => money(currentInvoice.value?.sum ?? forecastSum.value));
+const invoiceNum = computed(() => currentInvoice.value?.num || invoiceNumber(0));
+const dueDate = computed(() => (currentInvoice.value?.dueAt
+  ? formatDate(new Date(currentInvoice.value.dueAt))
+  : formatDate(shiftDays(2))));
+const suspendDate = computed(() => (currentInvoice.value?.suspendAt
+  ? formatDate(new Date(currentInvoice.value.suspendAt))
+  : formatDate(shiftDays(4))));
 
 const cells = computed(() => {
   const forecastMoney = money(forecastSum.value);
@@ -64,22 +75,22 @@ const cells = computed(() => {
 
   if (status.value === 'issued') {
     return [
-      {label: t('pro.banner.issued.l1'), value: forecastMoney, sub: t('pro.banner.issued.s1', {num: invoiceNumber(0)}), tone: 'ink'},
-      {label: t('pro.banner.issued.l2'), value: formatDate(shiftDays(2)), sub: t('pro.banner.issued.s2'), tone: 'amber'},
+      {label: t('pro.banner.issued.l1'), value: invoiceSum.value, sub: t('pro.banner.issued.s1', {num: invoiceNum.value}), tone: 'ink'},
+      {label: t('pro.banner.issued.l2'), value: dueDate.value, sub: t('pro.banner.issued.s2'), tone: 'amber'},
       {label: t('pro.banner.issued.l3'), value: String(paidCount), sub: t('pro.banner.outsideFree', {free}), tone: 'ink'},
     ];
   }
   if (status.value === 'overdue') {
     return [
-      {label: t('pro.banner.overdue.l1'), value: forecastMoney, sub: t('pro.banner.overdue.s1', {date: formatDate(shiftDays(-3))}), tone: 'danger'},
-      {label: t('pro.banner.overdue.l2'), value: formatDate(shiftDays(4)), sub: t('pro.banner.overdue.s2'), tone: 'danger'},
+      {label: t('pro.banner.overdue.l1'), value: invoiceSum.value, sub: t('pro.banner.overdue.s1', {date: dueDate.value}), tone: 'danger'},
+      {label: t('pro.banner.overdue.l2'), value: suspendDate.value, sub: t('pro.banner.overdue.s2'), tone: 'danger'},
       {label: t('pro.banner.overdue.l3'), value: t('pro.banner.overdue.v3'), sub: t('pro.banner.overdue.s3'), tone: 'ink'},
     ];
   }
   if (status.value === 'suspended') {
     return [
-      {label: t('pro.banner.suspended.l1'), value: forecastMoney, sub: t('pro.banner.suspended.s1', {num: invoiceNumber(0)}), tone: 'ink'},
-      {label: t('pro.banner.suspended.l2'), value: formatDate(shiftDays(-1)), sub: t('pro.banner.suspended.s2', {count: paidCount}), tone: 'ink'},
+      {label: t('pro.banner.suspended.l1'), value: invoiceSum.value, sub: t('pro.banner.suspended.s1', {num: invoiceNum.value}), tone: 'ink'},
+      {label: t('pro.banner.suspended.l2'), value: suspendDate.value, sub: t('pro.banner.suspended.s2', {count: paidCount}), tone: 'ink'},
       {label: t('pro.banner.suspended.l3'), value: t('pro.banner.suspended.v3', {free}), sub: t('pro.banner.suspended.s3'), tone: 'ink'},
     ];
   }

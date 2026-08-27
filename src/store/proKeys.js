@@ -60,18 +60,27 @@ export const useProKeysStore = defineStore('proKeys', () => {
     mergeKey(id, fields);
   };
 
+  // Ключ, заблокированный из-за истёкшего срока, бэкенд разблокирует при
+  // продлении/смене тарифа — отражаем это и в локальном состоянии.
+  const reviveFields = (id) => {
+    const current = keysList.value.find((k) => k.id === id);
+    return current?.blockReason === 'expired' ? {blockReason: null, off: false} : {};
+  };
+
   /** Смена тарифа; возвращает новую дату окончания. */
   const setKeyTier = async (id, tier, months) => {
+    const revive = reviveFields(id);
     const until = await proApi.setProKeyTier(id, tier, months);
-    mergeKey(id, {tier, until});
+    mergeKey(id, {tier, until, ...(until ? revive : {})});
     return until;
   };
 
   /** Продление платного ключа; возвращает новую дату окончания. */
   const extendKey = async (id, months) => {
     const current = keysList.value.find((k) => k.id === id);
+    const revive = reviveFields(id);
     const until = await proApi.extendProKey(id, months, current?.until || null);
-    mergeKey(id, {until});
+    mergeKey(id, {until, ...(until ? revive : {})});
     return until;
   };
 

@@ -94,7 +94,8 @@ function mapRealUser(user) {
     proto: 'vless',
     until: user.PaidUntil ? String(user.PaidUntil).slice(0, 10) : null,
     sold: (user.SoldForCents || 0) / 100,
-    off: Boolean(user.Blocked),
+    off: Boolean(user.Blocked) && !user.ProBlockReason,
+    blockReason: user.ProBlockReason || null,
     lastVisit: user.LastVisitHour || null,
     gb: user.MonthlyQuotaRemainingGB ?? 0,
   };
@@ -234,10 +235,24 @@ function mockPatch(id, fields) {
   writeOverrides(overrides);
 }
 
-// ——— Биллинг: всегда мок до реализации инвойсов на бэкенде. ———
+// ——— Биллинг: реальные локальные инвойсы keydesk либо мок. ———
 
-/** Будущий эндпоинт: GET /pro/billing. */
+/** GET /pro/billing (реальный режим) либо мок-состояние. */
 export async function fetchProBilling() {
+  if (isRealPro()) {
+    const r = await withAuthRetry(() => axios.get(`${apiLink}/pro/billing`));
+    const current = r.data?.InvoiceID
+      ? {
+        num: r.data.InvoiceID,
+        issuedAt: r.data.IssuedAt || null,
+        dueAt: r.data.DueAt || null,
+        suspendAt: r.data.SuspendAt || null,
+        sum: (r.data.TotalCents || 0) / 100,
+      }
+      : null;
+    return {status: r.data?.State || 'paid', current, real: true};
+  }
+
   const forced = devQuery('proBilling');
   if (forced && ['paid', 'issued', 'overdue', 'suspended'].includes(forced)) {
     return {status: forced};
@@ -245,8 +260,23 @@ export async function fetchProBilling() {
   return {status: readOverrides().billing || 'paid'};
 }
 
-/** Будущий эндпоинт: GET /pro/invoices (прошлые; прогноз и текущий считает фронт). */
+/** GET /pro/invoices (реальный режим) либо посевные инвойсы макета. */
 export async function fetchProInvoices() {
+  if (isRealPro()) {
+    const r = await withAuthRetry(() => axios.get(`${apiLink}/pro/invoices`));
+    const list = Array.isArray(r.data) ? r.data : [];
+    return list.map((i) => ({
+      num: i.ID,
+      periodId: i.ID,
+      createdAt: i.CreatedAt || null,
+      paidAtIso: i.PaidAt || null,
+      keys: i.KeysCount || 0,
+      sum: (i.TotalCents || 0) / 100,
+      status: i.Status === 'issued' ? 'awaiting' : i.Status,
+      real: true,
+    }));
+  }
+
   return seedInvoices();
 }
 
@@ -263,8 +293,13 @@ export async function fetchProAnalytics() {
   return {revenueHistory: REVENUE_HISTORY, allTimeExtra: ALL_TIME_EXTRA, stats};
 }
 
-/** Будущий эндпоинт: POST /pro/invoices/current/pay. */
+/** POST /pro/invoices/current/pay (реальный режим, стаб-оплата) либо мок. */
 export async function payProInvoice() {
+  if (isRealPro()) {
+    const r = await withAuthRetry(() => axios.post(`${apiLink}/pro/invoices/current/pay`));
+    return {status: r.data?.State || 'paid'};
+  }
+
   const overrides = readOverrides();
   overrides.billing = 'paid';
   writeOverrides(overrides);

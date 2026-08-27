@@ -18,6 +18,9 @@ export function useProKeyView(keyRef) {
   const isFree = computed(() => keyRef.value.tier === 'free');
   const isDead = computed(() => status.value === 'off');
   const isBlocked = computed(() => status.value === 'blocked');
+  // Заблокирован из-за истёкшего срока (реальный бэкенд): лечится продлением,
+  // а не оплатой инвойса.
+  const isExpiredBlocked = computed(() => keyRef.value.blockReason === 'expired');
   const isWarn = computed(() => status.value === 'warn');
 
   const hasName = computed(() => Boolean(keyRef.value.name && keyRef.value.name.trim()));
@@ -36,7 +39,11 @@ export function useProKeyView(keyRef) {
     return `${t(`pro.card.${parts.key}`)}, ${parts.time}`;
   });
 
-  const gbText = computed(() => `${formatGb(keyRef.value.gb)} ${t('pro.card.gb')}`);
+  const gbText = computed(() => {
+    // Квота unlim-тарифа (1 ПиБ) — показываем как безлимит.
+    if ((keyRef.value.gb || 0) >= 100000) return `∞ ${t('pro.card.gb')}`;
+    return `${formatGb(keyRef.value.gb)} ${t('pro.card.gb')}`;
+  });
 
   const billable = computed(() => countsIn(keyRef.value));
   const profit = computed(() => profitOf(keyRef.value));
@@ -73,12 +80,18 @@ export function useProKeyView(keyRef) {
     return t('pro.card.validUntil');
   });
 
+  const blockedNote = computed(() => (isExpiredBlocked.value
+    ? t('pro.card.expiredNote')
+    : t('pro.card.blockedNote')));
+
   return {
     status,
     isFree,
     isDead,
     isBlocked,
+    isExpiredBlocked,
     isWarn,
+    blockedNote,
     hasName,
     hasNote,
     displayName,

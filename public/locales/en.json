@@ -516,7 +516,8 @@
       "pay": "Pay",
       "extend": "Extend",
       "actions": "Actions",
-      "blockedNote": "Switched off because of an unpaid invoice."
+      "blockedNote": "Switched off because of an unpaid invoice.",
+      "expiredNote": "The key's paid period is over - extend it to switch it back on."
     },
     "menu": {
       "sectionKey": "key",

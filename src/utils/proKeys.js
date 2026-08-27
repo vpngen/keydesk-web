@@ -14,6 +14,8 @@ export function tierPrice(tier) {
 /** Статус ключа: off / blocked (платный при billing=suspended) / idle / warn / ok. */
 export function statusOf(key, billing) {
   if (key.off) return 'off';
+  // Реальный бэкенд: ключ заблокирован по биллингу или из-за истёкшего срока.
+  if (key.blockReason) return 'blocked';
   if (key.tier !== 'free' && billing === 'suspended') return 'blocked';
   if (!key.lastVisit) return 'idle';
   if (key.until && daysUntil(key.until) <= WARN_DAYS) return 'warn';

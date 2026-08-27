@@ -62,7 +62,7 @@
 
     <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-card__proto"/>
 
-    <div v-if="isBlocked" class="pro-key-card__blocked-note">{{ t('pro.card.blockedNote') }}</div>
+    <div v-if="isBlocked" class="pro-key-card__blocked-note">{{ blockedNote }}</div>
 
     <div class="pro-key-card__footer">
       <button v-if="canCopy" class="pro-key-card__copy" type="button" @click="emit('copy', keyItem)">
@@ -79,10 +79,10 @@
       <button v-if="isFree && !isDead" class="pro-key-card__upgrade" type="button" @click="emit('open-upgrade', keyItem)">
         {{ t('pro.card.upgrade') }}
       </button>
-      <button v-if="isBlocked" class="pro-key-card__pay" type="button" @click="emit('open-pay')">
+      <button v-if="isBlocked && !isExpiredBlocked" class="pro-key-card__pay" type="button" @click="emit('open-pay')">
         {{ t('pro.card.pay') }}
       </button>
-      <button v-if="isWarn" class="pro-key-card__extend" type="button" @click="emit('open-extend', keyItem)">
+      <button v-if="isWarn || isExpiredBlocked" class="pro-key-card__extend" type="button" @click="emit('open-extend', keyItem)">
         {{ t('pro.card.extend') }}
       </button>
       <button
@@ -139,9 +139,9 @@ const emit = defineEmits([
 
 const {t} = useI18n();
 const {
-  status, isFree, isDead, isBlocked, isWarn,
+  status, isFree, isDead, isBlocked, isExpiredBlocked, isWarn,
   hasName, hasNote, displayName, statusWord, tariffLabel,
-  untilText, untilLabel, lastLabel, gbText,
+  untilText, untilLabel, lastLabel, gbText, blockedNote,
   profitText, profitTone, soldText, invoiceLabel, invoiceValue,
 } = useProKeyView(toRef(props, 'keyItem'));
 
