@@ -10,10 +10,13 @@ if (import.meta.env.MODE !== 'production') {
 
   const keydesk = import.meta.env.VITE_KEYDESK_URL || '';
   const keydeskVip = import.meta.env.VITE_KEYDESK_VIP_URL || '';
-  const useVip = new URLSearchParams(search).get('vip') === 'true';
+  const keydeskPro = import.meta.env.VITE_KEYDESK_PRO_URL || '';
+  const params = new URLSearchParams(search);
+  const useVip = params.get('vip') === 'true';
+  const usePro = params.get('pro') === 'true';
 
   isDevOrStageHost = onDevHost && Boolean(keydesk);
-  apiLink = isDevOrStageHost ? (useVip ? keydeskVip : keydesk) : '';
+  apiLink = isDevOrStageHost ? (usePro ? (keydeskPro || keydesk) : useVip ? keydeskVip : keydesk) : '';
 }
 
 export { apiLink, isDevOrStageHost };

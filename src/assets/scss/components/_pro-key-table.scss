@@ -1,0 +1,318 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+$columns: 104px minmax(0, 1fr) 108px 134px 106px 136px 82px 94px 86px 90px;
+
+.pro-key-table {
+	overflow-x: auto;
+	border: 1px solid v.$pro-color-ink;
+	background: v.$pro-color-card;
+
+	&__inner {
+		min-width: 1200px;
+	}
+
+	&__head {
+		display: grid;
+		align-items: center;
+		grid-template-columns: $columns;
+		border-bottom: 2px solid v.$pro-color-ink;
+		font: 700 10px/1.2 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-shade;
+	}
+
+	&__head-cell {
+		border-left: 1px solid v.$pro-color-hairline;
+		padding: 11px 12px;
+
+		&--first {
+			border-left: 0;
+			padding: 11px 8px 11px 14px;
+		}
+
+		&--sortable {
+			@include pro.pro-control-reset;
+
+			border-left: 1px solid v.$pro-color-hairline;
+			padding: 11px 12px;
+			font: inherit;
+			letter-spacing: inherit;
+			text-align: left;
+			text-transform: inherit;
+			color: inherit;
+		}
+
+		&--right {
+			text-align: right;
+		}
+
+		&--center {
+			text-align: center;
+		}
+	}
+
+	&__row {
+		position: relative;
+		display: grid;
+		align-items: center;
+		grid-template-columns: $columns;
+		border-bottom: 1px solid v.$pro-color-line;
+		background: v.$pro-color-card;
+		cursor: pointer;
+
+		&:hover {
+			background: v.$pro-color-row-hover;
+		}
+
+		&--muted {
+			background: v.$pro-color-dead-bg;
+			opacity: 0.55;
+		}
+	}
+
+	&__cell {
+		padding: 12px;
+		font: 400 13px/1 v.$pro-font-mono;
+		white-space: nowrap;
+
+		&--user {
+			display: flex;
+			align-items: center;
+			padding: 12px 8px 12px 14px;
+			font-size: 12px;
+			color: v.$pro-color-ink-soft;
+			gap: 6px;
+		}
+
+		&--name {
+			display: flex;
+			align-items: center;
+			min-width: 0;
+			font-family: v.$pro-font-sans;
+			gap: 8px;
+		}
+
+		&--status {
+			display: flex;
+			align-items: center;
+			overflow: hidden;
+			font-size: 11px;
+			color: v.$pro-color-faded;
+			gap: 7px;
+		}
+
+		&--status-ok {
+			color: v.$pro-color-green;
+		}
+
+		&--status-warn,
+		&--status-blocked {
+			color: v.$pro-color-red;
+		}
+
+		&--mono {
+			font-family: v.$pro-font-mono;
+		}
+
+		&--faded {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			color: v.$pro-color-faded;
+		}
+
+		&--right {
+			text-align: right;
+		}
+
+		&--warn {
+			color: v.$pro-color-red;
+		}
+
+		&--dead {
+			color: v.$pro-color-faded;
+		}
+
+		&--strong {
+			font-weight: 700;
+		}
+
+		&--profit-pos {
+			color: v.$pro-color-green;
+		}
+
+		&--profit-neg {
+			color: v.$pro-color-red;
+		}
+
+		&--profit-zero {
+			color: v.$pro-color-muted;
+		}
+
+		&--actions {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+		}
+	}
+
+	&__expand-icon {
+		font: 400 10px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__name {
+		overflow: hidden;
+		font: 400 15px/1.2 v.$pro-font-sans;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+
+		&--unnamed {
+			font: italic 400 14px/1.2 v.$pro-font-sans;
+			color: v.$pro-color-faded;
+		}
+
+		&--dead {
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__note-icon {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: none;
+		align-items: center;
+		color: v.$pro-color-muted;
+
+		.svg-icon {
+			width: 13px;
+			height: 13px;
+			fill: none;
+			stroke: currentcolor;
+		}
+	}
+
+	&__tariff {
+		border: 2px solid v.$pro-color-blue;
+		padding: 2px 7px;
+		font: 700 10px/1.4 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+
+		&--free {
+			border-color: v.$pro-color-muted;
+			color: v.$pro-color-faded;
+		}
+
+		&--muted {
+			border-color: v.$pro-color-disabled;
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__status-dot {
+		flex: none;
+		width: 7px;
+		height: 7px;
+		background: currentcolor;
+	}
+
+	&__sold {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px dotted v.$pro-color-hairline;
+		font: 400 13px/1 v.$pro-font-mono;
+		white-space: nowrap;
+
+		&--muted {
+			color: v.$pro-color-disabled;
+		}
+
+		&--static {
+			border-bottom: 0;
+			cursor: default;
+		}
+	}
+
+	&__copy {
+		@include pro.pro-control-reset;
+
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+
+		&--blocked {
+			color: v.$pro-color-dead-border;
+			cursor: not-allowed;
+		}
+	}
+
+	&__gear {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-hairline;
+		width: 24px;
+		height: 24px;
+		font: 400 12px/1 v.$pro-font-mono;
+		background: v.$pro-color-card;
+
+		&:hover {
+			background: v.$pro-color-hover;
+		}
+	}
+
+	&__expanded {
+		grid-column: 1 / -1;
+		border-top: 1px dashed v.$pro-color-hairline;
+		background: v.$pro-color-paper;
+		cursor: default;
+
+		.pro-proto {
+			flex-direction: row;
+			align-items: center;
+			border: 0;
+			padding: 10px 14px;
+			background: transparent;
+			gap: 12px;
+		}
+
+		.pro-proto__value {
+			flex: 1;
+		}
+	}
+
+	&__proto-copy {
+		@include pro.pro-control-reset;
+
+		flex: none;
+		padding: 6px 12px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-paper;
+		background: v.$pro-color-ink;
+
+		&:hover {
+			opacity: 0.85;
+		}
+	}
+
+	&__footer {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 14px;
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+		background: v.$pro-color-shade;
+	}
+}

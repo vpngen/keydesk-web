@@ -1,0 +1,52 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 1px solid v.$pro-color-ink;
+	padding: 40px 18px;
+	text-align: center;
+	background: v.$pro-color-paper;
+	gap: 16px;
+
+	&__icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px dashed v.$pro-color-muted;
+		width: 88px;
+		height: 110px;
+		font: 400 22px/1 v.$pro-font-mono;
+		color: v.$pro-color-disabled;
+		background: v.$pro-color-card;
+	}
+
+	&__title {
+		font: 700 24px/1.2 v.$pro-font-narrow;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	&__text {
+		max-width: 440px;
+		font: 400 15px/1.55 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__cta {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		height: 42px;
+		box-shadow: 3px 3px 0 rgba(33, 30, 25, 0.3);
+		font: 700 13px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-paper;
+		background: v.$pro-color-ink;
+	}
+}

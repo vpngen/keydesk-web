@@ -1,13 +1,21 @@
 <template>
-  <HeaderInset/>
-  <RouterView/>
-  <Footer/>
-  <template v-if="isVipLayout">
-    <picture>
-      <source media="(max-width: 767px)" srcset="./assets/images/vip/scepter-mob-vip.png"/>
-      <source media="(min-width: 768px)" srcset="./assets/images/vip/scepter-vip.png"/>
-      <img alt="VIP" class="scepter" src="./assets/images/vip/scepter-vip.png"/>
-    </picture>
+  <template v-if="isProLayout">
+    <ProLayout>
+      <RouterView/>
+    </ProLayout>
+    <ProToast/>
+  </template>
+  <template v-else>
+    <HeaderInset/>
+    <RouterView/>
+    <Footer/>
+    <template v-if="isVipLayout">
+      <picture>
+        <source media="(max-width: 767px)" srcset="./assets/images/vip/scepter-mob-vip.png"/>
+        <source media="(min-width: 768px)" srcset="./assets/images/vip/scepter-vip.png"/>
+        <img alt="VIP" class="scepter" src="./assets/images/vip/scepter-vip.png"/>
+      </picture>
+    </template>
   </template>
   <TheLoader/>
   <teleport to="#app">
@@ -27,9 +35,12 @@ import DialogConstruction from '@/components/dialogs/DialogConstruction.vue';
 import HeaderInset from './components/HeaderInset.vue';
 import Footer from './components/Footer.vue';
 import TheLoader from "@/components/TheLoader.vue";
+import ProLayout from "@/components/pro/ProLayout.vue";
+import ProToast from "@/components/pro/ProToast.vue";
 import {useAuthStore} from "@/store/auth";
 import {useConstructionStore} from '@/store/construction';
 import {useProfileStore} from "@/store/profile";
+import {useProLayout} from "@/composables/useProLayout";
 import {isDevOrStageHost} from "@/const/api";
 import {isConstructionError} from '@/utils/apiErrors';
 
@@ -39,6 +50,7 @@ const authStore = useAuthStore();
 const constructionStore = useConstructionStore();
 const profileStore = useProfileStore();
 const {isVIP} = storeToRefs(profileStore);
+const {isProLayout} = useProLayout();
 const {
   isShown: isConstructionShown,
   till: constructionTill,
@@ -47,7 +59,7 @@ const {
 
 const isHomePage = computed(() => route.name === 'Home');
 const isVipRequested = computed(() => isDevOrStageHost && route.query.vip === 'true');
-const isVipLayout = computed(() => (isVIP.value || isVipRequested.value) && isHomePage.value);
+const isVipLayout = computed(() => (isVIP.value || isVipRequested.value) && isHomePage.value && !isProLayout.value);
 
 watch(isVipLayout, (vipLayout) => {
   const elApp = document.getElementById('app');
@@ -57,6 +69,17 @@ watch(isVipLayout, (vipLayout) => {
     elApp.classList.add('vip');
   } else {
     elApp.classList.remove('vip');
+  }
+}, {immediate: true});
+
+watch(isProLayout, (proLayout) => {
+  const elApp = document.getElementById('app');
+  if (!elApp) return;
+
+  if (proLayout) {
+    elApp.classList.add('pro');
+  } else {
+    elApp.classList.remove('pro');
   }
 }, {immediate: true});
 

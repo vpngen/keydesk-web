@@ -29,6 +29,26 @@ function getInitialLocale() {
   return browserPreferredLocale()
 }
 
+/**
+ * Славянские формы множественного числа: «0 ключей | {n} ключ | {n} ключа | {n} ключей».
+ * При 3 формах в сообщении индекс 0 используется и для нуля.
+ */
+function slavicPluralRule(choice, choicesLength) {
+  if (choice === 0 && choicesLength === 4) {
+    return 0
+  }
+  const teen = choice % 100 > 10 && choice % 100 < 20
+  const lastDigit = choice % 10
+  const offset = choicesLength === 4 ? 1 : 0
+  if (!teen && lastDigit === 1) {
+    return offset
+  }
+  if (!teen && lastDigit >= 2 && lastDigit <= 4) {
+    return offset + 1
+  }
+  return offset + 2
+}
+
 /** Базовый путь приложения (Vue CLI `publicPath`) + путь к JSON в `public/locales/`. */
 function localeJsonUrl(filename) {
   const raw = import.meta.env.BASE_URL || '/'
@@ -57,6 +77,9 @@ export async function setupI18n() {
     legacy: false,
     locale: getInitialLocale(),
     fallbackLocale: 'ru',
+    pluralRules: {
+      ru: slavicPluralRule,
+    },
     messages: {
       ru,
       en,

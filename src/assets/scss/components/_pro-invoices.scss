@@ -1,0 +1,168 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-invoices {
+	&__totals {
+		display: flex;
+		gap: 26px;
+	}
+
+	&__total {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__total-label {
+		font: 400 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__total-value {
+		font: 400 18px/1 v.$pro-font-mono;
+
+		&--strong {
+			font-weight: 700;
+		}
+
+		&--danger {
+			color: v.$pro-color-red-dark;
+		}
+	}
+
+	&__grid {
+		display: grid;
+		align-items: start;
+		grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+		gap: 14px;
+	}
+}
+
+.pro-invoice-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid v.$pro-color-ink;
+	background: v.$pro-color-card;
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-line;
+		padding: 11px 14px;
+		gap: 10px;
+	}
+
+	&__num {
+		font: 700 14px/1 v.$pro-font-mono;
+	}
+
+	&__badge {
+		border: 1px solid v.$pro-color-faded;
+		padding: 1px 7px;
+		font: 700 10px/1.5 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-faded;
+
+		&--forecast {
+			border-style: dashed;
+		}
+
+		&--paid {
+			border-color: v.$pro-color-green;
+			color: v.$pro-color-green;
+		}
+
+		&--awaiting {
+			border-color: v.$pro-color-amber-dark;
+			color: v.$pro-color-amber-dark;
+		}
+
+		&--overdue {
+			border-color: v.$pro-color-red;
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 11px 14px;
+		gap: 10px 14px;
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	&__field-label {
+		font: 400 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__field-value {
+		font: 400 13px/1 v.$pro-font-mono;
+	}
+
+	&__foot {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding: 10px 14px;
+		gap: 10px;
+	}
+
+	&__sum {
+		font: 700 16px/1 v.$pro-font-mono;
+
+		&--danger {
+			color: v.$pro-color-red-dark;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	&__open {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid v.$pro-color-blue;
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-blue;
+	}
+
+	&__pay {
+		@include pro.pro-control-reset;
+
+		padding: 7px 14px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: v.$pro-color-on-dark;
+		background: v.$pro-color-red;
+	}
+
+	&--issued {
+		background: v.$pro-color-tint-issued;
+	}
+
+	&--overdue {
+		background: v.$pro-color-tint-red;
+	}
+
+	&--alt {
+		background: v.$pro-color-paper;
+	}
+}

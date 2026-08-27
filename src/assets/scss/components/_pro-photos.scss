@@ -1,0 +1,175 @@
+@use "../pro-variables" as v;
+
+.pro-photos {
+	display: flex;
+	flex-direction: column;
+	margin-top: 8px;
+	gap: 4px;
+
+	&__title-row {
+		display: flex;
+		align-items: baseline;
+		border-top: 1px dashed v.$pro-color-hairline;
+		padding-top: 16px;
+		gap: 12px;
+	}
+
+	&__title {
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__scroll {
+		overflow-x: auto;
+		margin: 0 -12px;
+		padding: 0 12px;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+			width: 0;
+			height: 0;
+		}
+	}
+
+	&__wall {
+		position: relative;
+		width: 1360px;
+		height: 300px;
+	}
+
+	&__pole {
+		position: absolute;
+		top: 22px;
+		border-radius: 3px;
+		width: 7px;
+		height: 266px;
+		background: v.$pro-color-wire;
+
+		&--left {
+			left: 22px;
+		}
+
+		&--right {
+			right: 22px;
+		}
+	}
+
+	&__bracket {
+		position: absolute;
+		top: 30px;
+		border-radius: 3px;
+		width: 34px;
+		height: 5px;
+		background: v.$pro-color-wire;
+
+		&--left {
+			left: 8px;
+		}
+
+		&--right {
+			right: 8px;
+		}
+	}
+
+	&__wire {
+		position: absolute;
+		left: 26px;
+		right: 26px;
+		top: 50px;
+		height: 2px;
+		background: v.$pro-color-ink-soft;
+	}
+
+	&__baseline {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 6px;
+		border-bottom: 1px dashed v.$pro-color-hairline;
+	}
+
+	&__polaroid {
+		position: absolute;
+		top: 44px;
+		width: 184px;
+		transform-origin: top center;
+
+		&--1 {
+			left: 70px;
+			transform: rotate(-3deg);
+		}
+
+		&--2 {
+			left: 350px;
+			transform: rotate(2deg);
+		}
+
+		&--3 {
+			left: 620px;
+			transform: rotate(-2deg);
+		}
+
+		&--4 {
+			left: 890px;
+			transform: rotate(3deg);
+		}
+
+		&--5 {
+			left: 1150px;
+			transform: rotate(-2.5deg);
+		}
+	}
+
+	&__pin {
+		position: absolute;
+		left: 50%;
+		top: -8px;
+		z-index: 2;
+		border: 1px solid v.$pro-color-pin-border;
+		border-radius: 2px;
+		width: 9px;
+		height: 22px;
+		background: v.$pro-color-pin;
+		transform: translateX(-50%);
+	}
+
+	&__frame {
+		border: 1px solid v.$pro-color-polaroid-border;
+		padding: 7px 7px 6px;
+		box-shadow: 3px 5px 10px rgba(33, 30, 25, 0.26);
+		background: v.$pro-color-polaroid;
+	}
+
+	&__image-box {
+		position: relative;
+		overflow: hidden;
+		height: 132px;
+		filter: grayscale(1) contrast(1.08) brightness(0.98);
+	}
+
+	&__image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	&__halftone {
+		position: absolute;
+		background-image: radial-gradient(rgba(0, 0, 0, 0.55) 20%, transparent 21%);
+		background-size: 3px 3px;
+		opacity: 0.13;
+		mix-blend-mode: multiply;
+		pointer-events: none;
+		inset: 0;
+	}
+
+	&__caption {
+		padding-top: 5px;
+		font: 400 9px/1.1 v.$pro-font-mono;
+		text-align: center;
+		color: v.$pro-color-faded;
+	}
+}

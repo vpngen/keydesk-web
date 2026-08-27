@@ -24,6 +24,8 @@ export const useAuthStore = defineStore('auth', () => {
         const decoded = jwtDecode(token.value);
         profileStore.isVIP = decoded.vip;
         profileStore.urlVIP = decoded.vip_url;
+        profileStore.isPRO = decoded.pro;
+        profileStore.urlPRO = decoded.pro_url;
         profileStore.uuid = decoded.sub;
 
         return token.value;

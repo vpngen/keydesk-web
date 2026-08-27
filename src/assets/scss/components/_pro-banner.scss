@@ -1,0 +1,198 @@
+@use "../pro-variables" as v;
+
+.pro-banner {
+	$b: &;
+
+	display: flex;
+	flex-direction: column;
+	border: 1px solid v.$pro-color-ink;
+	border-left: 6px solid v.$pro-color-green;
+	background: v.$pro-color-raised;
+
+	&__header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		padding: 13px 16px;
+		min-width: 0;
+		cursor: pointer;
+		gap: 8px 10px;
+
+		&:hover {
+			background: rgba(33, 30, 25, 0.04);
+		}
+	}
+
+	&__label {
+		flex: none;
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__title {
+		font: 700 20px/1 v.$pro-font-narrow;
+		letter-spacing: 0.06em;
+	}
+
+	&__stamp {
+		border: 2px double v.$pro-color-green;
+		padding: 2px 7px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: v.$pro-color-green;
+		transform: rotate(-5deg);
+	}
+
+	&__spacer {
+		flex: 1;
+	}
+
+	&__chevron {
+		flex: none;
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__cells {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+	}
+
+	&__cell {
+		display: flex;
+		flex-direction: column;
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding: 12px 16px;
+		gap: 5px;
+	}
+
+	&__cell-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__cell-value {
+		font: 400 18px/1 v.$pro-font-mono;
+		white-space: nowrap;
+
+		&--strong {
+			font-weight: 700;
+			font-size: 20px;
+		}
+
+		&--amber {
+			color: v.$pro-color-amber-dark;
+		}
+
+		&--danger {
+			color: v.$pro-color-red-dark;
+		}
+	}
+
+	&__cell-sub {
+		font: 400 12px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__actions {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		border-top: 1px dashed v.$pro-color-ink;
+		padding: 14px 16px;
+		gap: 10px;
+	}
+
+	&__cta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-ink;
+		padding: 0 18px;
+		height: 44px;
+		box-shadow: 3px 3px 0 v.$pro-color-ink;
+		font: 700 13px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-on-dark;
+		background: v.$pro-color-ink;
+		cursor: pointer;
+	}
+
+	&__link {
+		align-self: flex-start;
+		border-bottom: 1px solid v.$pro-color-blue;
+		padding-bottom: 2px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		white-space: nowrap;
+		text-decoration: none;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+	}
+
+	&__note {
+		border-top: 1px dashed v.$pro-color-ink;
+		padding: 10px 24px;
+		font: 400 13px/1.4 v.$pro-font-sans;
+	}
+
+	&--issued {
+		border-left-color: v.$pro-color-amber;
+		background: v.$pro-color-tint-issued;
+
+		#{$b}__stamp {
+			border-color: v.$pro-color-amber;
+			color: v.$pro-color-amber;
+		}
+	}
+
+	&--overdue {
+		border-color: v.$pro-color-red;
+		background: v.$pro-color-tint-red;
+
+		#{$b}__stamp {
+			border-color: v.$pro-color-red;
+			color: v.$pro-color-red;
+		}
+
+		#{$b}__actions {
+			border-top-color: v.$pro-color-red;
+		}
+
+		#{$b}__cta {
+			background: v.$pro-color-red;
+		}
+
+		#{$b}__note {
+			border-top-color: v.$pro-color-red;
+			color: v.$pro-color-red-dark;
+			background: v.$pro-color-tint-red-deep;
+		}
+	}
+
+	&--suspended {
+		border-left-color: v.$pro-color-ink;
+		background: v.$pro-color-tint-suspended;
+
+		#{$b}__stamp {
+			border-color: v.$pro-color-ink;
+			color: v.$pro-color-ink;
+		}
+
+		#{$b}__cta {
+			background: v.$pro-color-red;
+		}
+
+		#{$b}__note {
+			color: v.$pro-color-ink-soft;
+			background: v.$pro-color-tint-suspended-deep;
+		}
+	}
+}

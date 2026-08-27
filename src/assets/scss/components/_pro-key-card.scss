@@ -1,0 +1,348 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-key-card {
+	$c: &;
+
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid v.$pro-color-ink;
+	min-width: 0;
+	box-shadow: 4px 4px 0 rgba(33, 30, 25, 0.14);
+	background: v.$pro-color-card;
+
+	&__head {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-line;
+		padding: 13px 16px 11px;
+		gap: 10px;
+	}
+
+	&__head-main {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		gap: 6px;
+	}
+
+	&__name-row {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		gap: 8px;
+	}
+
+	&__name {
+		overflow: hidden;
+		font: 700 19px/1.15 v.$pro-font-sans;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		color: v.$pro-color-ink;
+
+		&--unnamed {
+			font: italic 400 17px/1.2 v.$pro-font-sans;
+			color: v.$pro-color-faded;
+		}
+
+		&--dead {
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__note-icon {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: none;
+		align-items: center;
+		color: v.$pro-color-muted;
+
+		.svg-icon {
+			width: 14px;
+			height: 14px;
+			fill: none;
+			stroke: currentcolor;
+		}
+	}
+
+	&__status {
+		display: flex;
+		align-items: center;
+		font: 400 11px/1 v.$pro-font-mono;
+		white-space: nowrap;
+		color: v.$pro-color-faded;
+		gap: 7px;
+
+		&--ok {
+			color: v.$pro-color-green;
+		}
+
+		&--warn,
+		&--blocked {
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__status-dot {
+		flex: none;
+		width: 7px;
+		height: 7px;
+		background: currentcolor;
+	}
+
+	&__status-sep {
+		color: v.$pro-color-faded;
+	}
+
+	&__tariff {
+		flex: none;
+		border: 2px solid v.$pro-color-blue;
+		padding: 3px 8px;
+		font: 700 12px/1.3 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+
+		&--free {
+			border-color: v.$pro-color-muted;
+			color: v.$pro-color-faded;
+		}
+
+		&--muted {
+			border-color: v.$pro-color-disabled;
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__fields {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		padding: 12px 16px;
+		gap: 11px 14px;
+	}
+
+	&__field {
+		display: flex;
+		flex-direction: column;
+		gap: 3px;
+	}
+
+	&__field-label {
+		font: 400 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+
+		&--warn {
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__field-value {
+		align-self: flex-start;
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+
+		&--warn {
+			font-weight: 700;
+			color: v.$pro-color-red;
+		}
+
+		&--dead {
+			color: v.$pro-color-faded;
+		}
+
+		&--soft {
+			color: v.$pro-color-ink-soft;
+		}
+
+		&--muted {
+			color: v.$pro-color-disabled;
+		}
+
+		&--strong {
+			font-weight: 700;
+		}
+
+		&--clickable {
+			@include pro.pro-control-reset;
+
+			align-self: flex-start;
+			border-bottom: 1px dotted v.$pro-color-hairline;
+			font: 400 14px/1 v.$pro-font-mono;
+		}
+
+		&--profit-pos {
+			color: v.$pro-color-green;
+		}
+
+		&--profit-neg {
+			color: v.$pro-color-red;
+		}
+
+		&--profit-zero {
+			color: v.$pro-color-muted;
+		}
+	}
+
+	&__proto {
+		margin: 0 16px 10px;
+	}
+
+	&__blocked-note {
+		margin: 0 16px 10px;
+		border: 1px solid v.$pro-color-red;
+		padding: 7px 10px;
+		font: 400 12px/1.35 v.$pro-font-sans;
+		color: v.$pro-color-red-dark;
+		background: v.$pro-color-tint-red;
+	}
+
+	&__footer {
+		position: relative;
+		display: flex;
+		align-items: center;
+		margin-top: auto;
+		border-top: 1px solid v.$pro-color-line;
+		padding: 10px 16px;
+		background: v.$pro-color-paper;
+		gap: 10px;
+	}
+
+	&__footer-spacer {
+		flex: 1;
+	}
+
+	&__copy {
+		@include pro.pro-control-reset;
+
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+
+		&:hover {
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__copy-blocked {
+		display: flex;
+		align-items: center;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-disabled;
+		gap: 7px;
+	}
+
+	&__copy-blocked-x {
+		font: 400 12px/1 v.$pro-font-mono;
+	}
+
+	&__dead-actions {
+		display: flex;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		gap: 12px;
+	}
+
+	&__dead-restore {
+		@include pro.pro-control-reset;
+
+		font: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__dead-delete {
+		@include pro.pro-control-reset;
+
+		font: inherit;
+		letter-spacing: inherit;
+		text-transform: inherit;
+		color: v.$pro-color-red;
+	}
+
+	&__upgrade {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid v.$pro-color-blue;
+		padding-bottom: 2px;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	&__pay {
+		@include pro.pro-control-reset;
+
+		padding: 6px 11px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-on-dark;
+		background: v.$pro-color-red;
+	}
+
+	&__extend {
+		@include pro.pro-control-reset;
+
+		padding: 6px 11px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-paper;
+		background: v.$pro-color-ink;
+	}
+
+	&__gear {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-hairline;
+		width: 26px;
+		height: 26px;
+		font: 400 13px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+
+		&:hover {
+			background: v.$pro-color-hover;
+		}
+	}
+
+	&--blocked {
+		border-color: v.$pro-color-muted;
+		box-shadow: none;
+		background: v.$pro-color-dead-bg;
+		opacity: 0.55;
+	}
+
+	&--dead {
+		border-color: v.$pro-color-dead-border;
+		box-shadow: none;
+		background: v.$pro-color-dead-bg;
+		opacity: 0.42;
+	}
+}

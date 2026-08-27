@@ -1,0 +1,892 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-dialog {
+	position: fixed;
+	z-index: 80;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	overflow: auto;
+	padding: 12px 8px 40px;
+	background: rgba(33, 30, 25, 0.55);
+	inset: 0;
+
+	&__window {
+		border: 1px solid v.$pro-color-ink;
+		width: 100%;
+		box-shadow: 6px 6px 0 rgba(33, 30, 25, 0.4);
+		background: v.$pro-color-paper;
+	}
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 14px 20px;
+		background: v.$pro-color-raised;
+	}
+
+	&__title {
+		font: 700 16px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	&__close {
+		@include pro.pro-control-reset;
+
+		font: 400 15px/1 v.$pro-font-mono;
+	}
+
+	&__steps {
+		display: flex;
+		flex-wrap: wrap;
+		border-bottom: 1px solid v.$pro-color-ink;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		background: v.$pro-color-card;
+	}
+
+	&__step {
+		flex: 1 1 auto;
+		border-bottom: 1px solid v.$pro-color-line;
+		border-left: 1px solid v.$pro-color-hairline;
+		padding: 10px;
+		white-space: nowrap;
+		text-align: center;
+
+		&--current {
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+
+		&--done {
+			color: v.$pro-color-ink-soft;
+			background: v.$pro-color-shade;
+		}
+
+		&--todo {
+			color: v.$pro-color-muted;
+			background: v.$pro-color-card;
+		}
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		padding: 20px;
+		gap: 14px;
+	}
+
+	&__question {
+		font: 400 14px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__info {
+		border-left: 3px solid v.$pro-color-blue;
+		padding: 11px 14px;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-blue;
+		background: v.$pro-color-tint-blue;
+	}
+
+	&__warning {
+		border-left: 3px solid v.$pro-color-amber;
+		padding: 9px 12px;
+		font: 400 12px/1.45 v.$pro-font-sans;
+		color: v.$pro-color-amber-dark;
+		background: v.$pro-color-tint-amber;
+	}
+
+	&__foot-note {
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__confirm-note {
+		border: 1px dashed v.$pro-color-red;
+		padding: 11px 14px;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+		background: v.$pro-color-card;
+	}
+
+	&__input-box {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		padding: 12px 14px;
+		background: v.$pro-color-card;
+		gap: 8px;
+
+		&--soft {
+			border-color: v.$pro-color-hairline;
+		}
+	}
+
+	&__input {
+		outline: 0;
+		border: 0;
+		width: 100%;
+		font: 400 15px/1.4 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+		background: transparent;
+
+		&::placeholder {
+			color: v.$pro-color-disabled;
+		}
+	}
+
+	&__textarea {
+		outline: 0;
+		border: 0;
+		width: 100%;
+		font: 400 14px/1.5 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+		background: transparent;
+		resize: vertical;
+
+		&::placeholder {
+			color: v.$pro-color-disabled;
+		}
+	}
+
+	&__counter {
+		font: 400 11px/1 v.$pro-font-mono;
+		text-align: right;
+		color: v.$pro-color-disabled;
+	}
+
+	&__extra {
+		display: flex;
+		flex-direction: column;
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding-top: 14px;
+		gap: 8px;
+	}
+
+	&__extra-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__key-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid v.$pro-color-hairline;
+		padding: 11px 14px;
+		background: v.$pro-color-card;
+		gap: 14px;
+	}
+
+	&__key-row-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__key-row-value {
+		font: 400 14px/1 v.$pro-font-mono;
+	}
+
+	&__sold-row {
+		display: flex;
+		align-items: center;
+		border: 1px solid v.$pro-color-hairline;
+		padding: 10px 14px;
+		background: v.$pro-color-card;
+		gap: 10px;
+
+		&--large {
+			border-color: v.$pro-color-ink;
+			padding: 12px 14px;
+			gap: 12px;
+		}
+	}
+
+	&__sold-euro {
+		font: 700 17px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+
+		.pro-dialog__sold-row--large & {
+			font-size: 22px;
+		}
+	}
+
+	&__sold-input {
+		outline: 0;
+		border: 0;
+		width: 90px;
+		font: 700 17px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+		background: transparent;
+
+		&::placeholder {
+			color: v.$pro-color-disabled;
+		}
+
+		.pro-dialog__sold-row--large & {
+			width: 120px;
+			font-size: 22px;
+		}
+	}
+
+	&__sold-per {
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__sold-spacer {
+		flex: 1;
+	}
+
+	&__sold-profit {
+		font: 400 12px/1 v.$pro-font-mono;
+
+		&--pos {
+			color: v.$pro-color-green;
+		}
+
+		&--neg {
+			color: v.$pro-color-red;
+		}
+
+		&--zero {
+			color: v.$pro-color-muted;
+		}
+	}
+
+	&__calc {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		padding: 12px 14px;
+		background: v.$pro-color-raised;
+		gap: 8px;
+	}
+
+	&__calc-line {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font: 400 13px/1.3 v.$pro-font-sans;
+	}
+
+	&__calc-value {
+		font: 400 14px/1 v.$pro-font-mono;
+	}
+
+	&__calc-total {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$pro-color-hairline;
+		padding-top: 8px;
+	}
+
+	&__calc-total-label {
+		font: 700 13px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__calc-profit {
+		font: 700 20px/1 v.$pro-font-mono;
+
+		&--pos {
+			color: v.$pro-color-green;
+		}
+
+		&--neg {
+			color: v.$pro-color-red;
+		}
+
+		&--zero {
+			color: v.$pro-color-muted;
+		}
+	}
+
+	&__foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$pro-color-ink;
+		padding: 12px 14px;
+		background: v.$pro-color-raised;
+		gap: 10px;
+	}
+
+	&__foot-left {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	&__foot-right {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__back,
+	&__cancel {
+		@include pro.pro-control-reset;
+
+		border: 1px solid v.$pro-color-ink;
+		padding: 9px 16px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		background: v.$pro-color-card;
+	}
+
+	&__skip {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid v.$pro-color-blue;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+	}
+
+	&__step-hint {
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__primary {
+		@include pro.pro-control-reset;
+		@include pro.pro-cta(v.$pro-color-ink);
+
+		padding: 11px 20px;
+
+		&:hover {
+			filter: brightness(1.12);
+		}
+
+		&--red {
+			background: v.$pro-color-red;
+		}
+
+		&--disabled {
+			box-shadow: none;
+			background: v.$pro-color-muted;
+			cursor: default;
+		}
+	}
+}
+
+// Радио-карточки (тариф/протокол).
+.pro-option {
+	display: flex;
+	align-items: flex-start;
+	border: 1px solid v.$pro-color-hairline;
+	padding: 14px 16px;
+	background: v.$pro-color-card;
+	cursor: pointer;
+	gap: 14px;
+
+	&__dot {
+		flex: none;
+		margin-top: 3px;
+		border: 1px solid v.$pro-color-ink;
+		width: 14px;
+		height: 14px;
+		background: v.$pro-color-card;
+	}
+
+	&__main {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 0;
+		gap: 6px;
+	}
+
+	&__head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	&__name {
+		font: 700 17px/1 v.$pro-font-narrow;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	&__price {
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__kind {
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.16em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+	}
+
+	&__desc {
+		font: 400 13px/1.45 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__sample {
+		overflow: hidden;
+		border: 1px dashed v.$pro-color-hairline;
+		padding: 6px 9px;
+		font: 400 11px/1.3 v.$pro-font-mono;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		color: v.$pro-color-muted;
+		background: v.$pro-color-card;
+	}
+
+	&--active {
+		border: 2px solid v.$pro-color-ink;
+		box-shadow: 3px 3px 0 rgba(33, 30, 25, 0.18);
+		background: v.$pro-color-raised;
+	}
+
+	&--active &__dot {
+		background: v.$pro-color-ink;
+	}
+}
+
+// Срок (чипы месяцев + «действует до»).
+.pro-term {
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+
+	&__options {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	&__option {
+		@include pro.pro-control-reset;
+
+		border: 1px solid v.$pro-color-ink;
+		padding: 11px 18px;
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+		background: v.$pro-color-card;
+
+		&--active {
+			border-width: 2px;
+			font-weight: 700;
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__until {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px solid v.$pro-color-hairline;
+		padding: 14px 16px;
+		background: v.$pro-color-card;
+	}
+
+	&__until-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__until-value {
+		font: 700 20px/1 v.$pro-font-mono;
+	}
+}
+
+// Шаг «проверка».
+.pro-review {
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	gap: 16px;
+
+	&__rows {
+		border: 1px solid v.$pro-color-hairline;
+		background: v.$pro-color-card;
+	}
+
+	&__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px dotted v.$pro-color-hairline;
+		padding: 11px 14px;
+		gap: 14px;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	&__row-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__row-value {
+		font: 400 14px/1.3 v.$pro-font-mono;
+		text-align: right;
+	}
+
+	&__invoice {
+		border: 1px solid v.$pro-color-ink;
+		background: v.$pro-color-raised;
+	}
+
+	&__invoice-title {
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 10px 14px;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	&__invoice-body {
+		display: flex;
+		flex-direction: column;
+		padding: 12px 14px;
+		gap: 9px;
+	}
+
+	&__invoice-line {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font: 400 13px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+		gap: 10px;
+	}
+
+	&__invoice-sum {
+		font: 400 14px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+
+		&--faded {
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__invoice-total {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$pro-color-hairline;
+		padding-top: 9px;
+	}
+
+	&__invoice-total-label {
+		font: 700 13px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__invoice-total-sum {
+		font: 700 22px/1 v.$pro-font-mono;
+	}
+
+	&__forecast {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px dashed v.$pro-color-muted;
+		padding: 11px 14px;
+	}
+
+	&__forecast-label {
+		font: 400 13px/1.4 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__forecast-value {
+		font: 400 14px/1 v.$pro-font-mono;
+	}
+
+	&__forecast-old {
+		text-decoration: line-through;
+		color: v.$pro-color-muted;
+	}
+}
+
+// Финальный экран мастеров.
+.pro-done {
+	display: flex;
+	flex-direction: column;
+	padding: 24px 20px;
+	gap: 16px;
+
+	&__head {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	&__stamp {
+		@include pro.pro-stamp(v.$pro-color-green, -8deg);
+
+		padding: 4px 10px;
+		font-size: 13px;
+		line-height: 1;
+	}
+
+	&__when {
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+	}
+
+	&__text {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__title {
+		font: 700 26px/1.15 v.$pro-font-narrow;
+		letter-spacing: 0.03em;
+	}
+
+	&__sub {
+		font: 400 14px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__key {
+		display: flex;
+		align-items: center;
+		border: 1px solid v.$pro-color-ink;
+		padding: 12px 14px;
+		background: v.$pro-color-card;
+		gap: 12px;
+	}
+
+	&__key-value {
+		flex: 1;
+		font: 400 13px/1.4 v.$pro-font-mono;
+		word-break: break-all;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__key-copy {
+		@include pro.pro-control-reset;
+
+		flex: none;
+		padding: 8px 14px;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-paper;
+		background: v.$pro-color-ink;
+	}
+
+	&__note {
+		border: 1px dashed v.$pro-color-muted;
+		padding: 11px 14px;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+}
+
+// Продление.
+.pro-extend {
+	&__dates {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		border: 1px solid v.$pro-color-hairline;
+		padding: 12px 14px;
+		background: v.$pro-color-card;
+		gap: 12px;
+	}
+
+	&__date {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__date-label {
+		font: 400 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__date-value {
+		font: 400 15px/1 v.$pro-font-mono;
+
+		&--strong {
+			font-weight: 700;
+		}
+
+		&--warn {
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__arrow {
+		font: 400 16px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__spacer {
+		flex: 1;
+	}
+
+	&__tariff {
+		border: 1px solid v.$pro-color-muted;
+		padding: 2px 7px;
+		font: 700 10px/1.5 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+	}
+
+	&__invoice {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		padding: 12px 14px;
+		background: v.$pro-color-raised;
+		gap: 8px;
+	}
+
+	&__invoice-line {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		font: 400 13px/1.3 v.$pro-font-sans;
+	}
+
+	&__invoice-value {
+		font: 400 14px/1 v.$pro-font-mono;
+
+		&--faded {
+			color: v.$pro-color-faded;
+		}
+	}
+
+	&__invoice-total {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$pro-color-hairline;
+		padding-top: 8px;
+	}
+
+	&__invoice-total-label {
+		font: 700 13px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__invoice-total-value {
+		font: 700 18px/1 v.$pro-font-mono;
+	}
+}
+
+// Оплата инвойса.
+.pro-pay {
+	&__head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-end;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding-bottom: 12px;
+		gap: 8px;
+	}
+
+	&__head-main {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	&__head-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__head-sum {
+		font: 700 27px/1 v.$pro-font-mono;
+		color: v.$pro-color-red-dark;
+	}
+
+	&__head-sub {
+		font: 400 12px/1.5 v.$pro-font-mono;
+		text-align: right;
+		color: v.$pro-color-faded;
+	}
+
+	&__lines {
+		border: 1px solid v.$pro-color-hairline;
+		background: v.$pro-color-card;
+	}
+
+	&__line {
+		display: grid;
+		grid-template-columns: 1fr 30px 62px 66px;
+		border-bottom: 1px dotted v.$pro-color-hairline;
+	}
+
+	&__line-name {
+		padding: 10px 14px;
+		font: 400 13px/1.3 v.$pro-font-sans;
+	}
+
+	&__line-qty,
+	&__line-price {
+		padding: 10px 8px;
+		font: 400 12px/1 v.$pro-font-mono;
+		text-align: right;
+	}
+
+	&__line-sum {
+		padding: 10px 14px 10px 8px;
+		font: 400 12px/1 v.$pro-font-mono;
+		text-align: right;
+	}
+
+	&__total {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 12px 14px;
+		background: v.$pro-color-raised;
+	}
+
+	&__total-label {
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+	}
+
+	&__total-sum {
+		font: 700 20px/1 v.$pro-font-mono;
+	}
+}

@@ -1,6 +1,37 @@
 @use "mixins/helpers";
 @use "variables";
 
+// PT Sans / PT Sans Narrow / PT Mono (PRO theme) — subsetted woff2, latin + cyrillic.
+// Not via helpers.font-face: these need unicode-range and have no woff fallback.
+@mixin pro-font-face($file, $family, $weight, $style, $range) {
+	@font-face {
+		src: url(variables.$url-font + $file + ".woff2") format("woff2");
+		font-family: $family;
+		font-weight: $weight;
+		font-style: $style;
+		font-display: swap;
+		unicode-range: $range;
+	}
+}
+
+// stylelint-disable scss/operator-no-unspaced, @stylistic/max-line-length
+$pro-latin: u+0000-00ff, u+0131, u+0152-0153, u+02bb-02bc, u+02c6, u+02da, u+02dc, u+0304, u+0308, u+0329, u+2000-206f, u+20ac, u+2122, u+2191, u+2193, u+2212, u+2215, u+feff, u+fffd;
+$pro-cyrillic: u+0301, u+0400-045f, u+0490-0491, u+04b0-04b1, u+2116;
+// stylelint-enable scss/operator-no-unspaced, @stylistic/max-line-length
+
+@include pro-font-face("PTSans/PTSans-400-latin", "PT Sans", 400, normal, $pro-latin);
+@include pro-font-face("PTSans/PTSans-400-cyrillic", "PT Sans", 400, normal, $pro-cyrillic);
+@include pro-font-face("PTSans/PTSans-700-latin", "PT Sans", 700, normal, $pro-latin);
+@include pro-font-face("PTSans/PTSans-700-cyrillic", "PT Sans", 700, normal, $pro-cyrillic);
+@include pro-font-face("PTSans/PTSans-Italic-400-latin", "PT Sans", 400, italic, $pro-latin);
+@include pro-font-face("PTSans/PTSans-Italic-400-cyrillic", "PT Sans", 400, italic, $pro-cyrillic);
+@include pro-font-face("PTSansNarrow/PTSansNarrow-400-latin", "PT Sans Narrow", 400, normal, $pro-latin);
+@include pro-font-face("PTSansNarrow/PTSansNarrow-400-cyrillic", "PT Sans Narrow", 400, normal, $pro-cyrillic);
+@include pro-font-face("PTSansNarrow/PTSansNarrow-700-latin", "PT Sans Narrow", 700, normal, $pro-latin);
+@include pro-font-face("PTSansNarrow/PTSansNarrow-700-cyrillic", "PT Sans Narrow", 700, normal, $pro-cyrillic);
+@include pro-font-face("PTMono/PTMono-400-latin", "PT Mono", 400, normal, $pro-latin);
+@include pro-font-face("PTMono/PTMono-400-cyrillic", "PT Mono", 400, normal, $pro-cyrillic);
+
 // Manrope
 @include helpers.font-face(variables.$url-font + "Manrope/Manrope-400", "Manrope", 400, normal);
 @include helpers.font-face(variables.$url-font + "Manrope/Manrope-500", "Manrope", 500, normal);

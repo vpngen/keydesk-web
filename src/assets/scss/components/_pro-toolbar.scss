@@ -1,0 +1,115 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px;
+
+	&__search {
+		display: flex;
+		flex: 1 1 260px;
+		align-items: center;
+		border: 1px solid v.$pro-color-ink;
+		padding: 0 12px;
+		height: 42px;
+		min-width: 220px;
+		background: v.$pro-color-card;
+		gap: 8px;
+	}
+
+	&__search-icon {
+		font: 400 13px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__search-input {
+		flex: 1;
+		outline: 0;
+		border: 0;
+		width: 100%;
+		min-width: 0;
+		font: 400 13px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+		background: transparent;
+
+		&::placeholder {
+			color: v.$pro-color-disabled;
+		}
+	}
+
+	&__search-clear {
+		@include pro.pro-control-reset;
+
+		font: 400 13px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__select {
+		appearance: none;
+		flex: 1 1 130px;
+		border: 1px solid v.$pro-color-ink;
+		padding: 0 10px;
+		height: 40px;
+		min-width: 0;
+		font: 400 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink;
+		background: v.$pro-color-card;
+		background-image: none;
+		cursor: pointer;
+	}
+
+	&__view {
+		display: flex;
+		flex: 1 1 240px;
+		border: 1px solid v.$pro-color-ink;
+		height: 40px;
+	}
+
+	&__view-btn {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: 1;
+		align-items: center;
+		justify-content: center;
+		padding: 0 14px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+		gap: 7px;
+
+		.svg-icon {
+			width: 13px;
+			height: 13px;
+			fill: currentcolor;
+		}
+
+		&--bordered {
+			border-left: 1px solid v.$pro-color-ink;
+		}
+
+		&--active {
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__create {
+		@include pro.pro-control-reset;
+		@include pro.pro-cta(v.$pro-color-red);
+
+		flex: 1 1 200px;
+		padding: 0 18px;
+		height: 44px;
+
+		&:hover {
+			background: v.$pro-color-red-dark;
+		}
+	}
+}
