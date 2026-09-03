@@ -1,9 +1,9 @@
 <template>
   <div class="pro-proto">
     <div class="pro-proto__row">
-      <div class="pro-proto__group">
+      <div v-if="protos.length" class="pro-proto__group">
         <button
-          v-for="p in PRO_PROTOCOLS"
+          v-for="p in protos"
           :key="p"
           :class="{'pro-proto__chip--active': currentProto === p}"
           class="pro-proto__chip"
@@ -13,7 +13,7 @@
           {{ t(`pro.protocols.${p}`) }}
         </button>
       </div>
-      <div class="pro-proto__group">
+      <div v-if="!keyItem.configs" class="pro-proto__group">
         <button
           v-for="f in PRO_FORMATS"
           :key="f"
@@ -26,7 +26,8 @@
         </button>
       </div>
     </div>
-    <div :title="value" class="pro-proto__value">{{ value }}</div>
+    <div v-if="value" :title="value" class="pro-proto__value">{{ value }}</div>
+    <div v-else class="pro-proto__value pro-proto__value--empty">{{ t('pro.card.noStoredKey') }}</div>
     <slot/>
   </div>
 </template>
@@ -36,7 +37,7 @@ import {computed} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import {useProKeysStore} from '@/store/proKeys';
-import {keyString} from '@/utils/proKeys';
+import {accessString, availableProtos} from '@/utils/proKeys';
 import {PRO_PROTOCOLS, PRO_FORMATS} from '@/assets/constants/proConstants';
 
 const props = defineProps({
@@ -50,7 +51,11 @@ const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const {protoByKey, formatByKey} = storeToRefs(proKeysStore);
 
-const currentProto = computed(() => protoByKey.value[props.keyItem.id] || props.keyItem.proto);
+const protos = computed(() => availableProtos(props.keyItem) || PRO_PROTOCOLS);
+const currentProto = computed(() => {
+  const selected = protoByKey.value[props.keyItem.id] || props.keyItem.proto;
+  return protos.value.includes(selected) ? selected : protos.value[0];
+});
 const currentFormat = computed(() => formatByKey.value[props.keyItem.id] || 'link');
-const value = computed(() => keyString(props.keyItem, currentProto.value, currentFormat.value));
+const value = computed(() => accessString(props.keyItem, currentProto.value, currentFormat.value));
 </script>

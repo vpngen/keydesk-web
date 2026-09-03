@@ -91,7 +91,10 @@ function mapRealUser(user) {
     name: user.ProLabel || '',
     note: user.ProNote || '',
     tier: user.Tier || 'free',
-    proto: 'vless',
+    // {} (не null!) у ключей без сохраненных строк: реальный режим никогда
+    // не должен падать в мок-синтезатор — иначе скопируют нерабочий ключ.
+    configs: user.ProConfigs || {},
+    proto: user.ProConfigs?.vless ? 'vless' : user.ProConfigs?.outline ? 'outline' : 'vless',
     until: user.PaidUntil ? String(user.PaidUntil).slice(0, 10) : null,
     sold: (user.SoldForCents || 0) / 100,
     off: Boolean(user.Blocked) && !user.ProBlockReason,

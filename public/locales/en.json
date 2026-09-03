@@ -517,7 +517,8 @@
       "extend": "Extend",
       "actions": "Actions",
       "blockedNote": "Switched off because of an unpaid invoice.",
-      "expiredNote": "The key's paid period is over - extend it to switch it back on."
+      "expiredNote": "The key's paid period is over - extend it to switch it back on.",
+      "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one."
     },
     "menu": {
       "sectionKey": "key",
@@ -1024,7 +1025,8 @@
       "receiptDownloaded": "Receipt downloaded",
       "invoiceDownloaded": "Invoice {num} downloaded",
       "supportChat": "Support chat opened with {bot}",
-      "guideSoon": "The full guide is in the works - it will open here later"
+      "guideSoon": "The full guide is in the works - it will open here later",
+      "noStoredKey": "This key has no stored access string - reissue the key"
     }
   }
 }

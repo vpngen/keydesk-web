@@ -22,6 +22,29 @@ export function statusOf(key, billing) {
   return 'ok';
 }
 
+/**
+ * Строка доступа ключа. Реальный режим: сохраненные при создании конфиги
+ * (vless/outline из keydesk); ключи, созданные до PRO, строк не имеют — null.
+ * Мок-режим: синтетика keyString.
+ */
+export function accessString(key, proto, format) {
+  if (key.configs) {
+    return key.configs[proto] || null;
+  }
+  return keyString(key, proto, format);
+}
+
+/** Доступные протоколы ключа (null — использовать полный мок-набор). */
+export function availableProtos(key) {
+  if (key.configs) {
+    const order = ['vless', 'outline'];
+    return Object.keys(key.configs)
+      .filter((p) => key.configs[p])
+      .sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  }
+  return null;
+}
+
 /** Профит: продал минус себестоимость тарифа. */
 export function profitOf(key) {
   return (key.sold || 0) - tierPrice(key.tier);

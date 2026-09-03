@@ -115,7 +115,7 @@ import ProTermPicker from '@/components/pro/dialogs/ProTermPicker.vue';
 import ProReviewPanel from '@/components/pro/dialogs/ProReviewPanel.vue';
 import ProDonePanel from '@/components/pro/dialogs/ProDonePanel.vue';
 import {PRO_LIMITS} from '@/assets/constants/proConstants';
-import {tierPrice, prorate, keyString} from '@/utils/proKeys';
+import {tierPrice, prorate, accessString} from '@/utils/proKeys';
 import {money, addMonths, formatIso, formatDate, nextBilling, daysToBilling} from '@/utils/proFormat';
 
 const props = defineProps({
@@ -203,7 +203,7 @@ const reviewRows = computed(() => [
   },
 ]);
 
-const doneKey = computed(() => (props.createdKey ? keyString(props.createdKey, proto.value, 'link') : ''));
+const doneKey = computed(() => (props.createdKey ? accessString(props.createdKey, proto.value, 'link') || '' : ''));
 
 const doneSub = computed(() => {
   if (!props.createdKey) return '';

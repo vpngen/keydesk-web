@@ -53,7 +53,7 @@ import ProTierOptions from '@/components/pro/dialogs/ProTierOptions.vue';
 import ProTermPicker from '@/components/pro/dialogs/ProTermPicker.vue';
 import ProReviewPanel from '@/components/pro/dialogs/ProReviewPanel.vue';
 import ProDonePanel from '@/components/pro/dialogs/ProDonePanel.vue';
-import {tierPrice, prorate, keyString} from '@/utils/proKeys';
+import {tierPrice, prorate, accessString} from '@/utils/proKeys';
 import {money, addMonths, formatIso, formatDate, nextBilling, daysToBilling} from '@/utils/proFormat';
 
 const props = defineProps({
@@ -105,7 +105,7 @@ const reviewRows = computed(() => [
   {label: t('pro.dialogs.upgrade.becomes'), value: t('pro.dialogs.upgrade.becomesValue', {tier: t(`pro.tiers.${tariff.value}.name`), date: untilDate.value})},
 ]);
 
-const doneKey = computed(() => keyString(props.keyItem, props.keyItem.proto, 'link'));
+const doneKey = computed(() => accessString(props.keyItem, props.keyItem.proto, 'link') || '');
 
 const doneSub = computed(() => `${props.keyItem.user} · ${t('pro.dialogs.done.until', {date: untilDate.value})} · ${t('pro.dialogs.upgrade.reissued')}`);
 
