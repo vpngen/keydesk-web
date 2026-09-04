@@ -46,13 +46,40 @@
 		}
 	}
 
+	&__value-row {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		gap: 8px;
+	}
+
 	&__value {
+		flex: 1;
 		overflow: hidden;
 		min-width: 0;
 		font: 400 11px/1.3 v.$pro-font-mono;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		color: v.$pro-color-faded;
+	}
+
+	&__copy {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-hairline;
+		width: 22px;
+		height: 22px;
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+
+		&:hover {
+			background: v.$pro-color-hover;
+		}
 	}
 }
 

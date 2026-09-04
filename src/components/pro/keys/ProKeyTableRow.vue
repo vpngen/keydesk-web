@@ -58,7 +58,7 @@
     </div>
 
     <div v-if="expanded" class="pro-key-table__expanded" @click.stop>
-      <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-table__proto">
+      <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-table__proto" @copy="emit('copy', keyItem)">
         <button v-if="!isDead && !isBlocked" class="pro-key-table__proto-copy" type="button" @click="emit('copy', keyItem)">
           {{ t('pro.table.copy') }}
         </button>

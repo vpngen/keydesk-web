@@ -29,9 +29,17 @@ export function statusOf(key, billing) {
  */
 export function accessString(key, proto, format) {
   if (key.configs) {
+    // «ссылка» — страница конфига VPNGen (одна на ключ), «ключ» — строка протокола.
+    if (format === 'link') return key.configs.link || null;
     return key.configs[proto] || null;
   }
   return keyString(key, proto, format);
+}
+
+/** Формат по умолчанию: ссылка, если она сохранена; иначе строка протокола. */
+export function defaultFormat(key) {
+  if (key.configs && !key.configs.link) return 'key';
+  return 'link';
 }
 
 /** Доступные протоколы ключа (null — использовать полный мок-набор). */
@@ -39,7 +47,7 @@ export function availableProtos(key) {
   if (key.configs) {
     const order = ['vless', 'outline'];
     return Object.keys(key.configs)
-      .filter((p) => key.configs[p])
+      .filter((p) => p !== 'link' && key.configs[p])
       .sort((a, b) => order.indexOf(a) - order.indexOf(b));
   }
   return null;

@@ -139,7 +139,7 @@ import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
-import {statusOf, profitOf, accessString, availableProtos} from '@/utils/proKeys';
+import {statusOf, profitOf, accessString, availableProtos, defaultFormat} from '@/utils/proKeys';
 import {formatIso, parseIso, daysSinceVisit} from '@/utils/proFormat';
 
 const {t} = useI18n();
@@ -248,7 +248,7 @@ const copyKey = async (key) => {
   const protos = availableProtos(key);
   let proto = protoByKey.value[key.id] || key.proto;
   if (protos && !protos.includes(proto)) [proto] = protos;
-  const format = formatByKey.value[key.id] || 'link';
+  const format = formatByKey.value[key.id] || defaultFormat(key);
   const value = accessString(key, proto, format);
   if (!value) {
     toastStore.show(t('pro.toasts.noStoredKey'));

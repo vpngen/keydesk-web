@@ -518,7 +518,8 @@
       "actions": "Actions",
       "blockedNote": "Switched off because of an unpaid invoice.",
       "expiredNote": "The key's paid period is over - extend it to switch it back on.",
-      "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one."
+      "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
+      "copyValue": "Copy"
     },
     "menu": {
       "sectionKey": "key",

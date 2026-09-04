@@ -60,7 +60,7 @@
       </template>
     </div>
 
-    <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-card__proto"/>
+    <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-card__proto" @copy="emit('copy', keyItem)"/>
 
     <div v-if="isBlocked" class="pro-key-card__blocked-note">{{ blockedNote }}</div>
 
