@@ -1,7 +1,8 @@
 @use "functions/responsive";
 @use "mixins/breakpoint";
+@use "mixins/pro";
 @use "variables";
-
+@use "pro-variables";
 @use "sass:math";
 
 :root {
@@ -81,6 +82,15 @@ body {
 			background: url("../images/vip/background-vip.png") variables.$color-dark center center no-repeat;
 			background-size: cover;
 		}
+	}
+
+	// PRO (бумажная ключница): гасим обычную тему, всё остальное — в pro-* блоках.
+	&.pro {
+		@include pro.pro-scanlines(0.03);
+
+		font-family: pro-variables.$pro-font-sans;
+		color: pro-variables.$pro-color-ink;
+		background-color: pro-variables.$pro-color-bg;
 	}
 }
 

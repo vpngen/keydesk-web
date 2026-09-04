@@ -1,0 +1,17 @@
+@use "../pro-variables" as v;
+
+.pro-toast {
+	position: fixed;
+	left: 50%;
+	bottom: 20px;
+	z-index: 90;
+	border: 1px solid v.$pro-color-ink;
+	padding: 12px 18px;
+	max-width: 86vw;
+	box-shadow: 4px 4px 0 rgba(33, 30, 25, 0.4);
+	font: 400 13px/1.4 v.$pro-font-sans;
+	text-align: center;
+	color: v.$pro-color-paper;
+	background: v.$pro-color-ink;
+	transform: translateX(-50%);
+}

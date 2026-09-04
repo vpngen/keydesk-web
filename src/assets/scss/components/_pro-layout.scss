@@ -1,0 +1,143 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-layout {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	padding: 10px 10px 80px;
+	min-height: 100vh;
+
+	&__sheet {
+		@include pro.pro-scanlines(0.02);
+
+		margin: 0 auto;
+		border: 1px solid v.$pro-color-ink;
+		width: 100%;
+		max-width: 1460px;
+		box-shadow: 6px 6px 0 rgba(33, 30, 25, 0.2);
+		background-color: v.$pro-color-paper;
+	}
+}
+
+.pro-header {
+	border-bottom: 1px solid v.$pro-color-ink;
+
+	&__brand {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 13px 14px 10px;
+	}
+
+	&__brand-left {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	&__brand-right {
+		display: flex;
+		align-items: center;
+		gap: 14px;
+	}
+
+	&__wordmark {
+		font: 700 19px/1 v.$pro-font-narrow;
+		letter-spacing: 0.05em;
+		color: v.$pro-color-ink;
+	}
+
+	&__wordmark-accent {
+		color: v.$pro-color-blue;
+	}
+
+	&__stamp {
+		@include pro.pro-stamp(v.$pro-color-red, -6deg);
+
+		padding: 2px 7px;
+		font-size: 10px;
+		line-height: 1;
+	}
+
+	&__avatar {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-ink;
+		width: 34px;
+		height: 34px;
+		font: 700 11px/1 v.$pro-font-mono;
+		background: v.$pro-color-shade;
+	}
+
+	&__lang {
+		display: flex;
+		align-items: center;
+		font: 400 11px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+		gap: 6px;
+	}
+
+	&__lang-btn {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid transparent;
+		padding-bottom: 2px;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+
+		&--active {
+			border-bottom-color: v.$pro-color-ink;
+			font-weight: 700;
+			color: v.$pro-color-ink;
+		}
+	}
+
+	&__lang-separator {
+		color: v.$pro-color-hairline;
+	}
+
+	&__nav {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		padding: 0 14px 11px;
+		font: 400 13px/1 v.$pro-font-sans;
+		gap: 9px 18px;
+	}
+
+	&__nav-item {
+		flex: none;
+		border-bottom: 2px solid transparent;
+		padding-bottom: 3px;
+		white-space: nowrap;
+		text-decoration: none;
+		color: v.$pro-color-ink-soft;
+		cursor: pointer;
+
+		&:hover {
+			color: v.$pro-color-red;
+		}
+
+		&--active {
+			border-bottom-color: v.$pro-color-red;
+			font-weight: 700;
+			color: v.$pro-color-red;
+		}
+
+		&--button {
+			@include pro.pro-control-reset;
+
+			border-bottom: 2px solid transparent;
+			padding-bottom: 3px;
+			color: v.$pro-color-ink-soft;
+		}
+
+		&--right {
+			margin-left: auto;
+			color: v.$pro-color-muted;
+		}
+	}
+}

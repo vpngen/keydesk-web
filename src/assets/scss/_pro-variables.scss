@@ -1,0 +1,55 @@
+// PRO (paper-ledger) design tokens.
+// Palette is transplanted verbatim from the keydesk-pro-web design canvas —
+// do not "normalize" values against the regular theme, the two must not mix.
+
+// Ink / structure
+$pro-color-ink: #211e19;
+$pro-color-ink-soft: #3b372f;
+$pro-color-faded: #6f6857;
+$pro-color-muted: #8a8270;
+$pro-color-disabled: #9a9280;
+$pro-color-dead-border: #b5ac96;
+
+// Paper / surfaces
+$pro-color-bg: #cfc8b4;
+$pro-color-paper: #f4eede;
+$pro-color-card: #faf6ea;
+$pro-color-raised: #efe7d2;
+$pro-color-shade: #e3dcc6;
+$pro-color-line: #e0d8c2;
+$pro-color-hairline: #c6bda5;
+$pro-color-hover: #e9e2cd;
+$pro-color-dead-bg: #ede7d6;
+$pro-color-row-hover: #f1ebd9;
+$pro-color-dot-off: #d6cdb4;
+
+// Accents
+$pro-color-red: #a8342a;
+$pro-color-red-dark: #8c2a21;
+$pro-color-blue: #2b4a78;
+$pro-color-green: #4c6a3b;
+$pro-color-amber: #b8791f;
+$pro-color-amber-dark: #8c5a12;
+$pro-color-on-dark: #f7f2e4;
+
+// Tinted panels
+$pro-color-tint-blue: #e9edf3;
+$pro-color-tint-amber: #f7eeda;
+$pro-color-tint-red: #f6e7df;
+$pro-color-tint-red-deep: #f1dbd2;
+$pro-color-tint-issued: #f3ead0;
+$pro-color-tint-suspended: #e5decb;
+$pro-color-tint-suspended-deep: #ded7c3;
+
+// Photo strip
+$pro-color-wire: #5a5346;
+$pro-color-pin-border: #6b5a3c;
+$pro-color-pin: #c7ad82;
+$pro-color-polaroid-border: #cfc6ad;
+$pro-color-polaroid: #f7f2e6;
+$pro-color-invoice-line: #ded6bf;
+
+// Fonts
+$pro-font-sans: "PT Sans", sans-serif;
+$pro-font-narrow: "PT Sans Narrow", sans-serif;
+$pro-font-mono: "PT Mono", monospace;

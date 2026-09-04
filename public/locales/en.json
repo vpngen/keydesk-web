@@ -219,7 +219,9 @@
       },
       {
         "question": "How can a user know how much traffic they have left?",
-        "answers": ["They ask you, and you check their card"]
+        "answers": [
+          "They ask you, and you check their card"
+        ]
       },
       {
         "question": "Which country is my server in?",
@@ -342,6 +344,690 @@
       "torrentTitle": "You downloaded too many torrent files.",
       "accessRestored": "Access will be restored in:",
       "ok": "OK"
+    }
+  },
+  "pro": {
+    "nav": {
+      "connections": "Connections",
+      "invoices": "Invoices",
+      "analytics": "Analytics",
+      "help": "Help",
+      "howItWorks": "How PRO works",
+      "notifications": "Notifications",
+      "backToKeys": "Back to the Keydesk"
+    },
+    "header": {
+      "greeting": "Hi, {name}!",
+      "brigadier": "brigadier",
+      "brigade": "brigade “{name}”"
+    },
+    "plurals": {
+      "keys": "0 keys | {n} key | {n} keys",
+      "people": "{n} person | {n} people"
+    },
+    "months": {
+      "short": [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      "full": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "banner": {
+      "statusLabel": "Subscription status",
+      "allInvoices": "All invoices",
+      "outsideBoth": "{free} Free and {paid} paid keys will not enter this bill",
+      "outsideFree": "{free} Free keys are not billed",
+      "paid": {
+        "stamp": "paid",
+        "l1": "Next invoice",
+        "s1": "in {days} d.",
+        "l2": "Forecast amount",
+        "s2": "recalculated when keys change",
+        "l3": "Keys billed",
+        "v3": "{paid} of {total}"
+      },
+      "issued": {
+        "stamp": "due",
+        "l1": "Amount due",
+        "s1": "invoice № {num}",
+        "l2": "Pay before",
+        "s2": "2 days left",
+        "l3": "Keys in the invoice",
+        "cta": "Pay the invoice"
+      },
+      "overdue": {
+        "stamp": "overdue",
+        "l1": "Amount due",
+        "s1": "was due {date}",
+        "l2": "Keys switch off on",
+        "s2": "4 days of grace left",
+        "l3": "Already restricted",
+        "v3": "cannot create",
+        "s3": "new paid keys",
+        "cta": "Pay the invoice",
+        "note": "Free keys work no matter what - only paid keys get switched off."
+      },
+      "suspended": {
+        "stamp": "suspended",
+        "l1": "Outstanding debt",
+        "s1": "invoice № {num}",
+        "l2": "Deactivated on",
+        "s2": "{count} paid keys",
+        "l3": "Still working",
+        "v3": "{free} Free",
+        "s3": "unchanged",
+        "cta": "Pay and switch on",
+        "note": "Pro Basic and Pro Unlim keys are deactivated: cards are greyed out, copying is closed. The keys are still here - terms, names and comments are kept, everything comes back right after payment. Free keys work as usual."
+      }
+    },
+    "status": {
+      "ok": "working",
+      "warn": "expiring",
+      "blocked": "blocked",
+      "off": "deactivated",
+      "idle": "never used"
+    },
+    "tiers": {
+      "free": {
+        "name": "Free",
+        "price": "free",
+        "desc": "Same as before: a perpetual key that never enters the invoice. Less resistant to blocking - a new wave may cut it off."
+      },
+      "basic": {
+        "name": "Pro Basic",
+        "price": "€2 / mo",
+        "desc": "More resistant to blocking: a priority channel, up to 100 GB per month, you set the term yourself. The key goes into the common invoice."
+      },
+      "unlim": {
+        "name": "Pro Unlim",
+        "price": "€5 / mo",
+        "desc": "No speed or traffic limits - plus everything from Basic."
+      }
+    },
+    "protocols": {
+      "vless": "VLESS",
+      "outline": "Outline",
+      "gate19": "Gate 19"
+    },
+    "formats": {
+      "link": "link",
+      "key": "key"
+    },
+    "toolbar": {
+      "searchPlaceholder": "Search keys…",
+      "tierAll": "Type: all",
+      "tierPrefix": "Type: ",
+      "statusAll": "Status: all",
+      "sortUntil": "Sort: term",
+      "sortLast": "Sort: last visit",
+      "sortName": "Sort: name",
+      "sortTraffic": "Sort: traffic",
+      "cards": "Cards",
+      "table": "Table",
+      "newKey": "New key"
+    },
+    "card": {
+      "unnamed": "unnamed",
+      "hasNote": "Has a comment",
+      "termless": "perpetual",
+      "validUntil": "Valid until",
+      "disabled": "Disabled",
+      "expiresIn": "Expires · {days} d.",
+      "lastVisit": "Last visit",
+      "today": "today",
+      "yesterday": "yesterday",
+      "traffic": "Traffic",
+      "gb": "GB",
+      "inInvoice": "In invoice {date}",
+      "nextInvoice": "Next bill",
+      "wontEnter": "won't enter",
+      "perMonth": "/mo",
+      "soldFor": "Sold for",
+      "notSold": "not sold",
+      "profit": "Profit",
+      "copy": "Copy key",
+      "copyBlocked": "Copying closed",
+      "restore": "Switch on",
+      "delete": "Delete",
+      "upgrade": "Upgrade",
+      "pay": "Pay",
+      "extend": "Extend",
+      "actions": "Actions",
+      "blockedNote": "Switched off because of an unpaid invoice.",
+      "expiredNote": "The key's paid period is over - extend it to switch it back on.",
+      "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
+      "copyValue": "Copy"
+    },
+    "menu": {
+      "sectionKey": "key",
+      "sectionTerm": "term and plan",
+      "sectionDanger": "danger zone",
+      "copy": "Copy key",
+      "rename": "Rename",
+      "addName": "Add a name",
+      "comment": "Comment",
+      "addComment": "Add a comment",
+      "sold": "Sale amount",
+      "setSold": "Set the sale amount",
+      "extend": "Extend / change term",
+      "changeTariff": "Change plan",
+      "upgradeToPro": "Upgrade to Pro",
+      "deactivate": "Deactivate",
+      "delete": "Delete key"
+    },
+    "table": {
+      "colKey": "Key",
+      "colName": "Name",
+      "colTariff": "Type",
+      "colStatus": "Status",
+      "colUntil": "Term",
+      "colLast": "Last visit",
+      "colTraffic": "Traffic",
+      "colSold": "Sold for",
+      "colProfit": "Profit",
+      "colActions": "Actions",
+      "pageOf": "page {page} of {total}",
+      "countsLine": "showing {shown} of {total} · Free {free} · Pro {pro}",
+      "copy": "Copy",
+      "expandHint": "Show the key"
+    },
+    "empty": {
+      "noKeys": {
+        "icon": "empty",
+        "title": "The keydesk is empty so far",
+        "text": "Issue the first key - for yourself or someone in the brigade. You can start with a free one; a paid key can be added at any moment.",
+        "cta": "Create the first key"
+      },
+      "search": {
+        "title": "Nothing found",
+        "text": "No key matches “{query}”. Check the spelling or browse the full list.",
+        "cta": "Clear the search"
+      },
+      "noPaid": {
+        "title": "No paid keys yet",
+        "text": "Any free key can be moved to Pro in a minute - but note the key is reissued, so it has to be added to the VPN client again.",
+        "cta": "Reset filters"
+      },
+      "filters": {
+        "title": "No key matches the filters",
+        "text": "Remove one of the filters to see the rest of the keys.",
+        "cta": "Reset filters"
+      }
+    },
+    "photos": {
+      "title": "Photo chronicle",
+      "caption1": "good foreign VPN · 1990",
+      "caption2": "the queue for VPN",
+      "caption3": "VPN ration cards",
+      "caption4": "social VPN",
+      "caption5": "no VPN today · 1988"
+    },
+    "invoices": {
+      "title": "Invoices",
+      "account": "account {num}",
+      "due": "Due",
+      "paidYear": "Paid this year",
+      "period": "Period",
+      "keys": "Keys",
+      "created": "Created",
+      "paidAt": "Paid",
+      "open": "open",
+      "pay": "Pay",
+      "statuses": {
+        "forecast": "forecast",
+        "awaiting": "awaiting payment",
+        "overdue": "overdue",
+        "paid": "paid",
+        "cancelled": "cancelled"
+      }
+    },
+    "analytics": {
+      "title": "Analytics",
+      "subtitle": "brigade summary",
+      "subtitleNamed": "summary for brigade “{name}”",
+      "report": "QC report",
+      "statRevMonth": "Revenue for {month}",
+      "statRevMonthHint": "from {count} sold keys",
+      "statRevAll": "All-time revenue",
+      "statRevAllHint": "over the last 6 months",
+      "statMrr": "MRR",
+      "statMrrHint": "cost {cost} / mo",
+      "statProfit": "Profit this month",
+      "statProfitHint": "revenue minus plan costs",
+      "chartTitle": "Revenue by month",
+      "chartUnit": "€ per month",
+      "mrrTitle": "Recurring revenue and retention",
+      "adviceTitle": "User management",
+      "adviceSub": "worth doing this week",
+      "growth": {
+        "mrr": "MRR at month end",
+        "paying": "Active paying users",
+        "joined": "New this month",
+        "left": "Left",
+        "net": "Net growth",
+        "retention": "Retention",
+        "retentionValue": "{kept} of {total}",
+        "tipMrr": "Normalized monthly revenue from active recurring subscriptions.",
+        "tipRetention": "How many of the users active 30 days ago are still active now."
+      },
+      "advice": {
+        "inactive": {
+          "title": "Inactive for over 30 days",
+          "body": "No visits for 30+ days - as quiet as an empty shelf. If some of them are paid keys, you pay for that silence every month. Delete them or ask if everything is fine.",
+          "cta": "Show inactive",
+          "foot": "saves up to {sum}"
+        },
+        "topActive": {
+          "title": "The most active users",
+          "body": "Over 50 GB a month on Pro Basic - clearly nobody is saving traffic here. Offer Pro Unlim: better for you, calmer for them.",
+          "cta": "Sort by traffic",
+          "foot": "+{sum} to MRR"
+        },
+        "newUsers": {
+          "title": "New users",
+          "body": "Congrats, the brigade is growing! Over the last month {people} joined you - as if delivered without the queue.",
+          "cta": "See the new ones",
+          "foot": "over the last 30 days"
+        },
+        "netGrowth": {
+          "title": "Net growth",
+          "body": "{joined} joined, {left} switched off - you are in the black. The brigadier shortage is clearly not about you.",
+          "cta": "Open invoices",
+          "foot": "growth over 30 days"
+        }
+      }
+    },
+    "help": {
+      "title": "Help",
+      "subtitle": "the keyholder's handbook",
+      "tabs": {
+        "guides": "Guides",
+        "faq": "FAQ",
+        "support": "Support"
+      },
+      "guidesIntro": "Copy the needed format from the key card and send it to the person along with the guide for their system - every protocol comes with both a link and an access key.",
+      "filterDevices": "Pick by device",
+      "filterProtos": "Pick by protocol",
+      "shownOf": "showing {shown} of {total}",
+      "clearFilter": "Reset",
+      "noGuides": "No guide for this filter pair yet - drop one of them.",
+      "more": "More",
+      "guides": {
+        "i1": {
+          "os": "iOS",
+          "app": "RabbitHole",
+          "proto": "VLESS · link",
+          "s1": "Install RabbitHole from the App Store.",
+          "s2": "Copy the link from the key card and send it to the person.",
+          "s3": "In the app: “+” → “Import from clipboard” → switch on."
+        },
+        "i2": {
+          "os": "Android",
+          "app": "Hiddify",
+          "proto": "VLESS · key",
+          "s1": "Install Hiddify from Google Play.",
+          "s2": "Pass the VLESS key from the card.",
+          "s3": "In the app: “+” on the main screen → “Add from clipboard” → the connect button in the center."
+        },
+        "i3": {
+          "os": "Windows",
+          "app": "Hiddify",
+          "proto": "VLESS · link",
+          "s1": "Download Hiddify from the official site.",
+          "s2": "Copy the key link.",
+          "s3": "“Add profile” → “From clipboard” → “Connect”."
+        },
+        "i4": {
+          "os": "iOS / Android",
+          "app": "Outline",
+          "proto": "Outline · key",
+          "s1": "Install Outline from the app store.",
+          "s2": "Pass the ss:// key from the card.",
+          "s3": "The app itself offers to add the server - “Connect”."
+        },
+        "i5": {
+          "os": "macOS",
+          "app": "Hiddify",
+          "proto": "VLESS · key",
+          "s1": "Download Hiddify for macOS from the official site.",
+          "s2": "Copy the VLESS key on the card.",
+          "s3": "In the app: “+” → “Add from clipboard” → the connect button in the center."
+        },
+        "i6": {
+          "os": "iOS",
+          "app": "Gate 19",
+          "proto": "Gate 19 · draft",
+          "s1": "Install Gate 19 from the App Store.",
+          "s2": "Copy the key on the card and send it to the person.",
+          "s3": "Add the key in the app and connect."
+        }
+      },
+      "faq": {
+        "i1": {
+          "q": "How is Pro Basic different from Pro Unlim?",
+          "a": "Pro Basic works with the base speed and traffic limits, like regular keys. Pro Unlim has no traffic limits and comes with extended quotas. In both cases you set the validity term yourself."
+        },
+        "i2": {
+          "q": "What happens to Free keys?",
+          "a": "Nothing. They work as before, indefinitely, and never enter the invoice. PRO does not auto-delete Free keys."
+        },
+        "i3": {
+          "q": "When does the bill arrive?",
+          "a": "Once a month, on the 1st, for all paid keys at once. If a key was created mid-month, the first time you only pay for the days it actually worked."
+        },
+        "i4": {
+          "q": "What if I don't pay on time?",
+          "a": "There is a week of grace. After that paid keys are switched off but not deleted. Names and comments are kept. After payment the keys become active again. Free keys keep working."
+        },
+        "i5": {
+          "q": "How is switching a key off different from deleting it?",
+          "a": "A switched-off key is kept and can become active again. A deleted key cannot be restored - a new one has to be created instead."
+        },
+        "i6": {
+          "q": "Can a Free key be moved to Pro?",
+          "a": "Yes, with the “Upgrade” button on the card. The key is reissued, so it has to be added to the VPN client again. The old key keeps working for 3 more days and then switches off."
+        },
+        "i7": {
+          "q": "Which protocol to choose?",
+          "a": "Better to have access to all three - VLESS, Outline and Gate 19. Under blocking they may behave differently: one protocol may stop connecting while another keeps working. Each comes with a link and an access key; you can switch between them on the key card."
+        },
+        "i8": {
+          "q": "Who sees my comments?",
+          "a": "Only you. The comment is not shown in the list - a small mark appears next to the name. Do not put names, surnames or other personal data in comments."
+        },
+        "i9": {
+          "q": "What does the person I sent a key to see?",
+          "a": "Only the data needed to connect the VPN. Comments and internal brigade information are not shown to them."
+        }
+      },
+      "support": {
+        "title": "Live support",
+        "intro": "A human answers, not a bot - usually within an hour.",
+        "bot": "Telegram bot",
+        "mail": "Email",
+        "account": "Account number",
+        "cta": "Write to support",
+        "beforeTitle": "Before writing",
+        "tip1": "Check whether the invoice is paid - switched-off keys don't work until the bill is closed.",
+        "tip2": "Attach the key number (e.g. user-014) - we'll sort it out faster.",
+        "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
+      }
+    },
+    "dialogs": {
+      "common": {
+        "next": "Next",
+        "back": "Back",
+        "skip": "Skip",
+        "cancel": "Cancel",
+        "save": "Save",
+        "done": "Done",
+        "stepOf": "step {step} of {total}",
+        "monthsShort": "mo",
+        "piiWarning": "Don't put names, surnames or other personal data anywhere - not even in the key name.",
+        "piiWarningShort": "Don't put names, surnames or other personal data."
+      },
+      "create": {
+        "title": "New key",
+        "steps": {
+          "type": "type",
+          "proto": "protocol",
+          "term": "term",
+          "name": "name",
+          "review": "review"
+        },
+        "typeQuestion": "What kind of key are we issuing?",
+        "pickTariff": "Pick a plan",
+        "pickProto": "Pick a protocol",
+        "protoQuestion": "Which protocol are we adding? Each comes with both a link and an access key - take whichever is handier.",
+        "protoKind": "link + key",
+        "protoDesc": {
+          "vless": "A widely used protocol for getting around blocking.",
+          "outline": "A simple app, easy to set up - one key for everything.",
+          "gate19": "One more key format in reserve - protocol resistance to blocking changes over time."
+        },
+        "protoNote": "We don't say which protocol beats blocking best - that changes. So better keep access over several at once instead of relying on one. You can switch at any moment.",
+        "termFree": "A Free key is perpetual - no term to set.",
+        "termQuestion": "For how long do you need the key?",
+        "termUntil": "The key will be valid until",
+        "termNote": "The term can be changed at any moment - both extended and shortened.",
+        "nameHint": "Give the key a name so you don't have to guess whose it is later.",
+        "namePlaceholder": "E.g.: second phone",
+        "nameFoot": "It is visible in the list and in the table. Search works by it too.",
+        "noteLabel": "Comment — optional",
+        "notePlaceholder": "A free-form note: contacts, terms, reminders",
+        "noteFoot": "The comment is not shown in the list - only a mark next to the name. You can add or change it later via the gear.",
+        "soldLabel": "Sold for — optional",
+        "soldHint": "Needed for analytics - to track your profit; it never enters the invoice.",
+        "soldPer": "/ mo",
+        "submit": "Create the key",
+        "toKeys": "To the Keydesk",
+        "doneStamp": "key created",
+        "doneTitle": "The key is issued and already works",
+        "doneNoteFree": "A Free key never enters the invoice - the next charge amount is unchanged.",
+        "doneNotePaid": "Nothing to pay right now. The {date} invoice - {sum}, including a {prorate} top-up for the rest of this month."
+      },
+      "upgrade": {
+        "title": "Upgrade",
+        "steps": {
+          "tariff": "plan",
+          "term": "term",
+          "review": "review"
+        },
+        "typeQuestion": "Which plan are you moving the key to?",
+        "termQuestion": "For how long are you taking {tier}?",
+        "key": "Key",
+        "was": "Was",
+        "becomes": "Becomes",
+        "becomesValue": "{tier} until {date}",
+        "submit": "Confirm the upgrade",
+        "doneStamp": "upgrade done",
+        "doneTitle": "It's {tier} now",
+        "reissued": "the key was reissued",
+        "doneNote": "The key was reissued - it has to be added to the VPN client again. The old key will keep working for 3 more days and then switch off. Nothing is charged right now: the {prorate} top-up for the rest of this month enters the {date} invoice."
+      },
+      "extend": {
+        "title": "Extend",
+        "now": "Now until",
+        "next": "Becomes until",
+        "currentInvoice": "Current invoice",
+        "unchanged": "unchanged",
+        "chargeNow": "Charged now",
+        "notNeeded": "nothing",
+        "note": "Extending needs no separate payment - the difference enters the monthly invoice.",
+        "submit": "Extend until {date}"
+      },
+      "name": {
+        "title": "Name",
+        "hint": "The name is the key's short caption in the list."
+      },
+      "note": {
+        "title": "Comment",
+        "hint": "A free-form note — write anything: contacts, terms, reminders.",
+        "placeholder": "E.g.: pays every two months, extend in December",
+        "foot": "Only you see the comment. It is not shown in the list - just a mark next to the name, but search works over it."
+      },
+      "sold": {
+        "title": "Sale amount",
+        "keyLabel": "Key",
+        "hint": "How much do you charge for this key per month? The number is only for you — to see the profit.",
+        "cost": "Plan cost",
+        "profit": "Profit per key",
+        "foot": "Leave the field empty if the key was given away for free — then profit is not counted."
+      },
+      "review": {
+        "invoiceTitle": "How this enters the invoice",
+        "prorateLine": "For the rest of this month — {days} d.",
+        "monthlyLine": "Then — in full months",
+        "invoiceAt": "Invoice {date}",
+        "payNote": "No need to pay now. All paid keys go in one bill on the 1st — the new key enters it only for the days it actually worked.",
+        "forecastWas": "The {date} forecast was",
+        "perMonth": "/ mo",
+        "tariff": "Plan",
+        "proto": "Protocol",
+        "term": "Term",
+        "name": "Name",
+        "note": "Comment",
+        "noteYes": "yes",
+        "noteNo": "no",
+        "termValue": "{months} mo · until {date}",
+        "soldValue": "{sum}/mo · profit {profit}",
+        "soldNo": "not set"
+      },
+      "done": {
+        "until": "until {date}",
+        "copy": "Copy"
+      },
+      "confirm": {
+        "deleteTitle": "Delete the key?",
+        "deactivateTitle": "Deactivate the key?",
+        "deleteText": "Key {user} will be deleted forever. The user loses access immediately.",
+        "deactivateText": "Key {user} will stop working but stays in the list - it can be switched on at any moment.",
+        "deleteNote": "This cannot be undone. If you need a temporary switch-off - use “Deactivate”.",
+        "freeNote": "A Free key does not affect the invoice.",
+        "paidNote": "Starting from the next invoice this key is no longer billed: {from} → {to}.",
+        "delete": "Delete",
+        "deactivate": "Deactivate",
+        "keep": "Keep it"
+      },
+      "pay": {
+        "title": "Invoice № {num}",
+        "invoiceLabel": "Invoice {num}",
+        "period": "period {from} — {to}",
+        "due": "pay before {date}",
+        "lineName": "{tier}, full month",
+        "total": "Total",
+        "submit": "Pay",
+        "noteSuspended": "After payment all paid keys switch on immediately - with their terms and comments intact.",
+        "noteDefault": "Free keys are not billed and keep working no matter what."
+      }
+    },
+    "tour": {
+      "skip": "Skip",
+      "back": "Back",
+      "s1": {
+        "label": "step 1 of 7",
+        "title": "PRO is on - the shortage is cancelled",
+        "text": "No move was needed: same keys, same list, same buttons. It's just that next to the free ones you can now get paid ones - no queue and no connections required.",
+        "cta": "Show what arrived"
+      },
+      "s2": {
+        "label": "step 2 of 7 · key labels",
+        "title": "Keys got labels",
+        "text": "Every key now carries a label. Issued for free - you get Free. Issued for sale - Pro Basic or Pro Unlim. The label is visible right in the list. And the brigade won't be quietly written off anymore - deletion protection is part of PRO too.",
+        "cta": "Next",
+        "cards": [
+          {
+            "name": "Free",
+            "price": "€0",
+            "body": "perpetual, never enters the invoice"
+          },
+          {
+            "name": "Pro Basic",
+            "price": "€2/mo",
+            "body": "you set the term, goes into the common invoice"
+          },
+          {
+            "name": "Pro Unlim",
+            "price": "€5/mo",
+            "body": "no speed or traffic limits"
+          }
+        ]
+      },
+      "s3": {
+        "label": "step 3 of 7 · the table",
+        "title": "Keys can be viewed as a table",
+        "text": "Next to the “+ New key” button there is a “Table” switch. One click - all keys, labels, traffic and status in rows, no card scrolling.",
+        "cta": "Next"
+      },
+      "s4": {
+        "label": "step 4 of 7 · how to issue a paid key",
+        "title": "Two roads to Pro",
+        "text": "The first - the red “+ New key” button in the top right: pick a plan, a term, sign and pay. The second - the “Upgrade” link right on a free key's card: the key is reissued, so it has to be added to the VPN client again - the old key works 3 more days and quietly retires.",
+        "cta": "Next"
+      },
+      "s5": {
+        "label": "step 5 of 7 · invoices",
+        "title": "Invoices arrived!",
+        "text": "Payment was never a thing before - now paid keys come with an invoice: one common bill for all paid keys at once, no separate bill per key.",
+        "cta": "Next",
+        "cards": [
+          {
+            "name": "One bill",
+            "price": "on the 1st",
+            "body": "All paid keys in one bill, paid once a month."
+          },
+          {
+            "name": "A key mid-month",
+            "price": "by days",
+            "body": "The first payment covers only the remaining days, not the whole month."
+          },
+          {
+            "name": "Overdue",
+            "price": "7 days of grace",
+            "body": "Then paid keys are switched off temporarily; Free keys keep working."
+          }
+        ]
+      },
+      "s6": {
+        "label": "step 6 of 7 · analytics",
+        "title": "Analytics added",
+        "text": "The top menu got an “Analytics” section: revenue, MRR, inactive users and hints on what to do next. Have a look - it's not just numbers, it's ready-made recommendations.",
+        "cta": "Next"
+      },
+      "s7": {
+        "label": "step 7 of 7",
+        "title": "Welcome to a world with no shortage",
+        "text": "The guide can always be reopened - “How PRO works” in the top menu. Happy selling!",
+        "cta": "Go to the Keydesk"
+      }
+    },
+    "toasts": {
+      "copiedLink": "The {proto} link for {user} was copied",
+      "copiedKey": "The {proto} key for {user} was copied",
+      "keyCopied": "Key copied",
+      "copyBlocked": "The key is switched off - pay the invoice to copy",
+      "created": "Key created",
+      "extended": "Key extended until {date}",
+      "upgraded": "Plan changed to {tier}",
+      "nameSaved": "Name saved",
+      "nameCleared": "Name cleared",
+      "noteSaved": "Comment saved",
+      "noteCleared": "Comment cleared",
+      "soldSaved": "Sale amount saved",
+      "soldCleared": "Sale amount cleared",
+      "deactivated": "Key deactivated",
+      "deleted": "Key deleted",
+      "restored": "Key {user} switched on",
+      "invoicePaid": "Invoice paid - all keys are active",
+      "forecastNotIssued": "The forecast invoice is not issued yet",
+      "receiptDownloaded": "Receipt downloaded",
+      "invoiceDownloaded": "Invoice {num} downloaded",
+      "supportChat": "Support chat opened with {bot}",
+      "guideSoon": "The full guide is in the works - it will open here later",
+      "noStoredKey": "This key has no stored access string - reissue the key"
     }
   }
 }

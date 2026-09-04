@@ -1,0 +1,58 @@
+@use "../pro-variables" as pro;
+
+// Scanline paper texture (page background: $opacity 0.03, sheet: 0.02).
+@mixin pro-scanlines($opacity: 0.03) {
+	background-image: repeating-linear-gradient(0deg, rgba(33, 30, 25, $opacity) 0 1px, transparent 1px 4px);
+}
+
+// Rotated rubber-stamp label (PRO badge, billing stamp, done stamp, ОТК).
+@mixin pro-stamp($color: pro.$pro-color-red, $angle: -6deg) {
+	border: 2px double $color;
+	font-family: pro.$pro-font-narrow;
+	font-weight: 700;
+	letter-spacing: 0.18em;
+	text-transform: uppercase;
+	color: $color;
+	transform: rotate($angle);
+}
+
+// Narrow uppercase micro-label (field captions, section headers).
+@mixin pro-label($size: 10px, $spacing: 0.2em) {
+	font: 400 #{$size}/1 pro.$pro-font-narrow;
+	letter-spacing: $spacing;
+	text-transform: uppercase;
+	color: pro.$pro-color-muted;
+}
+
+// Hard offset shadow — the design never blurs.
+@mixin pro-hard-shadow($x: 3px, $y: 3px, $color: pro.$pro-color-ink) {
+	box-shadow: $x $y 0 $color;
+}
+
+// Native button/select reset for text-styled controls.
+@mixin pro-control-reset {
+	appearance: none;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	font: inherit;
+	color: inherit;
+	background: none;
+	cursor: pointer;
+}
+
+// Primary CTA (red/ink block button with hard shadow).
+@mixin pro-cta($bg: pro.$pro-color-red) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid pro.$pro-color-ink;
+	box-shadow: 3px 3px 0 pro.$pro-color-ink;
+	font: 700 13px/1 pro.$pro-font-narrow;
+	letter-spacing: 0.14em;
+	white-space: nowrap;
+	text-transform: uppercase;
+	color: pro.$pro-color-on-dark;
+	background: $bg;
+	cursor: pointer;
+}

@@ -1,0 +1,365 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-help {
+	&__tabs {
+		display: flex;
+		border: 1px solid v.$pro-color-ink;
+		width: 100%;
+	}
+
+	&__tab {
+		@include pro.pro-control-reset;
+
+		flex: 1;
+		border-left: 1px solid v.$pro-color-ink;
+		padding: 12px 6px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.1em;
+		white-space: nowrap;
+		text-align: center;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+
+		&:first-child {
+			border-left: 0;
+		}
+
+		&--active {
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__guides {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+	}
+
+	&__filters {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 14px;
+	}
+
+	&__filter-group {
+		display: flex;
+		flex-direction: column;
+		gap: 9px;
+	}
+
+	&__filter-label {
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: v.$pro-color-faded;
+	}
+
+	&__chips {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	&__chip {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		align-items: center;
+		border: 1px solid v.$pro-color-ink;
+		padding: 9px 13px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.12em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink;
+		background: v.$pro-color-card;
+		gap: 8px;
+
+		&:hover {
+			box-shadow: 2px 2px 0 rgba(33, 30, 25, 0.2);
+		}
+
+		&--active {
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__chip-arrow {
+		font: 400 11px/1 v.$pro-font-mono;
+	}
+
+	&__filter-state {
+		display: flex;
+		align-items: center;
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+		gap: 14px;
+	}
+
+	&__filter-clear {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid v.$pro-color-blue;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	&__no-guides {
+		border: 1px dashed v.$pro-color-muted;
+		padding: 24px;
+		font: 400 14px/1.5 v.$pro-font-sans;
+		text-align: center;
+		color: v.$pro-color-faded;
+		background: v.$pro-color-paper;
+	}
+
+	&__guides-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 14px;
+	}
+
+	&__faq {
+		border: 1px solid v.$pro-color-ink;
+		background: v.$pro-color-card;
+	}
+
+	&__faq-item {
+		border-bottom: 1px solid v.$pro-color-line;
+
+		&:last-child {
+			border-bottom: 0;
+		}
+	}
+
+	&__faq-question {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 14px 18px;
+		background: v.$pro-color-card;
+		cursor: pointer;
+		gap: 16px;
+
+		&:hover {
+			background: v.$pro-color-raised;
+		}
+
+		&--open {
+			background: v.$pro-color-raised;
+		}
+	}
+
+	&__faq-q {
+		font: 700 16px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-ink;
+	}
+
+	&__faq-sign {
+		flex: none;
+		font: 400 16px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__faq-answer {
+		padding: 0 18px 16px;
+		max-width: 820px;
+		font: 400 14px/1.6 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__support {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 16px;
+	}
+
+	&__support-card {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		box-shadow: 5px 5px 0 rgba(33, 30, 25, 0.14);
+		background: v.$pro-color-card;
+
+		&--tips {
+			box-shadow: none;
+			background: v.$pro-color-raised;
+		}
+	}
+
+	&__support-head {
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 12px 18px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		background: v.$pro-color-shade;
+	}
+
+	&__support-body {
+		display: flex;
+		flex-direction: column;
+		padding: 20px 18px;
+		gap: 16px;
+	}
+
+	&__support-intro {
+		font: 400 15px/1.6 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__support-rows {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	&__support-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border: 1px dashed v.$pro-color-hairline;
+		padding: 11px 14px;
+		background: v.$pro-color-paper;
+		gap: 14px;
+	}
+
+	&__support-row-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__support-row-value {
+		font: 400 14px/1 v.$pro-font-mono;
+	}
+
+	&__support-cta {
+		@include pro.pro-control-reset;
+		@include pro.pro-cta(v.$pro-color-red);
+
+		align-self: stretch;
+		padding: 13px 22px;
+	}
+
+	&__support-tip {
+		display: flex;
+		align-items: flex-start;
+		gap: 12px;
+	}
+
+	&__support-tip-dot {
+		flex: none;
+		margin-top: 7px;
+		width: 8px;
+		height: 8px;
+		background: v.$pro-color-ink;
+	}
+
+	&__support-tip-text {
+		font: 400 14px/1.55 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__support-warning {
+		margin-top: 6px;
+		border: 1px dashed v.$pro-color-muted;
+		padding: 11px 14px;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+}
+
+.pro-guide-card {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid v.$pro-color-ink;
+	box-shadow: 4px 4px 0 rgba(33, 30, 25, 0.12);
+	background: v.$pro-color-card;
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 11px 16px;
+		background: v.$pro-color-shade;
+		gap: 10px;
+	}
+
+	&__os {
+		font: 700 14px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__app {
+		font: 400 10px/1 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+	}
+
+	&__steps {
+		display: flex;
+		flex-direction: column;
+		padding: 14px 16px;
+		gap: 10px;
+	}
+
+	&__step {
+		display: flex;
+		align-items: flex-start;
+		gap: 10px;
+	}
+
+	&__step-num {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-ink;
+		width: 19px;
+		height: 19px;
+		font: 700 10px/1 v.$pro-font-mono;
+		background: v.$pro-color-raised;
+	}
+
+	&__step-text {
+		font: 400 13px/1.45 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__foot {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: auto;
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding: 9px 16px;
+		gap: 10px;
+	}
+
+	&__proto {
+		font: 400 11px/1 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	&__more {
+		@include pro.pro-control-reset;
+
+		border-bottom: 1px solid v.$pro-color-blue;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+	}
+}

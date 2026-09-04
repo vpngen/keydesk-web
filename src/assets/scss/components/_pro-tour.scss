@@ -1,0 +1,187 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+.pro-tour {
+	position: fixed;
+	z-index: 95;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	overflow: auto;
+	padding: 12px 8px 40px;
+	background: rgba(33, 30, 25, 0.55);
+	inset: 0;
+
+	&__window {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		width: 100%;
+		max-width: 760px;
+		box-shadow: 6px 6px 0 rgba(33, 30, 25, 0.4);
+		background: v.$pro-color-paper;
+	}
+
+	&__head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 13px 14px;
+		background: v.$pro-color-raised;
+	}
+
+	&__brand {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	&__wordmark {
+		font: 700 18px/1 v.$pro-font-narrow;
+		letter-spacing: 0.06em;
+	}
+
+	&__wordmark-accent {
+		color: v.$pro-color-blue;
+	}
+
+	&__stamp {
+		@include pro.pro-stamp(v.$pro-color-red, -6deg);
+
+		padding: 1px 7px;
+		font-size: 10px;
+		line-height: 1;
+		letter-spacing: 0.2em;
+	}
+
+	&__skip {
+		@include pro.pro-control-reset;
+
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-faded;
+	}
+
+	&__body {
+		display: flex;
+		flex-direction: column;
+		padding: 20px 16px;
+		gap: 14px;
+	}
+
+	&__step-label {
+		font: 400 12px/1 v.$pro-font-mono;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__title {
+		font: 700 26px/1.12 v.$pro-font-narrow;
+		letter-spacing: 0.01em;
+		text-transform: uppercase;
+	}
+
+	&__text {
+		font: 400 15px/1.55 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__cards {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+		gap: 12px;
+	}
+
+	&__card {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		padding: 16px;
+		background: v.$pro-color-card;
+		gap: 9px;
+	}
+
+	&__card-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	&__card-name {
+		font: 700 18px/1 v.$pro-font-narrow;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	&__card-price {
+		font: 400 13px/1 v.$pro-font-mono;
+		white-space: nowrap;
+		color: v.$pro-color-faded;
+	}
+
+	&__card-body {
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding-top: 9px;
+		font: 400 14px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__foot {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		border-top: 1px solid v.$pro-color-ink;
+		padding: 13px 14px;
+		background: v.$pro-color-raised;
+		gap: 12px;
+	}
+
+	&__dots {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__dot {
+		width: 16px;
+		height: 4px;
+		background: v.$pro-color-dot-off;
+
+		&--active {
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__actions {
+		display: flex;
+		gap: 12px;
+	}
+
+	&__back {
+		@include pro.pro-control-reset;
+
+		border: 1px solid v.$pro-color-ink;
+		padding: 11px 18px;
+		font: 700 12px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		background: v.$pro-color-card;
+	}
+
+	&__next {
+		@include pro.pro-control-reset;
+		@include pro.pro-cta(v.$pro-color-ink);
+
+		padding: 11px 22px;
+		font-size: 12px;
+
+		&--final {
+			background: v.$pro-color-red;
+		}
+	}
+}

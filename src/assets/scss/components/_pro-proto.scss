@@ -1,0 +1,147 @@
+@use "../mixins/pro";
+@use "../pro-variables" as v;
+
+// Переключатель протокол × формат + строка ключа (карточка и раскрытая строка таблицы).
+.pro-proto {
+	display: flex;
+	flex-direction: column;
+	border: 1px dashed v.$pro-color-hairline;
+	padding: 9px 10px;
+	min-width: 0;
+	background: v.$pro-color-card;
+	gap: 8px;
+
+	&__row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 10px;
+	}
+
+	&__group {
+		display: flex;
+		flex: none;
+		border: 1px solid v.$pro-color-hairline;
+	}
+
+	&__chip {
+		@include pro.pro-control-reset;
+
+		border-left: 1px solid v.$pro-color-hairline;
+		padding: 4px 8px;
+		font: 700 9px/1.4 v.$pro-font-narrow;
+		letter-spacing: 0.1em;
+		white-space: nowrap;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+		background: v.$pro-color-paper;
+
+		&:first-child {
+			border-left: 0;
+		}
+
+		&--active {
+			color: v.$pro-color-paper;
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__value-row {
+		display: flex;
+		align-items: center;
+		min-width: 0;
+		gap: 8px;
+	}
+
+	&__value {
+		flex: 1;
+		overflow: hidden;
+		min-width: 0;
+		font: 400 11px/1.3 v.$pro-font-mono;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		color: v.$pro-color-faded;
+	}
+
+	&__copy {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-hairline;
+		width: 22px;
+		height: 22px;
+		font: 400 12px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+
+		&:hover {
+			background: v.$pro-color-hover;
+		}
+	}
+}
+
+.pro-key-menu {
+	position: absolute;
+	right: 10px;
+	bottom: 44px;
+	z-index: 20;
+	border: 1px solid v.$pro-color-ink;
+	width: 224px;
+	box-shadow: 5px 5px 0 rgba(33, 30, 25, 0.22);
+	background: v.$pro-color-card;
+
+	&__section {
+		border-bottom: 1px solid v.$pro-color-ink;
+		padding: 7px 12px;
+		font: 700 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-faded;
+		background: v.$pro-color-shade;
+
+		&--bordered {
+			border-top: 1px solid v.$pro-color-ink;
+		}
+	}
+
+	&__item {
+		@include pro.pro-control-reset;
+
+		display: flex;
+		align-items: center;
+		border-bottom: 1px solid v.$pro-color-line;
+		padding: 10px 14px;
+		width: 100%;
+		font: 400 14px/1 v.$pro-font-sans;
+		text-align: left;
+		gap: 8px;
+
+		&:hover {
+			background: v.$pro-color-hover;
+		}
+
+		&:last-child {
+			border-bottom: 0;
+		}
+
+		&--danger {
+			color: v.$pro-color-red;
+		}
+	}
+
+	&__dot {
+		border-radius: 50%;
+		width: 6px;
+		height: 6px;
+		background: v.$pro-color-blue;
+	}
+
+	&--table {
+		right: 12px;
+		top: 38px;
+		bottom: auto;
+	}
+}
