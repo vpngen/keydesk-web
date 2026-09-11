@@ -35,16 +35,29 @@
 		gap: 8px;
 	}
 
+	// Название - кнопка: клик открывает диалог названия (как «не продан» у суммы).
 	&__name {
+		@include pro.pro-control-reset;
+
+		display: block;
 		overflow: hidden;
+		max-width: 100%;
 		font: 700 19px/1.15 v.$pro-font-sans;
 		white-space: nowrap;
+		text-align: left;
 		text-overflow: ellipsis;
 		color: v.$pro-color-ink;
 
+		&:hover {
+			text-decoration: underline dotted;
+			text-underline-offset: 3px;
+		}
+
 		&--unnamed {
 			font: italic 400 17px/1.2 v.$pro-font-sans;
+			text-decoration: underline dotted;
 			color: v.$pro-color-faded;
+			text-underline-offset: 3px;
 		}
 
 		&--dead {
