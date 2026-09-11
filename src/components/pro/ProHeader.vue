@@ -65,12 +65,15 @@
       <button class="pro-header__nav-item pro-header__nav-item--button" type="button" @click="emit('open-tour')">
         {{ t('pro.nav.howItWorks') }}
       </button>
+      <!-- Скрыто: в PRO-дизайне нет страницы уведомлений, а /notifications
+           открывается в обычной теме. Вернём, когда появится PRO-версия страницы.
       <RouterLink
         :to="{path: '/notifications', query: route.query}"
         class="pro-header__nav-item pro-header__nav-item--right"
       >
         {{ t('pro.nav.notifications') }}
       </RouterLink>
+      -->
     </nav>
   </div>
 </template>
