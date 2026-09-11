@@ -19,7 +19,7 @@
 
       <slot/>
 
-      <div class="pro-dialog__foot">
+      <div v-if="!hideFooter" class="pro-dialog__foot">
         <div class="pro-dialog__foot-left">
           <button v-if="hasBack" class="pro-dialog__back" type="button" @click="emit('back')">
             {{ t('pro.dialogs.common.back') }}
@@ -66,7 +66,7 @@ defineProps({
   },
   primaryLabel: {
     type: String,
-    required: true,
+    default: '',
   },
   primaryVariant: {
     type: String,
@@ -87,6 +87,7 @@ defineProps({
     type: Number,
     default: 640,
   },
+  hideFooter: {type: Boolean},
 });
 
 const emit = defineEmits(['close', 'back', 'skip', 'primary']);

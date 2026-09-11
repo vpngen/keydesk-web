@@ -454,12 +454,12 @@
       "free": {
         "name": "Free",
         "price": "free",
-        "desc": "Same as before: a perpetual key that never enters the invoice. Less resistant to blocking - a new wave may cut it off."
+        "desc": "Same as before: a perpetual key, not billed. Less resistant to blocking - a new wave may cut it off."
       },
       "basic": {
         "name": "Pro Basic",
         "price": "€2 / mo",
-        "desc": "More resistant to blocking: a priority channel, up to 100 GB per month, you set the term yourself. The key goes into the common invoice."
+        "desc": "More resistant to blocking: a priority channel, up to 100 GB per month. Charged to the connected card right when created."
       },
       "unlim": {
         "name": "Pro Unlim",
@@ -826,8 +826,11 @@
         "toKeys": "To the Keydesk",
         "doneStamp": "key created",
         "doneTitle": "The key is issued and already works",
-        "doneNoteFree": "A Free key never enters the invoice - the next charge amount is unchanged.",
-        "doneNotePaid": "Nothing to pay right now. The {date} invoice - {sum}, including a {prorate} top-up for the rest of this month."
+        "doneNoteFree": "A Free key is not billed. A name, a comment and the sale price can be added later via the gear menu.",
+        "doneNotePaid": "{price} is charged to the connected card - right away, no invoice. Then {price} is charged every month while the key is active. A name and a comment can be added via the gear menu.",
+        "creating": "Creating a {tier} key…",
+        "doneTitleFree": "The Free key is issued and already works",
+        "doneTitlePaid": "The {tier} key is issued and already works"
       },
       "upgrade": {
         "title": "Upgrade",
@@ -1027,7 +1030,8 @@
       "invoiceDownloaded": "Invoice {num} downloaded",
       "supportChat": "Support chat opened with {bot}",
       "guideSoon": "The full guide is in the works - it will open here later",
-      "noStoredKey": "This key has no stored access string - reissue the key"
+      "noStoredKey": "This key has no stored access string - reissue the key",
+      "createFailed": "Couldn't create the key - please try again"
     }
   }
 }

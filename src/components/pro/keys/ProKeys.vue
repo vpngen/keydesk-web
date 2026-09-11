@@ -65,7 +65,7 @@
     <ProDialogCreateKey
       v-if="showDialogCreate"
       :created-key="createdKey"
-      :forecast-sum="forecastSum"
+      :creating="isCreating"
       @close="closeCreate"
       @create="createKey"
     />
@@ -156,6 +156,7 @@ const openMenuId = ref(null);
 const dialogKey = ref(null);
 const confirmKind = ref('off');
 const createdKey = ref(null);
+const isCreating = ref(false);
 
 const showDialogCreate = ref(false);
 const showDialogUpgrade = ref(false);
@@ -271,8 +272,16 @@ const restoreKey = async (key) => {
 };
 
 const createKey = async (payload) => {
-  createdKey.value = await proKeysStore.createKey(payload);
-  toastStore.show(t('pro.toasts.created'));
+  isCreating.value = true;
+  try {
+    createdKey.value = await proKeysStore.createKey(payload);
+    toastStore.show(t('pro.toasts.created'));
+  } catch (error) {
+    console.error(error);
+    toastStore.show(t('pro.toasts.createFailed'));
+  } finally {
+    isCreating.value = false;
+  }
 };
 
 const upgradeKey = async ({tier, months}) => {
