@@ -21,9 +21,11 @@
         <button v-if="hasPay" class="pro-banner__cta" type="button" @click="emit('pay')">
           {{ t(`pro.banner.${status}.cta`) }}
         </button>
+        <!-- Временно скрыто вместе с разделом «Инвойсы».
         <RouterLink :to="{path: '/invoices', query: route.query}" class="pro-banner__link">
           {{ t('pro.banner.allInvoices') }} →
         </RouterLink>
+        -->
       </div>
     </template>
     <div v-if="hasNote" class="pro-banner__note">{{ t(`pro.banner.${status}.note`) }}</div>

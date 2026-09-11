@@ -346,3 +346,9 @@
 		opacity: 0.42;
 	}
 }
+
+// Подсветка карточки после «Перейти к ключу».
+.pro-key-card--flash {
+	box-shadow: 0 0 0 3px v.$pro-color-red, 4px 4px 0 rgba(33, 30, 25, 0.14);
+	transition: box-shadow 0.4s;
+}

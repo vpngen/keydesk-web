@@ -454,17 +454,17 @@
       "free": {
         "name": "Free",
         "price": "free",
-        "desc": "Same as before: a perpetual key that never enters the invoice. Less resistant to blocking - a new wave may cut it off."
+        "desc": "For basic internet access. A perpetual key, but less resistant to blocking."
       },
       "basic": {
         "name": "Pro Basic",
         "price": "€2 / mo",
-        "desc": "More resistant to blocking: a priority channel, up to 100 GB per month, you set the term yourself. The key goes into the common invoice."
+        "desc": "A stable key for everyday use. Priority channel and higher resistance to blocking. Up to 100 GB of traffic per month."
       },
       "unlim": {
         "name": "Pro Unlim",
         "price": "€5 / mo",
-        "desc": "No speed or traffic limits - plus everything from Basic."
+        "desc": "Maximum speed and no traffic limits. Priority channel and higher resistance to blocking - for those who need a VPN all the time."
       }
     },
     "protocols": {
@@ -519,7 +519,9 @@
       "blockedNote": "Switched off because of an unpaid invoice.",
       "expiredNote": "The key's paid period is over - extend it to switch it back on.",
       "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
-      "copyValue": "Copy"
+      "copyValue": "Copy",
+      "boughtOn": "Bought {date}",
+      "bought": "Bought"
     },
     "menu": {
       "sectionKey": "key",
@@ -798,7 +800,7 @@
           "name": "name",
           "review": "review"
         },
-        "typeQuestion": "What kind of key are we issuing?",
+        "typeQuestion": "Which key are we selling?",
         "pickTariff": "Pick a plan",
         "pickProto": "Pick a protocol",
         "protoQuestion": "Which protocol are we adding? Each comes with both a link and an access key - take whichever is handier.",
@@ -826,8 +828,30 @@
         "toKeys": "To the Keydesk",
         "doneStamp": "key created",
         "doneTitle": "The key is issued and already works",
-        "doneNoteFree": "A Free key never enters the invoice - the next charge amount is unchanged.",
-        "doneNotePaid": "Nothing to pay right now. The {date} invoice - {sum}, including a {prorate} top-up for the rest of this month."
+        "doneNoteFree": "A Free key is not billed. A name, a comment and the sale price can be added later via the gear menu.",
+        "doneNotePaid": "{price} is charged to the connected card - right away, no invoice. Then {price} is charged every month while the key is active. A name and a comment can be added via the gear menu.",
+        "creating": "Creating a {tier} key…",
+        "doneTitleFree": "The Free key is issued and already works",
+        "doneTitlePaid": "The {tier} key is issued and already works",
+        "submitFree": "Create key",
+        "creatingFree": "Creating the key…",
+        "confirmTitle": "Final check",
+        "confirmLead": "We're about to charge {price} for {tier} and create the key.",
+        "confirmText": "Double-check the plan. The money is real, and so is the button.",
+        "confirmQuestion": "All good - charge it?",
+        "confirmYes": "Yes, create the key",
+        "retry": "Try again",
+        "charging": "Charging {price} and creating the key…",
+        "payFailed": "The charge didn't go through - no key was created and nothing was charged. Please try again.",
+        "readyTitle": "Hooray, the key is ready!",
+        "readyLead": "Now give it a name so you don't have to remember later who bought what.",
+        "nameLabel": "Key name",
+        "noteLabelOpt": "Comment - optional",
+        "piiJoke": "No first names, last names or other personal data. We sell keys here, we don't keep dossiers.",
+        "saveName": "Save",
+        "soldTitle": "{name} is ready for sale.",
+        "soldLead": "All that's left is to find a buyer - the rest is up to you.",
+        "gotoKey": "Go to the key"
       },
       "upgrade": {
         "title": "Upgrade",
@@ -1027,7 +1051,9 @@
       "invoiceDownloaded": "Invoice {num} downloaded",
       "supportChat": "Support chat opened with {bot}",
       "guideSoon": "The full guide is in the works - it will open here later",
-      "noStoredKey": "This key has no stored access string - reissue the key"
+      "noStoredKey": "This key has no stored access string - reissue the key",
+      "createFailed": "Couldn't create the key - please try again",
+      "saveFailed": "Couldn't save - please try again"
     }
   }
 }

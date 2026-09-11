@@ -5,7 +5,7 @@
  */
 
 import {PRO_PROTOCOLS} from '@/assets/constants/proConstants';
-import {toIso, today, invoiceNumber, monthShift, formatDate} from '@/utils/proFormat';
+import {toIso, today, parseIso, invoiceNumber, monthShift, formatDate} from '@/utils/proFormat';
 
 const inDays = (d) => {
   const x = today();
@@ -24,6 +24,13 @@ const visitDaysAgo = (d, h = 12, m = 0) => {
   x.setDate(x.getDate() - d);
   x.setHours(h, m, 0, 0);
   return x.toISOString();
+};
+
+/** Синтетическая дата покупки посевного ключа: месяц до «until», для Free — 2 месяца назад. */
+const seedCreatedAt = (k) => {
+  const d = k.until ? parseIso(k.until) : today();
+  d.setMonth(d.getMonth() - (k.until ? 1 : 2));
+  return d.toISOString();
 };
 
 /** 16 ключей из макета (порядок и данные сохранены). */
@@ -54,6 +61,7 @@ export function seedKeys() {
     proto: PRO_PROTOCOLS[i % 3],
     sold: k.tier === 'free' ? 0 : soldSeed[i] || 0,
     off: Boolean(k.off),
+    createdAt: seedCreatedAt(k),
     ...k,
   }));
 }
@@ -113,5 +121,6 @@ export function enrichUser(user, index) {
     off: false,
     lastVisit: user.LastVisitHour || null,
     gb: user.MonthlyQuotaRemainingGB ?? 0,
+    createdAt: user.CreatedAt || null,
   };
 }

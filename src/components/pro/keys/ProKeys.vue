@@ -64,10 +64,8 @@
   <teleport to="#app">
     <ProDialogCreateKey
       v-if="showDialogCreate"
-      :created-key="createdKey"
-      :forecast-sum="forecastSum"
       @close="closeCreate"
-      @create="createKey"
+      @goto="gotoKey"
     />
     <ProDialogUpgrade
       v-if="showDialogUpgrade && dialogKey"
@@ -118,7 +116,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, nextTick, ref} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import ProBillingBanner from '@/components/pro/keys/ProBillingBanner.vue';
@@ -155,7 +153,6 @@ const {status: billingStatus} = storeToRefs(billingStore);
 const openMenuId = ref(null);
 const dialogKey = ref(null);
 const confirmKind = ref('off');
-const createdKey = ref(null);
 
 const showDialogCreate = ref(false);
 const showDialogUpgrade = ref(false);
@@ -225,14 +222,23 @@ const openPay = () => {
 };
 
 const openCreate = () => {
-  createdKey.value = null;
   openMenuId.value = null;
   showDialogCreate.value = true;
 };
 
 const closeCreate = () => {
   showDialogCreate.value = false;
-  createdKey.value = null;
+};
+
+// «Перейти к ключу»: закрыть диалог и подсветить карточку созданного ключа.
+const gotoKey = async (key) => {
+  closeCreate();
+  await nextTick();
+  const el = key && document.querySelector(`[data-key-id="${key.id}"]`);
+  if (!el) return;
+  el.scrollIntoView({behavior: 'smooth', block: 'center'});
+  el.classList.add('pro-key-card--flash');
+  setTimeout(() => el.classList.remove('pro-key-card--flash'), 2500);
 };
 
 const clearFilters = () => {
@@ -268,11 +274,6 @@ const copyKey = async (key) => {
 const restoreKey = async (key) => {
   await proKeysStore.setKeyOff(key.id, false);
   toastStore.show(t('pro.toasts.restored', {user: key.user}));
-};
-
-const createKey = async (payload) => {
-  createdKey.value = await proKeysStore.createKey(payload);
-  toastStore.show(t('pro.toasts.created'));
 };
 
 const upgradeKey = async ({tier, months}) => {

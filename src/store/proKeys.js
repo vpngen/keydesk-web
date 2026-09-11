@@ -54,6 +54,17 @@ export const useProKeysStore = defineStore('proKeys', () => {
     return key;
   };
 
+  /**
+   * Покупка ключа: для платных тарифов сначала списание с привязанной карты,
+   * при отказе (error.code === 'payment_failed') ключ не создаётся.
+   */
+  const purchaseKey = async (payload) => {
+    if (payload.tier !== 'free') {
+      await proApi.chargeProKey({tier: payload.tier});
+    }
+    return createKey(payload);
+  };
+
   /** Название / комментарий / «продал за». */
   const patchKeyMeta = async (id, fields) => {
     await proApi.patchProKeyMeta(id, fields);
@@ -115,6 +126,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
     freeCount,
     fetchKeys,
     createKey,
+    purchaseKey,
     patchKeyMeta,
     setKeyTier,
     extendKey,

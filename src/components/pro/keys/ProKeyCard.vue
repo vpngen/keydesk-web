@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'pro-key-card--dead': isDead, 'pro-key-card--blocked': isBlocked}" class="pro-key-card">
+  <div :class="{'pro-key-card--dead': isDead, 'pro-key-card--blocked': isBlocked}" :data-key-id="keyItem.id" class="pro-key-card">
     <div class="pro-key-card__head">
       <div class="pro-key-card__head-main">
         <div class="pro-key-card__name-row">
@@ -37,8 +37,8 @@
       </div>
       <template v-if="!isFree">
         <div class="pro-key-card__field">
-          <div class="pro-key-card__field-label">{{ invoiceLabel }}</div>
-          <div class="pro-key-card__field-value pro-key-card__field-value--soft">{{ invoiceValue }}</div>
+          <div class="pro-key-card__field-label">{{ purchaseLabel }}</div>
+          <div class="pro-key-card__field-value pro-key-card__field-value--soft">{{ purchaseValue }}</div>
         </div>
         <div class="pro-key-card__field">
           <div class="pro-key-card__field-label">{{ t('pro.card.soldFor') }}</div>
@@ -142,7 +142,7 @@ const {
   status, isFree, isDead, isBlocked, isExpiredBlocked, isWarn,
   hasName, hasNote, displayName, statusWord, tariffLabel,
   untilText, untilLabel, lastLabel, gbText, blockedNote,
-  profitText, profitTone, soldText, invoiceLabel, invoiceValue,
+  profitText, profitTone, soldText, purchaseLabel, purchaseValue,
 } = useProKeyView(toRef(props, 'keyItem'));
 
 const canCopy = computed(() => !isDead.value && !isBlocked.value);

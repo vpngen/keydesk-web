@@ -38,6 +38,8 @@
       >
         {{ t('pro.nav.connections') }}
       </RouterLink>
+      <!-- Временно скрыто: покупка ключей идёт напрямую с карты, инвойсы вернутся,
+           когда покупки переедут в них. Страница /invoices сохранена.
       <RouterLink
         :class="{'pro-header__nav-item--active': route.name === 'ProInvoices'}"
         :to="{path: '/invoices', query: route.query}"
@@ -45,6 +47,7 @@
       >
         {{ t('pro.nav.invoices') }}
       </RouterLink>
+      -->
       <RouterLink
         :class="{'pro-header__nav-item--active': route.name === 'ProAnalytics'}"
         :to="{path: '/analytics', query: route.query}"

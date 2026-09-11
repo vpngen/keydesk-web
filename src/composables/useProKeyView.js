@@ -66,13 +66,12 @@ export function useProKeyView(keyRef) {
       : t('pro.card.notSold');
   });
 
-  const invoiceLabel = computed(() => (isDead.value
-    ? t('pro.card.nextInvoice')
-    : t('pro.card.inInvoice', {date: formatShort(nextBilling())})));
+  // Покупка ключа списывается с карты сразу — показываем дату покупки и цену.
+  const purchaseLabel = computed(() => (keyRef.value.createdAt
+    ? t('pro.card.boughtOn', {date: formatShort(new Date(keyRef.value.createdAt))})
+    : t('pro.card.bought')));
 
-  const invoiceValue = computed(() => (billable.value
-    ? `${money(tierPrice(keyRef.value.tier))}${t('pro.card.perMonth')}`
-    : t('pro.card.wontEnter')));
+  const purchaseValue = computed(() => `${money(tierPrice(keyRef.value.tier))}${t('pro.card.perMonth')}`);
 
   const untilLabel = computed(() => {
     if (isDead.value) return t('pro.card.disabled');
@@ -106,7 +105,7 @@ export function useProKeyView(keyRef) {
     profitText,
     profitTone,
     soldText,
-    invoiceLabel,
-    invoiceValue,
+    purchaseLabel,
+    purchaseValue,
   };
 }
