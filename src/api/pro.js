@@ -101,6 +101,7 @@ function mapRealUser(user) {
     blockReason: user.ProBlockReason || null,
     lastVisit: user.LastVisitHour || null,
     gb: user.MonthlyQuotaRemainingGB ?? 0,
+    createdAt: user.CreatedAt || null,
   };
 }
 
