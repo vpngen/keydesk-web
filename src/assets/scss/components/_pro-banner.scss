@@ -21,6 +21,14 @@
 		&:hover {
 			background: rgba(33, 30, 25, 0.04);
 		}
+
+		&--static {
+			cursor: default;
+
+			&:hover {
+				background: transparent;
+			}
+		}
 	}
 
 	&__label {

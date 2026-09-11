@@ -60,18 +60,6 @@
 		line-height: 1;
 	}
 
-	&__avatar {
-		display: flex;
-		flex: none;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid v.$pro-color-ink;
-		width: 34px;
-		height: 34px;
-		font: 700 11px/1 v.$pro-font-mono;
-		background: v.$pro-color-shade;
-	}
-
 	&__lang {
 		display: flex;
 		align-items: center;

@@ -3,9 +3,15 @@
     <div class="pro-key-card__head">
       <div class="pro-key-card__head-main">
         <div class="pro-key-card__name-row">
-          <div :class="{'pro-key-card__name--unnamed': !hasName, 'pro-key-card__name--dead': isDead}" class="pro-key-card__name">
+          <button
+            :class="{'pro-key-card__name--unnamed': !hasName, 'pro-key-card__name--dead': isDead}"
+            :title="hasName ? t('pro.menu.rename') : t('pro.menu.addName')"
+            class="pro-key-card__name"
+            type="button"
+            @click.stop="emit('open-name', keyItem)"
+          >
             {{ displayName }}
-          </div>
+          </button>
           <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-card__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
             <SvgIcon name="pro-note"/>
           </button>
