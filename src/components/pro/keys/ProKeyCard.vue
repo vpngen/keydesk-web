@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'pro-key-card--dead': isDead, 'pro-key-card--blocked': isBlocked}" class="pro-key-card">
+  <div :class="{'pro-key-card--dead': isDead, 'pro-key-card--blocked': isBlocked}" :data-key-id="keyItem.id" class="pro-key-card">
     <div class="pro-key-card__head">
       <div class="pro-key-card__head-main">
         <div class="pro-key-card__name-row">

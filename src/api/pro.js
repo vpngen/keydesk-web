@@ -222,6 +222,22 @@ export async function createProKey(payload, localKey) {
   return localKey;
 }
 
+/**
+ * Списание за платный ключ с привязанной карты (карта привязывается при
+ * покупке PRO-бригады, задолго до Ключницы). Платежной интеграции пока нет —
+ * заглушка: успех после короткой паузы; реальный вызов появится как
+ * POST /pro/charge. Дев-ручка (dev/stage): ?proPayFail=true — отказ оплаты.
+ */
+export async function chargeProKey({tier}) {
+  await new Promise((resolve) => setTimeout(resolve, 600));
+  if (devQuery('proPayFail') === 'true') {
+    const error = new Error('payment failed');
+    error.code = 'payment_failed';
+    throw error;
+  }
+  return {status: 'charged', tier};
+}
+
 export async function deleteProKey(id) {
   if (isRealPro()) {
     await withAuthRetry(() => axios.delete(`${apiLink}/user/${id}`));

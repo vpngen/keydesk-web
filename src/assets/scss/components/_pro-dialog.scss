@@ -85,6 +85,31 @@
 		}
 	}
 
+	&__headline {
+		font: 700 26px/1.15 v.$pro-font-narrow;
+		letter-spacing: 0.03em;
+	}
+
+	&__lead {
+		font: 400 15px/1.55 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__field-label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__danger {
+		border-left: 3px solid v.$pro-color-red;
+		padding: 11px 14px;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-red-dark;
+		background: v.$pro-color-tint-red;
+	}
+
 	&__question {
 		font: 400 14px/1.5 v.$pro-font-sans;
 		color: v.$pro-color-ink-soft;
@@ -898,5 +923,62 @@
 
 	&__total-sum {
 		font: 700 20px/1 v.$pro-font-mono;
+	}
+}
+
+// Карточки тарифов в диалоге создания ключа — как карточки онбординга,
+// плюс выбранное состояние (по умолчанию PRO Basic).
+.pro-tier-cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	gap: 12px;
+}
+
+.pro-tier-card {
+	@include pro.pro-control-reset;
+
+	display: flex;
+	flex-direction: column;
+	border: 1px solid v.$pro-color-ink;
+	padding: 16px;
+	text-align: left;
+	background: v.$pro-color-card;
+	gap: 9px;
+
+	&__head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	&__name {
+		font: 700 18px/1 v.$pro-font-narrow;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	&__price {
+		font: 400 13px/1 v.$pro-font-mono;
+		white-space: nowrap;
+		color: v.$pro-color-faded;
+	}
+
+	&__body {
+		border-top: 1px dotted v.$pro-color-hairline;
+		padding-top: 9px;
+		font: 400 14px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&:hover {
+		background: v.$pro-color-raised;
+	}
+
+	&--active {
+		border: 2px solid v.$pro-color-ink;
+		padding: 15px;
+		box-shadow: 3px 3px 0 rgba(33, 30, 25, 0.18);
+		background: v.$pro-color-raised;
 	}
 }

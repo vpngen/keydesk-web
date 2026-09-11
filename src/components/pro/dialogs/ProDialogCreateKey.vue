@@ -1,32 +1,68 @@
 <template>
   <ProDialog
+    :has-back="phase === 'confirm' && !busy"
     :has-cancel="false"
-    :hide-footer="!createdKey"
-    :primary-label="t('pro.dialogs.create.toKeys')"
+    :primary-disabled="primaryDisabled"
+    :primary-label="primaryLabel"
+    :primary-variant="phase === 'confirm' ? 'red' : 'ink'"
     :title="title"
+    @back="goBack"
     @close="emit('close')"
-    @primary="emit('close')"
+    @primary="onPrimary"
   >
-    <!-- Единственный шаг: клик по тарифу сразу создаёт ключ. -->
-    <template v-if="!createdKey">
-      <ProTierOptions
-        :model-value="tariff"
-        :question="t('pro.dialogs.create.typeQuestion')"
-        @update:model-value="pick"
-      />
-      <div v-if="creating" class="pro-dialog__body pro-dialog__body--status">
-        <div class="pro-dialog__foot-note">{{ t('pro.dialogs.create.creating', {tier: t(`pro.tiers.${tariff}.name`)}) }}</div>
-      </div>
-    </template>
+    <!-- 1 · какой ключ продаем -->
+    <div v-if="phase === 'pick'" class="pro-dialog__body">
+      <div class="pro-dialog__question">{{ t('pro.dialogs.create.typeQuestion') }}</div>
+      <ProTierCards v-model="tier"/>
+      <div v-if="busy" class="pro-dialog__foot-note">{{ t('pro.dialogs.create.creatingFree') }}</div>
+    </div>
 
-    <ProDonePanel
-      v-else
-      :key-value="doneKey"
-      :note="doneNote"
-      :stamp="t('pro.dialogs.create.doneStamp')"
-      :sub="doneSub"
-      :title="doneTitle"
-    />
+    <!-- 2 · подтверждение списания (только платные) -->
+    <div v-else-if="phase === 'confirm'" class="pro-dialog__body">
+      <div class="pro-dialog__headline">{{ t('pro.dialogs.create.confirmTitle') }}</div>
+      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.confirmLead', {price: priceText, tier: tierName}) }}</div>
+      <div class="pro-dialog__question">{{ t('pro.dialogs.create.confirmText') }}</div>
+      <div v-if="payFailed" class="pro-dialog__danger">{{ t('pro.dialogs.create.payFailed') }}</div>
+      <div v-if="busy" class="pro-dialog__foot-note">{{ t('pro.dialogs.create.charging', {price: priceText}) }}</div>
+      <div v-else class="pro-dialog__question pro-dialog__question--strong">{{ t('pro.dialogs.create.confirmQuestion') }}</div>
+    </div>
+
+    <!-- 3 · ключ готов: название и комментарий -->
+    <div v-else-if="phase === 'name'" class="pro-dialog__body">
+      <div class="pro-dialog__headline">{{ t('pro.dialogs.create.readyTitle') }}</div>
+      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.readyLead') }}</div>
+
+      <div class="pro-dialog__field-label">{{ t('pro.dialogs.create.nameLabel') }}</div>
+      <div class="pro-dialog__input-box">
+        <input
+          v-model="name"
+          :maxlength="PRO_LIMITS.name"
+          :placeholder="t('pro.dialogs.create.namePlaceholder')"
+          class="pro-dialog__input"
+          type="text"
+        >
+        <div class="pro-dialog__counter">{{ name.length }} / {{ PRO_LIMITS.name }}</div>
+      </div>
+
+      <div class="pro-dialog__field-label">{{ t('pro.dialogs.create.noteLabelOpt') }}</div>
+      <div class="pro-dialog__input-box pro-dialog__input-box--soft">
+        <textarea
+          v-model="note"
+          :maxlength="PRO_LIMITS.note"
+          :placeholder="t('pro.dialogs.create.notePlaceholder')"
+          class="pro-dialog__textarea"
+          rows="3"
+        ></textarea>
+        <div class="pro-dialog__counter">{{ note.length }} / {{ PRO_LIMITS.note }}</div>
+      </div>
+      <div class="pro-dialog__warning">{{ t('pro.dialogs.create.piiJoke') }}</div>
+    </div>
+
+    <!-- 4 · готов к продаже -->
+    <div v-else class="pro-dialog__body">
+      <div class="pro-dialog__headline">{{ t('pro.dialogs.create.soldTitle', {name: savedName}) }}</div>
+      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.soldLead') }}</div>
+    </div>
   </ProDialog>
 </template>
 
@@ -34,64 +70,110 @@
 import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import ProDialog from '@/components/pro/dialogs/ProDialog.vue';
-import ProTierOptions from '@/components/pro/dialogs/ProTierOptions.vue';
-import ProDonePanel from '@/components/pro/dialogs/ProDonePanel.vue';
-import {tierPrice, accessString, defaultFormat} from '@/utils/proKeys';
-import {money, formatIso} from '@/utils/proFormat';
+import ProTierCards from '@/components/pro/dialogs/ProTierCards.vue';
+import {useProKeysStore} from '@/store/proKeys';
+import {useProToastStore} from '@/store/proToast';
+import {PRO_LIMITS} from '@/assets/constants/proConstants';
+import {tierPrice} from '@/utils/proKeys';
+import {money} from '@/utils/proFormat';
 
-const props = defineProps({
-  createdKey: {
-    type: [Object, null],
-    default: null,
-  },
-  // Родитель держит запрос: блокируем повторные клики и показываем статус.
-  creating: {type: Boolean},
-});
-
-const emit = defineEmits(['close', 'create']);
+const emit = defineEmits(['close', 'goto']);
 
 const {t} = useI18n();
+const proKeysStore = useProKeysStore();
+const toastStore = useProToastStore();
 
-const tariff = ref(null);
+// pick → (confirm, только платные) → name → ready
+const phase = ref('pick');
+const tier = ref('basic'); // по умолчанию — PRO Basic
+const busy = ref(false);
+const payFailed = ref(false);
+const createdKey = ref(null);
+const name = ref('');
+const note = ref('');
+const savedName = ref('');
 
-// Платный ключ = месячное списание с привязанной карты, поэтому срок — 1 месяц;
-// название/комментарий/«продал за» задаются потом через шестерёнку.
-const pick = (tier) => {
-  if (props.creating || props.createdKey) return;
-  tariff.value = tier;
-  emit('create', {
-    tier,
-    proto: 'vless',
-    months: 1,
-    name: '',
-    note: '',
-    sold: 0,
-  });
-};
+const tierName = computed(() => t(`pro.tiers.${tier.value}.name`));
+const priceText = computed(() => money(tierPrice(tier.value)));
 
-const tierName = computed(() => (tariff.value ? t(`pro.tiers.${tariff.value}.name`) : ''));
+const title = computed(() => (phase.value === 'pick'
+  ? t('pro.dialogs.create.title')
+  : `${t('pro.dialogs.create.title')} · ${tierName.value}`));
 
-const title = computed(() => (tariff.value
-  ? `${t('pro.dialogs.create.title')} · ${tierName.value}`
-  : t('pro.dialogs.create.title')));
-
-const doneKey = computed(() => (props.createdKey
-  ? accessString(props.createdKey, props.createdKey.proto, defaultFormat(props.createdKey)) || ''
-  : ''));
-
-const doneTitle = computed(() => (tariff.value === 'free'
-  ? t('pro.dialogs.create.doneTitleFree')
-  : t('pro.dialogs.create.doneTitlePaid', {tier: tierName.value})));
-
-const doneSub = computed(() => {
-  if (!props.createdKey) return '';
-  const until = props.createdKey.until
-    ? t('pro.dialogs.done.until', {date: formatIso(props.createdKey.until)})
-    : t('pro.card.termless');
-  return `${props.createdKey.user} · ${tierName.value} · ${until}`;
+const primaryLabel = computed(() => {
+  if (phase.value === 'pick') return tier.value === 'free' ? t('pro.dialogs.create.submitFree') : t('pro.dialogs.common.next');
+  if (phase.value === 'confirm') return payFailed.value ? t('pro.dialogs.create.retry') : t('pro.dialogs.create.confirmYes');
+  if (phase.value === 'name') return t('pro.dialogs.create.saveName');
+  return t('pro.dialogs.create.gotoKey');
 });
 
-const doneNote = computed(() => (tariff.value === 'free'
-  ? t('pro.dialogs.create.doneNoteFree')
-  : t('pro.dialogs.create.doneNotePaid', {price: money(tierPrice(tariff.value))})));
+const primaryDisabled = computed(() => busy.value || (phase.value === 'name' && !name.value.trim()));
+
+// Списание (для платных) + создание ключа. Платный ключ = месячное списание,
+// поэтому срок — 1 месяц; при отказе оплаты ключ не создаётся.
+const purchase = async () => {
+  busy.value = true;
+  payFailed.value = false;
+  try {
+    createdKey.value = await proKeysStore.purchaseKey({
+      tier: tier.value,
+      proto: 'vless',
+      months: 1,
+      name: '',
+      note: '',
+      sold: 0,
+    });
+    toastStore.show(t('pro.toasts.created'));
+    phase.value = 'name';
+  } catch (error) {
+    if (error?.code === 'payment_failed') {
+      payFailed.value = true;
+    } else {
+      console.error(error);
+      toastStore.show(t('pro.toasts.createFailed'));
+    }
+  } finally {
+    busy.value = false;
+  }
+};
+
+const save = async () => {
+  busy.value = true;
+  try {
+    await proKeysStore.patchKeyMeta(createdKey.value.id, {name: name.value.trim(), note: note.value.trim()});
+    savedName.value = name.value.trim();
+    phase.value = 'ready';
+  } catch (error) {
+    console.error(error);
+    toastStore.show(t('pro.toasts.saveFailed'));
+  } finally {
+    busy.value = false;
+  }
+};
+
+const onPrimary = () => {
+  if (busy.value) return;
+  if (phase.value === 'pick') {
+    if (tier.value === 'free') {
+      purchase();
+    } else {
+      phase.value = 'confirm';
+    }
+    return;
+  }
+  if (phase.value === 'confirm') {
+    purchase();
+    return;
+  }
+  if (phase.value === 'name') {
+    save();
+    return;
+  }
+  emit('goto', createdKey.value);
+};
+
+const goBack = () => {
+  payFailed.value = false;
+  phase.value = 'pick';
+};
 </script>
