@@ -1,13 +1,15 @@
 <template>
-  <div :class="`pro-banner--${status}`" class="pro-banner">
-    <div class="pro-banner__header" @click="isOpen = !isOpen">
+  <div :class="`pro-banner--${displayStatus}`" class="pro-banner">
+    <!-- Пока PRO_INVOICES_ENABLED = false: статус всегда «оплачено», баннер
+         не раскрывается (нет шеврона, клика и блока инвойса). -->
+    <div :class="{'pro-banner__header--static': !PRO_INVOICES_ENABLED}" class="pro-banner__header" @click="toggle">
       <div class="pro-banner__label">{{ t('pro.banner.statusLabel') }}</div>
       <div class="pro-banner__title">PRO</div>
-      <div class="pro-banner__stamp">{{ t(`pro.banner.${status}.stamp`) }}</div>
+      <div class="pro-banner__stamp">{{ t(`pro.banner.${displayStatus}.stamp`) }}</div>
       <div class="pro-banner__spacer"></div>
-      <div class="pro-banner__chevron">{{ isOpen ? '▴' : '▾' }}</div>
+      <div v-if="PRO_INVOICES_ENABLED" class="pro-banner__chevron">{{ isOpen ? '▴' : '▾' }}</div>
     </div>
-    <template v-if="isOpen">
+    <template v-if="PRO_INVOICES_ENABLED && isOpen">
       <div class="pro-banner__cells">
         <div v-for="(cell, i) in cells" :key="i" class="pro-banner__cell">
           <div class="pro-banner__cell-label">{{ cell.label }}</div>
@@ -28,7 +30,7 @@
         -->
       </div>
     </template>
-    <div v-if="hasNote" class="pro-banner__note">{{ t(`pro.banner.${status}.note`) }}</div>
+    <div v-if="hasNote" class="pro-banner__note">{{ t(`pro.banner.${displayStatus}.note`) }}</div>
   </div>
 </template>
 
@@ -39,6 +41,7 @@ import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProBillingStore} from '@/store/proBilling';
+import {PRO_INVOICES_ENABLED} from '@/assets/constants/proConstants';
 import {money, formatDate, nextBilling, daysToBilling, shiftDays, invoiceNumber} from '@/utils/proFormat';
 
 const emit = defineEmits(['pay']);
@@ -52,8 +55,16 @@ const {status, currentInvoice} = storeToRefs(billingStore);
 
 const isOpen = ref(false);
 
-const hasPay = computed(() => status.value !== 'paid');
-const hasNote = computed(() => status.value === 'overdue' || status.value === 'suspended');
+// Реальный статус биллинга показываем только когда инвойсы включены.
+const displayStatus = computed(() => (PRO_INVOICES_ENABLED ? status.value : 'paid'));
+
+const toggle = () => {
+  if (!PRO_INVOICES_ENABLED) return;
+  isOpen.value = !isOpen.value;
+};
+
+const hasPay = computed(() => displayStatus.value !== 'paid');
+const hasNote = computed(() => displayStatus.value === 'overdue' || displayStatus.value === 'suspended');
 
 // Реальный текущий инвойс (keydesk) даёт точные даты и сумму; в мок-режиме
 // значения синтезируются как в макете.

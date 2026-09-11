@@ -14,6 +14,11 @@ export const PRO_STATUSES = ['ok', 'warn', 'blocked', 'off', 'idle'];
 
 export const BILLING_STATES = ['paid', 'issued', 'overdue', 'suspended'];
 
+// Временно: в этом месяце инвойсов нет (покупка ключей идёт напрямую с карты),
+// баннер подписки показывает «оплачено» и не раскрывается. Включим вместе
+// с возвратом раздела «Инвойсы».
+export const PRO_INVOICES_ENABLED = false;
+
 export const PRO_PROTOCOLS = ['vless', 'outline', 'gate19'];
 
 export const PRO_FORMATS = ['link', 'key'];
