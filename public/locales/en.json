@@ -783,8 +783,8 @@
         "account": "Account number",
         "cta": "Write to support",
         "beforeTitle": "Before writing",
-        "tip1": "Check whether the invoice is paid - switched-off keys don't work until the bill is closed.",
-        "tip2": "Attach the key number (e.g. user-014) - we'll sort it out faster.",
+        "tip1": "Check the key is switched on and its term hasn't expired - switched-off keys don't work.",
+        "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
       }
     },

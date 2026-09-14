@@ -363,3 +363,14 @@
 		color: v.$pro-color-blue;
 	}
 }
+
+// Контакты поддержки - ссылки в стиле макета (моно, пунктирное подчёркивание).
+.pro-help__support-link {
+	text-decoration: underline dotted;
+	color: inherit;
+	text-underline-offset: 3px;
+
+	&:hover {
+		text-decoration-style: solid;
+	}
+}
