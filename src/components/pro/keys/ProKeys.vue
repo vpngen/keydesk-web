@@ -192,8 +192,8 @@ const filteredKeys = computed(() => {
   });
 });
 
-const countsLine = computed(() => t('pro.table.countsLine', {
-  shown: filteredKeys.value.length,
+// Подвал страницы: числа по всей ключнице, явно подписанные как общие.
+const countsLine = computed(() => t('pro.table.allKeys', {
   total: keysList.value.length,
   free: freeCount.value,
   pro: keysList.value.length - freeCount.value,

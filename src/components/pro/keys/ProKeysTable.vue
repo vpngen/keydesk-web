@@ -76,16 +76,15 @@ const emit = defineEmits([
 const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
-const {keysList, freeCount} = storeToRefs(proKeysStore);
+const {keysList} = storeToRefs(proKeysStore);
 const {selectedSort} = storeToRefs(filterStore);
 
 const expandedId = ref(null);
 
-const countsLine = computed(() => t('pro.table.countsLine', {
-  shown: props.keys.length,
+// В таблице - только результат выборки; общие числа по тарифам - в подвале страницы.
+const countsLine = computed(() => t('pro.table.found', {
+  filtered: props.keys.length,
   total: keysList.value.length,
-  free: freeCount.value,
-  pro: keysList.value.length - freeCount.value,
 }));
 
 // Стрелка показывает реальное направление сортировки (см. filteredKeys в ProKeys).

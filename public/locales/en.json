@@ -560,7 +560,9 @@
       "pageOf": "page {page} of {total}",
       "countsLine": "showing {shown} of {total} · Free {free} · Pro {pro}",
       "copy": "Copy",
-      "expandHint": "Show the key"
+      "expandHint": "Show the key",
+      "found": "Showing {filtered} of {total} keys",
+      "allKeys": "All keys: {total} · Free {free} · Pro {pro}"
     },
     "empty": {
       "noKeys": {

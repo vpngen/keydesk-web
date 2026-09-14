@@ -560,7 +560,9 @@
       "pageOf": "стр. {page} из {total}",
       "countsLine": "показано {shown} из {total} · Free {free} · Pro {pro}",
       "copy": "Копировать",
-      "expandHint": "Показать ключ"
+      "expandHint": "Показать ключ",
+      "found": "Найдено: {filtered} из {total}",
+      "allKeys": "Всего в ключнице: {total} · Free {free} · Pro {pro}"
     },
     "empty": {
       "noKeys": {
