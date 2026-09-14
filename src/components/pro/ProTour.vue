@@ -60,7 +60,8 @@ import {useI18n} from 'vue-i18n';
 const emit = defineEmits(['close']);
 
 const TOTAL_STEPS = 7;
-const CARD_STEPS = {2: 3, 5: 3};
+// Карточки тарифов только на шаге 2: правила оплаты (шаг 5) теперь текстом.
+const CARD_STEPS = {2: 3};
 
 const {t, tm} = useI18n();
 

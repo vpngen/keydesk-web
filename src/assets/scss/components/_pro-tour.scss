@@ -86,6 +86,7 @@
 
 	&__text {
 		font: 400 15px/1.55 v.$pro-font-sans;
+		white-space: pre-line; // абзацы шага 5
 		color: v.$pro-color-ink-soft;
 	}
 
