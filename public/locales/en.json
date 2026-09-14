@@ -917,7 +917,9 @@
         "hint": "How much do you charge for this key per month? The number is only for you — to see the profit.",
         "cost": "Plan cost",
         "profit": "Profit per key",
-        "foot": "Leave the field empty if the key was given away for free — then profit is not counted."
+        "foot": "Empty means the price isn't set. The paid plan's cost is counted either way.",
+        "negative": "The amount can't be negative",
+        "invalid": "Enter a number, e.g. 10.50"
       },
       "review": {
         "invoiceTitle": "How this enters the invoice",
