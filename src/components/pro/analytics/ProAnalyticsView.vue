@@ -40,7 +40,7 @@ import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProfileStore} from '@/store/profile';
-import {REVENUE_HISTORY, ALL_TIME_EXTRA} from '@/api/proMockData';
+import {REVENUE_HISTORY} from '@/api/proMockData';
 import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
 import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
 import {money, monthShift, daysSinceVisit, today} from '@/utils/proFormat';
@@ -86,7 +86,8 @@ const chartBars = computed(() => {
   }));
 });
 
-const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0) + (isReal.value ? 0 : ALL_TIME_EXTRA));
+// «За всё время» = сумма столбцов графика: подпись «за 6 месяцев» и цифра совпадают.
+const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0));
 
 const mrrPoints = computed(() => {
   const factors = isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1];
@@ -117,9 +118,10 @@ const net = computed(() => joined.value - left.value);
 
 const statCards = computed(() => [
   {
-    label: t('pro.analytics.statRevMonth', {month: monthsFull.value[today().getMonth()]}),
+    // Выручка считается по введённым ценам продажи - это ожидание, не факт оплаты.
+    label: t('pro.analytics.statRevMonth'),
     value: money(revenue.value),
-    hint: t('pro.analytics.statRevMonthHint', {count: liveKeys.value.filter((k) => k.sold).length}),
+    hint: t('pro.analytics.statRevMonthHint'),
     tone: 'ink',
   },
   {
