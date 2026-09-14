@@ -20,7 +20,7 @@
     <button v-if="!isFree" class="pro-key-menu__item" type="button" @click="emit('extend')">
       {{ t('pro.menu.extend') }}
     </button>
-    <button class="pro-key-menu__item" type="button" @click="emit('upgrade')">
+    <button v-if="canUpgrade" class="pro-key-menu__item" type="button" @click="emit('upgrade')">
       {{ isFree ? t('pro.menu.upgradeToPro') : t('pro.menu.changeTariff') }}
     </button>
     <div v-if="variant === 'card'" class="pro-key-menu__section pro-key-menu__section--bordered">{{ t('pro.menu.sectionDanger') }}</div>
@@ -47,6 +47,11 @@ defineProps({
   hasNote: {type: Boolean},
   hasSold: {type: Boolean},
   isFree: {type: Boolean},
+  // Выше Pro Unlim тарифа нет - пункт «сменить тариф» ему не показываем.
+  canUpgrade: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits(['copy', 'rename', 'note', 'sold', 'extend', 'upgrade', 'deactivate', 'delete', 'close']);

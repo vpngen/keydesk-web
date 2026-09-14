@@ -77,6 +77,7 @@
       :has-name="hasName"
       :has-note="hasNote"
       :has-sold="Boolean(keyItem.sold)"
+      :can-upgrade="keyItem.tier !== 'unlim'"
       :is-free="isFree"
       variant="table"
       @close="emit('close-menu', keyItem)"

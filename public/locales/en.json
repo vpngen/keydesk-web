@@ -885,7 +885,9 @@
         "payButton": "Pay {amount} and switch plan",
         "successTitle": "Payment successful.",
         "successText": "Your {plan} plan is active.",
-        "payFailed": "The charge failed - the plan was not changed, nothing was charged. Try again."
+        "payFailed": "The charge failed - the plan was not changed, nothing was charged. Try again.",
+        "priceLine": "{plan}: {amount}/mo",
+        "credit": "Credit for unused {plan} days: −{amount} ({days} of {total} d.)"
       },
       "extend": {
         "title": "Extend",

@@ -5,7 +5,7 @@
  */
 
 import {TIER_PRICE, WARN_DAYS, INACTIVE_DAYS, BASIC_QUOTA_GB} from '@/assets/constants/proConstants';
-import {daysUntil, nextBilling, parseIso, daysToBilling, monthDays, daysSinceVisit} from '@/utils/proFormat';
+import {daysUntil, nextBilling, parseIso, daysToBilling, monthDays, daysSinceVisit, addMonths} from '@/utils/proFormat';
 
 export function tierPrice(tier) {
   return TIER_PRICE[tier] || 0;
@@ -74,6 +74,35 @@ export function usedGb(key) {
     return Math.max(0, BASIC_QUOTA_GB - remaining);
   }
   return key.gb || 0;
+}
+
+const TIER_ORDER = ['free', 'basic', 'unlim'];
+
+/** Тарифы, на которые ключ можно апгрейдить (только вверх; даунгрейд пока не делаем). */
+export function upgradeTiers(key) {
+  const rank = TIER_ORDER.indexOf(key.tier);
+  return TIER_ORDER.filter((tier, i) => tier !== 'free' && i > rank);
+}
+
+/**
+ * Расчёт апгрейда (временно на фронте, до реального биллинга): неиспользованные
+ * дни текущего платного месяца идут в зачёт, новый месяц начинается сегодня.
+ * Период = месяц до даты окончания (все платные сроки сейчас месячные).
+ * Суммы - до цента.
+ */
+export function upgradeQuote(key, newTier) {
+  const price = tierPrice(newTier);
+  const currentPrice = tierPrice(key.tier);
+  const empty = {price, currentPrice, credit: 0, due: price, daysLeft: 0, periodDays: 0};
+  if (!currentPrice || !key.until) return empty;
+
+  const end = parseIso(key.until);
+  const start = parseIso(addMonths(key.until, -1));
+  const periodDays = Math.max(1, Math.round((end - start) / 86400000));
+  const daysLeft = Math.min(periodDays, Math.max(0, daysUntil(key.until)));
+  const credit = Math.min(currentPrice, Math.round(currentPrice * daysLeft / periodDays * 100) / 100);
+  const due = Math.max(0, Math.round((price - credit) * 100) / 100);
+  return {price, currentPrice, credit, due, daysLeft, periodDays};
 }
 
 /** Профит: продал минус себестоимость тарифа. */

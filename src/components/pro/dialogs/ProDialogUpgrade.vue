@@ -27,6 +27,10 @@
         <div class="pro-dialog__key-row-value">{{ keyLabel }}</div>
       </div>
       <div class="pro-dialog__lead">{{ t('pro.dialogs.upgrade.current', {plan: currentName}) }}</div>
+      <div class="pro-dialog__question">{{ t('pro.dialogs.upgrade.priceLine', {plan: planName, amount: money(quote.price)}) }}</div>
+      <div v-if="quote.credit > 0" class="pro-dialog__question">
+        {{ t('pro.dialogs.upgrade.credit', {plan: currentName, amount: money(quote.credit), days: quote.daysLeft, total: quote.periodDays}) }}
+      </div>
       <div class="pro-dialog__headline">{{ t('pro.dialogs.upgrade.dueNow', {amount}) }}</div>
       <div class="pro-dialog__question">{{ t('pro.dialogs.upgrade.chargeText') }}</div>
       <div v-if="nextChargeDate" class="pro-dialog__question">{{ t('pro.dialogs.upgrade.nextCharge', {date: nextChargeDate}) }}</div>
@@ -52,7 +56,7 @@ import {useProKeysStore} from '@/store/proKeys';
 import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
 import {PRO_INVOICES_ENABLED} from '@/assets/constants/proConstants';
-import {tierPrice} from '@/utils/proKeys';
+import {upgradeTiers, upgradeQuote} from '@/utils/proKeys';
 import {money, formatDate} from '@/utils/proFormat';
 
 const props = defineProps({
@@ -75,15 +79,17 @@ const phase = ref('pick');
 const busy = ref(false);
 const payFailed = ref(false);
 
-// Текущий тариф из списка убираем - «переход» на него не имеет смысла.
-const tiers = computed(() => ['basic', 'unlim'].filter((tier) => tier !== props.keyItem.tier));
+// Только тарифы выше текущего (даунгрейд пока не поддерживаем).
+const tiers = computed(() => upgradeTiers(props.keyItem));
 const tariff = ref(tiers.value.includes('unlim') ? 'unlim' : tiers.value[0]);
 
 const planName = computed(() => t(`pro.tiers.${tariff.value}.name`));
 const currentName = computed(() => t(`pro.tiers.${props.keyItem.tier}.name`));
 const keyLabel = computed(() => (props.keyItem.name ? `${props.keyItem.user} · ${props.keyItem.name}` : props.keyItem.user));
-// Сумма списания = месячная цена тарифа (её же списывает стаб оплаты).
-const amount = computed(() => money(tierPrice(tariff.value)));
+// Сумма списания = цена нового тарифа минус зачёт за неиспользованные дни
+// текущего (считается на фронте, временно - до реального биллинга).
+const quote = computed(() => upgradeQuote(props.keyItem, tariff.value));
+const amount = computed(() => money(quote.value.due));
 // Дату следующего списания берём только из биллинга; пока инвойсов нет - не показываем.
 const nextChargeDate = computed(() => (PRO_INVOICES_ENABLED && currentInvoice.value?.dueAt
   ? formatDate(new Date(currentInvoice.value.dueAt))
@@ -101,7 +107,7 @@ const pay = async () => {
   busy.value = true;
   payFailed.value = false;
   try {
-    await proKeysStore.purchaseTier(props.keyItem.id, tariff.value);
+    await proKeysStore.purchaseTier(props.keyItem.id, tariff.value, quote.value.due);
     phase.value = 'done';
     emit('upgraded', tariff.value);
   } catch (error) {

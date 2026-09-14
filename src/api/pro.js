@@ -16,6 +16,7 @@
  */
 
 import axios from 'axios';
+import {TIER_PRICE} from '@/assets/constants/proConstants';
 import {apiLink, isDevOrStageHost} from '@/const/api';
 import {useAuthStore} from '@/store/auth';
 import {useProfileStore} from '@/store/profile';
@@ -229,14 +230,16 @@ export async function createProKey(payload, localKey) {
  * заглушка: успех после короткой паузы; реальный вызов появится как
  * POST /pro/charge. Дев-ручка (dev/stage): ?proPayFail=true — отказ оплаты.
  */
-export async function chargeProKey({tier}) {
+export async function chargeProKey({tier, amount = null}) {
   await new Promise((resolve) => setTimeout(resolve, 600));
   if (devQuery('proPayFail') === 'true') {
     const error = new Error('payment failed');
     error.code = 'payment_failed';
     throw error;
   }
-  return {status: 'charged', tier};
+  // amount: сумма к списанию в евро (null = полная цена тарифа) - для будущего
+  // реального вызова; стаб её только возвращает.
+  return {status: 'charged', tier, amount: amount ?? TIER_PRICE[tier] ?? 0};
 }
 
 export async function deleteProKey(id) {
