@@ -230,15 +230,21 @@ const closeCreate = () => {
   showDialogCreate.value = false;
 };
 
-// «Перейти к ключу»: закрыть диалог и подсветить карточку созданного ключа.
+// «Перейти к ключу»: закрыть диалог, снять поиск/фильтры, которые прячут
+// новый ключ (вид карточки⇄таблица сохраняем), проскроллить и подсветить.
 const gotoKey = async (key) => {
   closeCreate();
+  if (!key) return;
+  if (!filteredKeys.value.some((k) => k.id === key.id)) {
+    filterStore.reset();
+  }
   await nextTick();
-  const el = key && document.querySelector(`[data-key-id="${key.id}"]`);
+  const el = document.querySelector(`[data-key-id="${key.id}"]`);
   if (!el) return;
+  const flashClass = el.classList.contains('pro-key-table__row') ? 'pro-key-table__row--flash' : 'pro-key-card--flash';
   el.scrollIntoView({behavior: 'smooth', block: 'center'});
-  el.classList.add('pro-key-card--flash');
-  setTimeout(() => el.classList.remove('pro-key-card--flash'), 2500);
+  el.classList.add(flashClass);
+  setTimeout(() => el.classList.remove(flashClass), 2500);
 };
 
 const clearFilters = () => {

@@ -1,16 +1,23 @@
 <template>
   <div
     :class="{'pro-key-table__row--muted': isDead || isBlocked}"
+    :data-key-id="keyItem.id"
     :title="t('pro.table.expandHint')"
     class="pro-key-table__row"
     @click="emit('toggle-expand', keyItem.id)"
   >
+    <!-- Колонка «ключ» - только номер; полное системное имя идёт второй
+         строкой под названием, иначе оно налезало на соседнюю ячейку. -->
     <div class="pro-key-table__cell pro-key-table__cell--user">
-      <span class="pro-key-table__expand-icon">{{ expanded ? '▾' : '▸' }}</span>{{ keyItem.user }}
+      <span class="pro-key-table__expand-icon">{{ expanded ? '▾' : '▸' }}</span>
+      <span :title="keyItem.user" class="pro-key-table__user-num">{{ userNum }}</span>
     </div>
     <div class="pro-key-table__cell pro-key-table__cell--name">
-      <div :class="{'pro-key-table__name--unnamed': !hasName, 'pro-key-table__name--dead': isDead}" class="pro-key-table__name">
-        {{ displayName }}
+      <div class="pro-key-table__name-block">
+        <div :class="{'pro-key-table__name--unnamed': !hasName, 'pro-key-table__name--dead': isDead}" :title="displayName" class="pro-key-table__name">
+          {{ displayName }}
+        </div>
+        <div :title="keyItem.user" class="pro-key-table__user">{{ keyItem.user }}</div>
       </div>
       <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-table__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
         <SvgIcon name="pro-note"/>
@@ -85,7 +92,7 @@
 </template>
 
 <script setup>
-import {toRef} from 'vue';
+import {computed, toRef} from 'vue';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
@@ -114,4 +121,8 @@ const {
   untilText, lastLabel, gbText,
   profitText, profitTone, soldText,
 } = useProKeyView(toRef(props, 'keyItem'));
+
+// Системные имена keydesk - «095 Беспробудный Маршалл»: в узкой колонке
+// показываем только номер (или всё имя, если номера нет).
+const userNum = computed(() => (props.keyItem.user || '').match(/^\d+/)?.[0] || props.keyItem.user);
 </script>
