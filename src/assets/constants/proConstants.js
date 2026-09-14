@@ -33,3 +33,9 @@ export const PRO_LIMITS = {
 
 // Порог «истекает» в днях (совпадает с макетом).
 export const WARN_DAYS = 7;
+
+// Неактивность для аналитики: был вход, но 30+ дней назад.
+export const INACTIVE_DAYS = 30;
+
+// Месячная квота Pro Basic (ГБ) - по ней считаем расход из остатка квоты keydesk.
+export const BASIC_QUOTA_GB = 100;

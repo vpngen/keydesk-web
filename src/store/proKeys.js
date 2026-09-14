@@ -65,6 +65,15 @@ export const useProKeysStore = defineStore('proKeys', () => {
     return createKey(payload);
   };
 
+  /**
+   * Смена тарифа с немедленным списанием: сначала оплата с привязанной карты,
+   * тариф активируется только после успешной оплаты (новый месяц с сегодня).
+   */
+  const purchaseTier = async (id, tier) => {
+    await proApi.chargeProKey({tier});
+    return setKeyTier(id, tier, 1);
+  };
+
   /** Название / комментарий / «продал за». */
   const patchKeyMeta = async (id, fields) => {
     await proApi.patchProKeyMeta(id, fields);
@@ -127,6 +136,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
     fetchKeys,
     createKey,
     purchaseKey,
+    purchaseTier,
     patchKeyMeta,
     setKeyTier,
     extendKey,

@@ -22,8 +22,12 @@
       <option value="warn">{{ t('pro.status.warn') }}</option>
       <option value="blocked">{{ t('pro.status.blocked') }}</option>
       <option value="idle">{{ t('pro.status.idle') }}</option>
+      <option value="inactive">{{ t('pro.status.inactive') }}</option>
       <option value="off">{{ t('pro.status.off') }}</option>
     </select>
+    <button v-if="keyIds" class="pro-toolbar__chip" type="button" @click="keyIds = null">
+      {{ t('pro.toolbar.fromAnalytics') }} · {{ keyIds.length }} ✕
+    </button>
     <select v-model="selectedSort" class="pro-toolbar__select">
       <option value="until">{{ t('pro.toolbar.sortUntil') }}</option>
       <option value="last">{{ t('pro.toolbar.sortLast') }}</option>
@@ -64,5 +68,5 @@ const emit = defineEmits(['create']);
 
 const {t} = useI18n();
 const filterStore = useProKeysFilterStore();
-const {filterText, selectedTier, selectedStatus, selectedSort, view} = storeToRefs(filterStore);
+const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds} = storeToRefs(filterStore);
 </script>

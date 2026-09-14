@@ -69,10 +69,9 @@
     />
     <ProDialogUpgrade
       v-if="showDialogUpgrade && dialogKey"
-      :forecast-sum="forecastSum"
       :key-item="dialogKey"
       @close="showDialogUpgrade = false"
-      @upgrade="upgradeKey"
+      @upgraded="onUpgraded"
     />
     <ProDialogExtend
       v-if="showDialogExtend && dialogKey"
@@ -137,7 +136,7 @@ import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
-import {statusOf, profitOf, accessString, availableProtos, defaultFormat} from '@/utils/proKeys';
+import {statusOf, profitOf, accessString, availableProtos, defaultFormat, isInactive30} from '@/utils/proKeys';
 import {formatIso, parseIso, daysSinceVisit} from '@/utils/proFormat';
 
 const {t} = useI18n();
@@ -147,7 +146,7 @@ const billingStore = useProBillingStore();
 const toastStore = useProToastStore();
 
 const {keysList, brigadierName, brigadeName, isLoaded, forecastSum, freeCount, protoByKey, formatByKey} = storeToRefs(proKeysStore);
-const {filterText, selectedTier, selectedStatus, selectedSort, view} = storeToRefs(filterStore);
+const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds} = storeToRefs(filterStore);
 const {status: billingStatus} = storeToRefs(billingStore);
 
 const openMenuId = ref(null);
@@ -170,7 +169,10 @@ const filteredKeys = computed(() => {
       && !(k.name || '').toLowerCase().includes(q)
       && !(k.note || '').toLowerCase().includes(q)
       && !k.user.includes(q)) return false;
+    if (keyIds.value && !keyIds.value.includes(k.id)) return false;
     if (selectedTier.value !== 'all' && k.tier !== selectedTier.value) return false;
+    // «нет подключений 30+ дней» - не статус ключа, а выборка аналитики.
+    if (selectedStatus.value === 'inactive') return isInactive30(k);
     if (selectedStatus.value !== 'all' && statusOf(k, billingStatus.value) !== selectedStatus.value) return false;
     return true;
   });
@@ -282,8 +284,8 @@ const restoreKey = async (key) => {
   toastStore.show(t('pro.toasts.restored', {user: key.user}));
 };
 
-const upgradeKey = async ({tier, months}) => {
-  await proKeysStore.setKeyTier(dialogKey.value.id, tier, months);
+// Списание и смена тарифа идут внутри диалога; здесь только тост.
+const onUpgraded = (tier) => {
   toastStore.show(t('pro.toasts.upgraded', {tier: t(`pro.tiers.${tier}.name`)}));
 };
 

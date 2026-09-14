@@ -40,7 +40,8 @@ import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {REVENUE_HISTORY, ALL_TIME_EXTRA} from '@/api/proMockData';
-import {tierPrice} from '@/utils/proKeys';
+import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
+import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
 import {money, monthShift, daysSinceVisit, today} from '@/utils/proFormat';
 
 const {t, tm} = useI18n();
@@ -89,9 +90,19 @@ const mrrPoints = computed(() => {
     .join(' ');
 });
 
-const inactive = computed(() => liveKeys.value.filter((k) => !k.lastVisit || daysSinceVisit(k.lastVisit) >= 30).length);
-const topActive = computed(() => liveKeys.value.filter((k) => k.tier === 'basic' && k.gb > 50).length);
-const joined = computed(() => liveKeys.value.filter((k) => k.num >= 33).length);
+// «Нет подключений 30+ дней» - только ранее использованные ключи; экономия -
+// цена только платных из них (Free ничего не стоит).
+const inactiveKeys = computed(() => liveKeys.value.filter(isInactive30));
+const inactive = computed(() => inactiveKeys.value.length);
+const inactiveSavings = computed(() => inactiveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
+// Апгрейд советуем по измеренному расходу (>50 ГБ), а не по лимиту тарифа;
+// без данных о расходе ключ в выборку не попадает.
+const topActiveKeys = computed(() => liveKeys.value.filter((k) => k.tier === 'basic' && (usedGb(k) ?? 0) > 50));
+const topActive = computed(() => topActiveKeys.value.length);
+const upgradeExtraCost = computed(() => topActive.value * (tierPrice('unlim') - tierPrice('basic')));
+// Новые за 30 дней - по дате создания ключа (реальный keydesk отдаёт CreatedAt).
+const joinedKeys = computed(() => liveKeys.value.filter((k) => k.createdAt && daysSinceVisit(k.createdAt) < INACTIVE_DAYS));
+const joined = computed(() => joinedKeys.value.length);
 const left = computed(() => keysList.value.filter((k) => k.off).length);
 const retained = computed(() => liveKeys.value.filter((k) => k.lastVisit && daysSinceVisit(k.lastVisit) < 30).length);
 const paying = computed(() => liveKeys.value.filter((k) => k.tier !== 'free' && k.sold > 0).length);
@@ -134,24 +145,27 @@ const growthRows = computed(() => [
   {label: t('pro.analytics.growth.retention'), value: t('pro.analytics.growth.retentionValue', {kept: retained.value, total: liveKeys.value.length}), tone: 'green', tip: t('pro.analytics.growth.tipRetention')},
 ]);
 
-const adviceCards = computed(() => [
+// Рекомендации без данных (0 ключей) не показываем.
+const allAdviceCards = computed(() => [
   {
     id: 'inactive',
+    hidden: inactive.value === 0,
     n: String(inactive.value),
     tone: 'amber',
     title: t('pro.analytics.advice.inactive.title'),
     body: t('pro.analytics.advice.inactive.body'),
     cta: t('pro.analytics.advice.inactive.cta'),
-    foot: t('pro.analytics.advice.inactive.foot', {sum: money(inactive.value * 2)}),
+    foot: t('pro.analytics.advice.inactive.foot', {sum: money(inactiveSavings.value)}),
   },
   {
     id: 'topActive',
+    hidden: topActive.value === 0,
     n: String(topActive.value),
     tone: 'blue',
     title: t('pro.analytics.advice.topActive.title'),
     body: t('pro.analytics.advice.topActive.body'),
     cta: t('pro.analytics.advice.topActive.cta'),
-    foot: t('pro.analytics.advice.topActive.foot', {sum: money(topActive.value * 3)}),
+    foot: t('pro.analytics.advice.topActive.foot', {amount: money(upgradeExtraCost.value)}),
   },
   {
     id: 'joined',
@@ -173,19 +187,22 @@ const adviceCards = computed(() => [
   },
 ]);
 
+const adviceCards = computed(() => allAdviceCards.value.filter((card) => card.hidden !== true));
+
 const onAdvice = (id) => {
   if (id === 'inactive') {
-    filterStore.applyPreset({status: 'idle', viewMode: 'table'});
+    filterStore.applyPreset({status: 'inactive', viewMode: 'table'});
     router.push({path: '/', query: route.query});
     return;
   }
   if (id === 'topActive') {
-    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table'});
+    // Та же выборка, что в рекомендации, - не просто «Basic по трафику».
+    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table', ids: topActiveKeys.value.map((k) => k.id)});
     router.push({path: '/', query: route.query});
     return;
   }
   if (id === 'joined') {
-    filterStore.applyPreset({sort: 'last', viewMode: 'cards'});
+    filterStore.applyPreset({sort: 'last', viewMode: 'cards', ids: joinedKeys.value.map((k) => k.id)});
     router.push({path: '/', query: route.query});
     return;
   }

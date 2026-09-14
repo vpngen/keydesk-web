@@ -4,8 +4,8 @@
  * tier, proto, until, sold, off, lastVisit, gb}.
  */
 
-import {TIER_PRICE, WARN_DAYS} from '@/assets/constants/proConstants';
-import {daysUntil, nextBilling, parseIso, daysToBilling, monthDays} from '@/utils/proFormat';
+import {TIER_PRICE, WARN_DAYS, INACTIVE_DAYS, BASIC_QUOTA_GB} from '@/assets/constants/proConstants';
+import {daysUntil, nextBilling, parseIso, daysToBilling, monthDays, daysSinceVisit} from '@/utils/proFormat';
 
 export function tierPrice(tier) {
   return TIER_PRICE[tier] || 0;
@@ -51,6 +51,29 @@ export function availableProtos(key) {
       .sort((a, b) => order.indexOf(a) - order.indexOf(b));
   }
   return null;
+}
+
+/**
+ * «Нет подключений 30+ дней»: ключ подключался раньше, но последний вход
+ * 30+ дней назад. Ни разу не использованные (в т.ч. сегодняшние) сюда не входят.
+ */
+export function isInactive30(key) {
+  return !key.off && Boolean(key.lastVisit) && daysSinceVisit(key.lastVisit) >= INACTIVE_DAYS;
+}
+
+/**
+ * Использованный за месяц трафик (ГБ) или null, если посчитать нельзя.
+ * Реальный keydesk отдаёт остаток квоты, поэтому расход известен только для
+ * Pro Basic с фиксированной квотой; мок хранит расход напрямую.
+ */
+export function usedGb(key) {
+  if (key.configs) {
+    if (key.tier !== 'basic') return null;
+    const remaining = key.gb;
+    if (typeof remaining !== 'number' || remaining > BASIC_QUOTA_GB) return null;
+    return Math.max(0, BASIC_QUOTA_GB - remaining);
+  }
+  return key.gb || 0;
 }
 
 /** Профит: продал минус себестоимость тарифа. */

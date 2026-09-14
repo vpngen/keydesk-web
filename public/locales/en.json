@@ -884,7 +884,8 @@
         "nextCharge": "Next charge: {date}",
         "payButton": "Pay {amount} and switch plan",
         "successTitle": "Payment successful.",
-        "successText": "Your {plan} plan is active."
+        "successText": "Your {plan} plan is active.",
+        "payFailed": "The charge failed - the plan was not changed, nothing was charged. Try again."
       },
       "extend": {
         "title": "Extend",
