@@ -120,6 +120,11 @@ $narrow: 767px;
 			opacity: 0.55;
 		}
 
+		// Строка с открытым меню поднимается над закреплёнными ячейками соседей.
+		&--menu-open {
+			z-index: 2;
+		}
+
 		@media (max-width: $narrow) {
 			grid-template-columns: $columns-narrow;
 		}
@@ -320,11 +325,6 @@ $narrow: 767px;
 		&--muted {
 			border-color: v.$pro-color-disabled;
 			color: v.$pro-color-faded;
-		}
-
-		// Строка с открытым меню поднимается над закреплёнными ячейками соседей.
-		&--menu-open {
-			z-index: 2;
 		}
 	}
 
