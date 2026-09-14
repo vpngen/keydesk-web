@@ -16,6 +16,7 @@
  */
 
 import axios from 'axios';
+import {usedFromRemaining} from '@/utils/proKeys';
 import {TIER_PRICE} from '@/assets/constants/proConstants';
 import {apiLink, isDevOrStageHost} from '@/const/api';
 import {useAuthStore} from '@/store/auth';
@@ -102,6 +103,8 @@ function mapRealUser(user) {
     blockReason: user.ProBlockReason || null,
     lastVisit: user.LastVisitHour || null,
     gb: user.MonthlyQuotaRemainingGB ?? 0,
+    // Расход считаем из остатка квоты; для unlim/без данных - null.
+    usedGb: usedFromRemaining(user.MonthlyQuotaRemainingGB),
     createdAt: user.CreatedAt || null,
   };
 }

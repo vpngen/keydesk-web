@@ -62,17 +62,23 @@ export function isInactive30(key) {
 }
 
 /**
+ * Расход за месяц (ГБ) из остатка квоты keydesk (MonthlyQuotaRemainingGB).
+ * Считается только при квоте Pro Basic; остаток больше квоты (unlim, 1 ПиБ)
+ * или отсутствие числа - null, «данных нет».
+ */
+export function usedFromRemaining(remaining) {
+  if (typeof remaining !== 'number' || remaining < 0 || remaining > BASIC_QUOTA_GB) return null;
+  return Math.round((BASIC_QUOTA_GB - remaining) * 10) / 10;
+}
+
+/**
  * Использованный за месяц трафик (ГБ) или null, если посчитать нельзя.
- * Реальный keydesk отдаёт остаток квоты, поэтому расход известен только для
- * Pro Basic с фиксированной квотой; мок хранит расход напрямую.
+ * Ключи с бэкенда несут usedGb (число или null) - см. mapRealUser/enrichUser;
+ * у мок-фикстуры поля нет, там gb - это сразу расход, как в макете.
  */
 export function usedGb(key) {
-  if (key.configs) {
-    if (key.tier !== 'basic') return null;
-    const remaining = key.gb;
-    if (typeof remaining !== 'number' || remaining > BASIC_QUOTA_GB) return null;
-    return Math.max(0, BASIC_QUOTA_GB - remaining);
-  }
+  if (typeof key.usedGb === 'number') return key.usedGb;
+  if (key.usedGb === null) return null;
   return key.gb || 0;
 }
 
