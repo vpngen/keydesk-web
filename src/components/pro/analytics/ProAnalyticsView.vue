@@ -39,6 +39,7 @@ import ProMrrPanel from '@/components/pro/analytics/ProMrrPanel.vue';
 import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
+import {useProfileStore} from '@/store/profile';
 import {REVENUE_HISTORY, ALL_TIME_EXTRA} from '@/api/proMockData';
 import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
 import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
@@ -50,6 +51,10 @@ const router = useRouter();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
 const {keysList, brigadeName} = storeToRefs(proKeysStore);
+const {isPRO} = storeToRefs(useProfileStore());
+// Реальная PRO-бригада: истории выручки на бэкенде нет, поэтому прошлые месяцы
+// показываем без значений, а не цифрами из макета. Фикстура - только для мок-стенда.
+const isReal = computed(() => isPRO.value === true);
 
 const monthsShort = computed(() => tm('pro.months.short'));
 const monthsFull = computed(() => tm('pro.months.full'));
@@ -63,7 +68,8 @@ const profitMonth = computed(() => revenue.value - cost.value);
 const mrr = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.tier === 'free' ? 0 : (k.sold || 0)), 0));
 
 const history = computed(() => {
-  const values = [...REVENUE_HISTORY, revenue.value];
+  const past = isReal.value ? REVENUE_HISTORY.map(() => null) : REVENUE_HISTORY;
+  const values = [...past, revenue.value];
   return values.map((value, i) => ({
     label: monthsShort.value[monthShift(i - 5).getMonth()],
     value,
@@ -71,19 +77,20 @@ const history = computed(() => {
 });
 
 const chartBars = computed(() => {
-  const maxRev = history.value.reduce((max, h) => Math.max(max, h.value), 1);
+  const maxRev = history.value.reduce((max, h) => Math.max(max, h.value || 0), 1);
   return history.value.map((h, i) => ({
     label: h.label,
-    value: `€${h.value}`,
-    height: `${Math.max(6, Math.round(h.value / maxRev * 150))}px`,
+    value: h.value === null ? '—' : `€${h.value}`,
+    height: `${Math.max(6, Math.round((h.value || 0) / maxRev * 150))}px`,
     isLast: i === history.value.length - 1,
   }));
 });
 
-const allTime = computed(() => history.value.reduce((sum, h) => sum + h.value, 0) + ALL_TIME_EXTRA);
+const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0) + (isReal.value ? 0 : ALL_TIME_EXTRA));
 
 const mrrPoints = computed(() => {
-  const hist = [0.55, 0.65, 0.75, 0.84, 0.92, 1].map((f) => Math.round(mrr.value * f));
+  const factors = isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1];
+  const hist = factors.map((f) => Math.round(mrr.value * f));
   const maxMrr = hist.reduce((max, v) => Math.max(max, v), 1);
   return hist
     .map((v, i) => `${Math.round(i * (320 / (hist.length - 1)))},${Math.round(115 - v / maxMrr * 100)}`)
@@ -118,7 +125,7 @@ const statCards = computed(() => [
   {
     label: t('pro.analytics.statRevAll'),
     value: money(allTime.value),
-    hint: t('pro.analytics.statRevAllHint'),
+    hint: isReal.value ? t('pro.analytics.statRevAllHintReal') : t('pro.analytics.statRevAllHint'),
     tone: 'ink',
   },
   {

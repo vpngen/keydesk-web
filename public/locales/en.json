@@ -666,7 +666,8 @@
           "cta": "Open invoices",
           "foot": "growth over 30 days"
         }
-      }
+      },
+      "statRevAllHintReal": "current month only so far"
     },
     "help": {
       "title": "Help",
