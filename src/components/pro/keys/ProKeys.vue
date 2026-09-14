@@ -162,6 +162,9 @@ const showDialogSold = ref(false);
 const showDialogConfirm = ref(false);
 const showDialogPay = ref(false);
 
+// Новые - по дате создания (новые сверху); без даты - в конец.
+const createdTs = (k) => (k.createdAt ? new Date(k.createdAt).getTime() || 0 : 0);
+
 const filteredKeys = computed(() => {
   const q = filterText.value.trim().toLowerCase();
   const list = keysList.value.filter((k) => {
@@ -182,6 +185,7 @@ const filteredKeys = computed(() => {
     if (selectedSort.value === 'traffic') return b.gb - a.gb;
     if (selectedSort.value === 'profit') return profitOf(b) - profitOf(a);
     if (selectedSort.value === 'last') return daysSinceVisit(a.lastVisit) - daysSinceVisit(b.lastVisit);
+    if (selectedSort.value === 'created') return createdTs(b) - createdTs(a);
     const ax = a.until ? parseIso(a.until).getTime() : 9e15;
     const bx = b.until ? parseIso(b.until).getTime() : 9e15;
     return ax - bx;

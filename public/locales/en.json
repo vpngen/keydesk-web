@@ -354,7 +354,7 @@
       "help": "Help",
       "howItWorks": "How PRO works",
       "notifications": "Notifications",
-      "backToKeys": "Back to the Keydesk"
+      "backToKeys": "Back to Keydesk"
     },
     "header": {
       "greeting": "Hi, {name}!",
@@ -489,7 +489,10 @@
       "cards": "Cards",
       "table": "Table",
       "newKey": "New key",
-      "fromAnalytics": "selection from analytics"
+      "fromAnalytics": "selection from analytics",
+      "sortCreated": "Sort: created",
+      "presetNew": "new in 30 days",
+      "presetActive": "Basic over 50 GB"
     },
     "card": {
       "unnamed": "unnamed",

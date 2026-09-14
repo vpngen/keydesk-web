@@ -204,12 +204,13 @@ const onAdvice = (id) => {
   }
   if (id === 'topActive') {
     // Та же выборка, что в рекомендации, - не просто «Basic по трафику».
-    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table', ids: topActiveKeys.value.map((k) => k.id)});
+    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table', ids: topActiveKeys.value.map((k) => k.id), label: t('pro.toolbar.presetActive')});
     router.push({path: '/', query: route.query});
     return;
   }
   if (id === 'joined') {
-    filterStore.applyPreset({sort: 'last', viewMode: 'cards', ids: joinedKeys.value.map((k) => k.id)});
+    // Та же выборка, что в показателе: созданные за 30 дней, новые сверху.
+    filterStore.applyPreset({sort: 'created', viewMode: 'cards', ids: joinedKeys.value.map((k) => k.id), label: t('pro.toolbar.presetNew')});
     router.push({path: '/', query: route.query});
     return;
   }

@@ -354,7 +354,7 @@
       "help": "Справка",
       "howItWorks": "Как работает PRO",
       "notifications": "Уведомления",
-      "backToKeys": "Назад в Ключницу"
+      "backToKeys": "Назад в ключницу"
     },
     "header": {
       "greeting": "Привет, {name}!",
@@ -484,12 +484,15 @@
       "statusAll": "Статус: все",
       "sortUntil": "Сортировка: срок",
       "sortLast": "Сортировка: посл. вход",
-      "sortName": "Сортировка: комментарий",
+      "sortName": "Сортировка: название",
       "sortTraffic": "Сортировка: трафик",
       "cards": "Карточки",
       "table": "Таблица",
       "newKey": "Новый ключ",
-      "fromAnalytics": "выборка из аналитики"
+      "fromAnalytics": "выборка из аналитики",
+      "sortCreated": "Сортировка: дата создания",
+      "presetNew": "новые за 30 дней",
+      "presetActive": "Basic с расходом больше 50 ГБ"
     },
     "card": {
       "unnamed": "без названия",

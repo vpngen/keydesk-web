@@ -26,13 +26,14 @@
       <option value="off">{{ t('pro.status.off') }}</option>
     </select>
     <button v-if="keyIds" class="pro-toolbar__chip" type="button" @click="keyIds = null">
-      {{ t('pro.toolbar.fromAnalytics') }} · {{ keyIds.length }} ✕
+      {{ keyIdsLabel || t('pro.toolbar.fromAnalytics') }} · {{ keyIds.length }} ✕
     </button>
     <select v-model="selectedSort" class="pro-toolbar__select">
       <option value="until">{{ t('pro.toolbar.sortUntil') }}</option>
       <option value="last">{{ t('pro.toolbar.sortLast') }}</option>
       <option value="name">{{ t('pro.toolbar.sortName') }}</option>
       <option value="traffic">{{ t('pro.toolbar.sortTraffic') }}</option>
+      <option value="created">{{ t('pro.toolbar.sortCreated') }}</option>
     </select>
     <div class="pro-toolbar__view" data-tour="view-toggle">
       <button
@@ -68,5 +69,5 @@ const emit = defineEmits(['create']);
 
 const {t} = useI18n();
 const filterStore = useProKeysFilterStore();
-const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds} = storeToRefs(filterStore);
+const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds, keyIdsLabel} = storeToRefs(filterStore);
 </script>

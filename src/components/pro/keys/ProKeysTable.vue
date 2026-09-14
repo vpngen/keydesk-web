@@ -88,7 +88,9 @@ const countsLine = computed(() => t('pro.table.countsLine', {
   pro: keysList.value.length - freeCount.value,
 }));
 
-const arrow = (sort) => (selectedSort.value === sort ? '↓' : '↕');
+// Стрелка показывает реальное направление сортировки (см. filteredKeys в ProKeys).
+const DIRECTION = {until: '↑', last: '↓', name: '↑', traffic: '↓', profit: '↓', created: '↓'};
+const arrow = (sort) => (selectedSort.value === sort ? DIRECTION[sort] || '↓' : '↕');
 
 const setSort = (sort) => {
   selectedSort.value = sort;
