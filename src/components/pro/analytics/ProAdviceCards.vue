@@ -1,5 +1,5 @@
 <template>
-  <div class="pro-analytics__advice">
+  <div class="pro-analytics__advice" data-tour="advice">
     <div class="pro-analytics__advice-header">
       <div class="pro-analytics__advice-title">{{ t('pro.analytics.adviceTitle') }}</div>
       <div class="pro-analytics__advice-rule"></div>

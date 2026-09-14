@@ -3,7 +3,7 @@
     <div class="pro-key-table__inner">
       <div class="pro-key-table__head">
         <div class="pro-key-table__head-cell pro-key-table__head-cell--first">{{ t('pro.table.colKey') }}</div>
-        <button class="pro-key-table__head-cell pro-key-table__head-cell--sortable" type="button" @click="setSort('name')">
+        <button class="pro-key-table__head-cell pro-key-table__head-cell--sortable pro-key-table__head-cell--name" type="button" @click="setSort('name')">
           {{ t('pro.table.colName') }} {{ arrow('name') }}
         </button>
         <div class="pro-key-table__head-cell">{{ t('pro.table.colTariff') }}</div>
@@ -21,7 +21,7 @@
         <button class="pro-key-table__head-cell pro-key-table__head-cell--sortable pro-key-table__head-cell--right" type="button" @click="setSort('profit')">
           {{ t('pro.table.colProfit') }} {{ arrow('profit') }}
         </button>
-        <div class="pro-key-table__head-cell pro-key-table__head-cell--center">{{ t('pro.table.colActions') }}</div>
+        <div class="pro-key-table__head-cell pro-key-table__head-cell--center pro-key-table__head-cell--actions">{{ t('pro.table.colActions') }}</div>
       </div>
       <ProKeyTableRow
         v-for="key in keys"
@@ -76,19 +76,20 @@ const emit = defineEmits([
 const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
-const {keysList, freeCount} = storeToRefs(proKeysStore);
+const {keysList} = storeToRefs(proKeysStore);
 const {selectedSort} = storeToRefs(filterStore);
 
 const expandedId = ref(null);
 
-const countsLine = computed(() => t('pro.table.countsLine', {
-  shown: props.keys.length,
+// В таблице - только результат выборки; общие числа по тарифам - в подвале страницы.
+const countsLine = computed(() => t('pro.table.found', {
+  filtered: props.keys.length,
   total: keysList.value.length,
-  free: freeCount.value,
-  pro: keysList.value.length - freeCount.value,
 }));
 
-const arrow = (sort) => (selectedSort.value === sort ? '↓' : '↕');
+// Стрелка показывает реальное направление сортировки (см. filteredKeys в ProKeys).
+const DIRECTION = {until: '↑', last: '↓', name: '↑', traffic: '↓', profit: '↓', created: '↓'};
+const arrow = (sort) => (selectedSort.value === sort ? DIRECTION[sort] || '↓' : '↕');
 
 const setSort = (sort) => {
   selectedSort.value = sort;

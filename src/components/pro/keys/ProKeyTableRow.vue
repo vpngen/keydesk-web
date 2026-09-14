@@ -1,18 +1,25 @@
 <template>
   <div
     :class="{'pro-key-table__row--muted': isDead || isBlocked}"
+    :data-key-id="keyItem.id"
     :title="t('pro.table.expandHint')"
     class="pro-key-table__row"
     @click="emit('toggle-expand', keyItem.id)"
   >
+    <!-- Колонка «ключ» - только номер; полное системное имя идёт второй
+         строкой под названием, иначе оно налезало на соседнюю ячейку. -->
     <div class="pro-key-table__cell pro-key-table__cell--user">
-      <span class="pro-key-table__expand-icon">{{ expanded ? '▾' : '▸' }}</span>{{ keyItem.user }}
+      <span class="pro-key-table__expand-icon">{{ expanded ? '▾' : '▸' }}</span>
+      <span :title="keyItem.user" class="pro-key-table__user-num">{{ userNum }}</span>
     </div>
     <div class="pro-key-table__cell pro-key-table__cell--name">
-      <div :class="{'pro-key-table__name--unnamed': !hasName, 'pro-key-table__name--dead': isDead}" class="pro-key-table__name">
-        {{ displayName }}
+      <div class="pro-key-table__name-block">
+        <div :class="{'pro-key-table__name--unnamed': !hasName, 'pro-key-table__name--dead': isDead}" :title="displayName" class="pro-key-table__name">
+          {{ displayName }}
+        </div>
+        <div :title="keyItem.user" class="pro-key-table__user">{{ keyItem.user }}</div>
       </div>
-      <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-table__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
+      <button v-if="hasNote" :aria-label="t('pro.menu.comment')" :title="t('pro.card.hasNote')" class="pro-key-table__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
         <SvgIcon name="pro-note"/>
       </button>
     </div>
@@ -46,51 +53,69 @@
     </div>
     <div class="pro-key-table__cell pro-key-table__cell--actions">
       <button
+        :aria-label="isBlocked ? t('pro.toasts.copyBlocked') : copyLabel"
         :class="{'pro-key-table__copy--blocked': isBlocked}"
-        :title="isBlocked ? t('pro.toasts.copyBlocked') : t('pro.menu.copy')"
+        :title="isBlocked ? t('pro.toasts.copyBlocked') : copyLabel"
         class="pro-key-table__copy"
         type="button"
         @click.stop="emit('copy', keyItem)"
       >
         ⧉
       </button>
-      <button class="pro-key-table__gear" type="button" @click.stop="emit('toggle-menu', keyItem.id)">⚙</button>
+      <button
+        ref="gearRef"
+        :aria-label="t('pro.card.actions')"
+        :title="t('pro.card.actions')"
+        class="pro-key-table__gear"
+        type="button"
+        @click.stop="emit('toggle-menu', keyItem.id)"
+      >
+        ⚙
+      </button>
+
+      <!-- Меню позиционируется от шестерёнки (телепорт в #app): его не режет
+           прокрутка таблицы, при нехватке места снизу раскрывается вверх. -->
+      <ProKeyMenu
+        v-if="menuOpen"
+        :anchor="gearRef"
+        :can-upgrade="keyItem.tier !== 'unlim'"
+        :has-name="hasName"
+        :has-note="hasNote"
+        :has-sold="Boolean(keyItem.sold)"
+        :is-free="isFree"
+        variant="table"
+        @close="onMenuClose"
+        @deactivate="emit('open-confirm', keyItem, 'off')"
+        @delete="emit('open-confirm', keyItem, 'del')"
+        @extend="emit('open-extend', keyItem)"
+        @note="emit('open-note', keyItem)"
+        @rename="emit('open-name', keyItem)"
+        @sold="emit('open-sold', keyItem)"
+        @upgrade="emit('open-upgrade', keyItem)"
+      />
     </div>
 
     <div v-if="expanded" class="pro-key-table__expanded" @click.stop>
       <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-table__proto" @copy="emit('copy', keyItem)">
         <button v-if="!isDead && !isBlocked" class="pro-key-table__proto-copy" type="button" @click="emit('copy', keyItem)">
-          {{ t('pro.table.copy') }}
+          {{ copyLabel }}
         </button>
       </ProKeyProtoSwitcher>
     </div>
 
-    <ProKeyMenu
-      v-if="menuOpen"
-      :has-name="hasName"
-      :has-note="hasNote"
-      :has-sold="Boolean(keyItem.sold)"
-      :is-free="isFree"
-      variant="table"
-      @close="emit('close-menu', keyItem)"
-      @deactivate="emit('open-confirm', keyItem, 'off')"
-      @delete="emit('open-confirm', keyItem, 'del')"
-      @extend="emit('open-extend', keyItem)"
-      @note="emit('open-note', keyItem)"
-      @rename="emit('open-name', keyItem)"
-      @sold="emit('open-sold', keyItem)"
-      @upgrade="emit('open-upgrade', keyItem)"
-    />
   </div>
 </template>
 
 <script setup>
-import {toRef} from 'vue';
+import {computed, nextTick, ref, toRef} from 'vue';
+import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
+import {useProKeysStore} from '@/store/proKeys';
+import {defaultFormat} from '@/utils/proKeys';
 
 const props = defineProps({
   keyItem: {
@@ -114,4 +139,22 @@ const {
   untilText, lastLabel, gbText,
   profitText, profitTone, soldText,
 } = useProKeyView(toRef(props, 'keyItem'));
+
+const gearRef = ref(null);
+
+// Подпись копирования по выбранному формату (ссылка / ключ).
+const {formatByKey} = storeToRefs(useProKeysStore());
+const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
+  ? t('pro.card.copyLink')
+  : t('pro.card.copyKey')));
+
+// Esc закрывает меню и возвращает фокус на кнопку; клик мимо - просто закрывает.
+const onMenuClose = (reason) => {
+  emit('close-menu', props.keyItem);
+  if (reason === 'escape') nextTick(() => gearRef.value?.focus());
+};
+
+// Системные имена keydesk - «095 Беспробудный Маршалл»: в узкой колонке
+// показываем только номер (или всё имя, если номера нет).
+const userNum = computed(() => (props.keyItem.user || '').match(/^\d+/)?.[0] || props.keyItem.user);
 </script>

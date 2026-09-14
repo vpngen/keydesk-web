@@ -12,7 +12,7 @@
           >
             {{ displayName }}
           </button>
-          <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-card__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
+          <button v-if="hasNote" :aria-label="t('pro.menu.comment')" :title="t('pro.card.hasNote')" class="pro-key-card__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
             <SvgIcon name="pro-note"/>
           </button>
         </div>
@@ -72,7 +72,7 @@
 
     <div class="pro-key-card__footer">
       <button v-if="canCopy" class="pro-key-card__copy" type="button" @click="emit('copy', keyItem)">
-        {{ t('pro.card.copy') }}
+        {{ copyLabel }}
       </button>
       <div v-if="isBlocked" class="pro-key-card__copy-blocked">
         <span class="pro-key-card__copy-blocked-x">✕</span> {{ t('pro.card.copyBlocked') }}
@@ -93,6 +93,8 @@
       </button>
       <button
         v-if="!isDead"
+        ref="gearRef"
+        :aria-label="t('pro.card.actions')"
         :title="t('pro.card.actions')"
         class="pro-key-card__gear"
         type="button"
@@ -102,12 +104,13 @@
       </button>
       <ProKeyMenu
         v-if="menuOpen"
+        :can-upgrade="keyItem.tier !== 'unlim'"
         :has-name="hasName"
         :has-note="hasNote"
         :has-sold="Boolean(keyItem.sold)"
         :is-free="isFree"
         variant="card"
-        @close="emit('close-menu', keyItem)"
+        @close="onMenuClose"
         @copy="emit('copy', keyItem)"
         @deactivate="emit('open-confirm', keyItem, 'off')"
         @delete="emit('open-confirm', keyItem, 'del')"
@@ -122,12 +125,15 @@
 </template>
 
 <script setup>
-import {computed, toRef} from 'vue';
+import {computed, nextTick, ref, toRef} from 'vue';
+import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
+import {useProKeysStore} from '@/store/proKeys';
+import {defaultFormat} from '@/utils/proKeys';
 
 const props = defineProps({
   keyItem: {
@@ -152,4 +158,18 @@ const {
 } = useProKeyView(toRef(props, 'keyItem'));
 
 const canCopy = computed(() => !isDead.value && !isBlocked.value);
+
+// Основное действие называется по выбранному формату: ссылка или ключ.
+const {formatByKey} = storeToRefs(useProKeysStore());
+const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
+  ? t('pro.card.copyLink')
+  : t('pro.card.copyKey')));
+
+const gearRef = ref(null);
+
+// Esc закрывает меню и возвращает фокус на шестерёнку; клик мимо - просто закрывает.
+const onMenuClose = (reason) => {
+  emit('close-menu', props.keyItem);
+  if (reason === 'escape') nextTick(() => gearRef.value?.focus());
+};
 </script>

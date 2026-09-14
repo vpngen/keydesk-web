@@ -354,7 +354,7 @@
       "help": "Help",
       "howItWorks": "How PRO works",
       "notifications": "Notifications",
-      "backToKeys": "Back to the Keydesk"
+      "backToKeys": "Back to Keydesk"
     },
     "header": {
       "greeting": "Hi, {name}!",
@@ -448,7 +448,8 @@
       "warn": "expiring",
       "blocked": "blocked",
       "off": "deactivated",
-      "idle": "never used"
+      "idle": "never used",
+      "inactive": "no connections for 30+ days"
     },
     "tiers": {
       "free": {
@@ -487,7 +488,11 @@
       "sortTraffic": "Sort: traffic",
       "cards": "Cards",
       "table": "Table",
-      "newKey": "New key"
+      "newKey": "New key",
+      "fromAnalytics": "selection from analytics",
+      "sortCreated": "Sort: created",
+      "presetNew": "new in 30 days",
+      "presetActive": "Basic over 50 GB"
     },
     "card": {
       "unnamed": "unnamed",
@@ -515,13 +520,16 @@
       "upgrade": "Upgrade",
       "pay": "Pay",
       "extend": "Extend",
-      "actions": "Actions",
+      "actions": "Key actions",
       "blockedNote": "Switched off because of an unpaid invoice.",
       "expiredNote": "The key's paid period is over - extend it to switch it back on.",
       "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
       "copyValue": "Copy",
       "boughtOn": "Bought {date}",
-      "bought": "Bought"
+      "bought": "Bought",
+      "createdOn": "created {date}",
+      "copyLink": "Copy link",
+      "copyKey": "Copy key"
     },
     "menu": {
       "sectionKey": "key",
@@ -554,7 +562,9 @@
       "pageOf": "page {page} of {total}",
       "countsLine": "showing {shown} of {total} · Free {free} · Pro {pro}",
       "copy": "Copy",
-      "expandHint": "Show the key"
+      "expandHint": "Show the key",
+      "found": "Showing {filtered} of {total} keys",
+      "allKeys": "All keys: {total} · Free {free} · Pro {pro}"
     },
     "empty": {
       "noKeys": {
@@ -604,15 +614,18 @@
         "overdue": "overdue",
         "paid": "paid",
         "cancelled": "cancelled"
-      }
+      },
+      "emptyFirstMonth": "Your first combined invoice hasn't been generated yet. For now, new paid keys are charged separately when you create them. Your invoice breakdown and next charge amount will appear here.",
+      "loadError": "Couldn't load invoices.",
+      "retry": "Try again"
     },
     "analytics": {
       "title": "Analytics",
       "subtitle": "brigade summary",
       "subtitleNamed": "summary for brigade “{name}”",
       "report": "QC report",
-      "statRevMonth": "Revenue for {month}",
-      "statRevMonthHint": "from {count} sold keys",
+      "statRevMonth": "Expected monthly revenue",
+      "statRevMonthHint": "Based on entered sale prices; payment receipt isn't confirmed",
       "statRevAll": "All-time revenue",
       "statRevAllHint": "over the last 6 months",
       "statMrr": "MRR",
@@ -638,7 +651,7 @@
       "advice": {
         "inactive": {
           "title": "Inactive for over 30 days",
-          "body": "No visits for 30+ days - as quiet as an empty shelf. If some of them are paid keys, you pay for that silence every month. Delete them or ask if everything is fine.",
+          "body": "Connected before, but no visits for 30+ days - as quiet as an empty shelf. If some of them are paid keys, you pay for that silence every month. Delete them or ask if everything is fine.",
           "cta": "Show inactive",
           "foot": "saves up to {sum}"
         },
@@ -646,7 +659,7 @@
           "title": "The most active users",
           "body": "Over 50 GB a month on Pro Basic - clearly nobody is saving traffic here. Offer Pro Unlim: better for you, calmer for them.",
           "cta": "Sort by traffic",
-          "foot": "+{sum} to MRR"
+          "foot": "Additional cost after upgrading: {amount}/month"
         },
         "newUsers": {
           "title": "New users",
@@ -660,7 +673,8 @@
           "cta": "Open invoices",
           "foot": "growth over 30 days"
         }
-      }
+      },
+      "statRevAllHintReal": "current month only so far"
     },
     "help": {
       "title": "Help",
@@ -730,15 +744,15 @@
       "faq": {
         "i1": {
           "q": "How is Pro Basic different from Pro Unlim?",
-          "a": "Pro Basic works with the base speed and traffic limits, like regular keys. Pro Unlim has no traffic limits and comes with extended quotas. In both cases you set the validity term yourself."
+          "a": "Pro Basic works with the base speed and traffic limits, like regular keys. Pro Unlim has no traffic limits and comes with extended quotas. Both plans are billed monthly."
         },
         "i2": {
           "q": "What happens to Free keys?",
-          "a": "Nothing. They work as before, indefinitely, and never enter the invoice. PRO does not auto-delete Free keys."
+          "a": "Nothing. They work as before, indefinitely and for free. PRO does not auto-delete Free keys."
         },
         "i3": {
-          "q": "When does the bill arrive?",
-          "a": "Once a month, on the 1st, for all paid keys at once. If a key was created mid-month, the first time you only pay for the days it actually worked."
+          "q": "When am I charged for keys?",
+          "a": "When you create a new Basic or Unlim key, its price is charged to your linked payment method immediately. The key activates after successful payment. Free keys cost nothing. After a month, all active paid keys are grouped into one invoice for the next billing period, listing key types, quantities and the total. From then on, your paid keys are billed automatically in one monthly payment."
         },
         "i4": {
           "q": "What if I don't pay on time?",
@@ -750,7 +764,7 @@
         },
         "i6": {
           "q": "Can a Free key be moved to Pro?",
-          "a": "Yes, with the “Upgrade” button on the card. The key is reissued, so it has to be added to the VPN client again. The old key keeps working for 3 more days and then switches off."
+          "a": "Yes, via “Upgrade” in the card menu: pick a plan and the payment is charged right away. The key stays the same - no need to re-add it to the VPN client."
         },
         "i7": {
           "q": "Which protocol to choose?",
@@ -773,8 +787,8 @@
         "account": "Account number",
         "cta": "Write to support",
         "beforeTitle": "Before writing",
-        "tip1": "Check whether the invoice is paid - switched-off keys don't work until the bill is closed.",
-        "tip2": "Attach the key number (e.g. user-014) - we'll sort it out faster.",
+        "tip1": "Check the key is switched on and its term hasn't expired - switched-off keys don't work.",
+        "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
       }
     },
@@ -816,10 +830,10 @@
         "termUntil": "The key will be valid until",
         "termNote": "The term can be changed at any moment - both extended and shortened.",
         "nameHint": "Give the key a name so you don't have to guess whose it is later.",
-        "namePlaceholder": "E.g.: second phone",
+        "namePlaceholder": "e.g. Spare laptop",
         "nameFoot": "It is visible in the list and in the table. Search works by it too.",
         "noteLabel": "Comment — optional",
-        "notePlaceholder": "A free-form note: contacts, terms, reminders",
+        "notePlaceholder": "e.g. Renew in December",
         "noteFoot": "The comment is not shown in the list - only a mark next to the name. You can add or change it later via the gear.",
         "soldLabel": "Sold for — optional",
         "soldHint": "Needed for analytics - to track your profit; it never enters the invoice.",
@@ -870,7 +884,18 @@
         "doneStamp": "upgrade done",
         "doneTitle": "It's {tier} now",
         "reissued": "the key was reissued",
-        "doneNote": "The key was reissued - it has to be added to the VPN client again. The old key will keep working for 3 more days and then switch off. Nothing is charged right now: the {prorate} top-up for the rest of this month enters the {date} invoice."
+        "doneNote": "The key was reissued - it has to be added to the VPN client again. The old key will keep working for 3 more days and then switch off. Nothing is charged right now: the {prorate} top-up for the rest of this month enters the {date} invoice.",
+        "switchTo": "Switch to {plan}",
+        "current": "Current: {plan}",
+        "dueNow": "Due now: {amount}",
+        "chargeText": "We'll charge your saved payment method now. Future payments will be collected through your combined monthly invoice.",
+        "nextCharge": "Next charge: {date}",
+        "payButton": "Pay {amount} and switch plan",
+        "successTitle": "Payment successful.",
+        "successText": "Your {plan} plan is active.",
+        "payFailed": "The charge failed - the plan was not changed, nothing was charged. Try again.",
+        "priceLine": "{plan}: {amount}/mo",
+        "credit": "Credit for unused {plan} days: −{amount} ({days} of {total} d.)"
       },
       "extend": {
         "title": "Extend",
@@ -889,8 +914,8 @@
       },
       "note": {
         "title": "Comment",
-        "hint": "A free-form note — write anything: contacts, terms, reminders.",
-        "placeholder": "E.g.: pays every two months, extend in December",
+        "hint": "Add the key's purpose or a reminder. No names, phone numbers or other personal data.",
+        "placeholder": "e.g. Renew in December",
         "foot": "Only you see the comment. It is not shown in the list - just a mark next to the name, but search works over it."
       },
       "sold": {
@@ -899,7 +924,9 @@
         "hint": "How much do you charge for this key per month? The number is only for you — to see the profit.",
         "cost": "Plan cost",
         "profit": "Profit per key",
-        "foot": "Leave the field empty if the key was given away for free — then profit is not counted."
+        "foot": "Empty means the price isn't set. The paid plan's cost is counted either way.",
+        "negative": "The amount can't be negative",
+        "invalid": "Enter a number, e.g. 10.50"
       },
       "review": {
         "invoiceTitle": "How this enters the invoice",
@@ -954,8 +981,8 @@
       "s1": {
         "label": "step 1 of 7",
         "title": "PRO is on - the shortage is cancelled",
-        "text": "No move was needed: same keys, same list, same buttons. It's just that next to the free ones you can now get paid ones - no queue and no connections required.",
-        "cta": "Show what arrived"
+        "text": "PRO is active. Let's show you where to create and manage keys.",
+        "cta": "Next"
       },
       "s2": {
         "label": "step 2 of 7 · key labels",
@@ -966,12 +993,12 @@
           {
             "name": "Free",
             "price": "€0",
-            "body": "perpetual, never enters the invoice"
+            "body": "perpetual, costs nothing"
           },
           {
             "name": "Pro Basic",
             "price": "€2/mo",
-            "body": "you set the term, goes into the common invoice"
+            "body": "base traffic limits, charged on creation"
           },
           {
             "name": "Pro Unlim",
@@ -989,31 +1016,14 @@
       "s4": {
         "label": "step 4 of 7 · how to issue a paid key",
         "title": "Two roads to Pro",
-        "text": "The first - the red “+ New key” button in the top right: pick a plan, a term, sign and pay. The second - the “Upgrade” link right on a free key's card: the key is reissued, so it has to be added to the VPN client again - the old key works 3 more days and quietly retires.",
+        "text": "Choose a plan, name your key and add an optional note. For a paid key, review the amount and confirm payment. A Free key can be moved to Pro via “Upgrade” in the card menu.",
         "cta": "Next"
       },
       "s5": {
         "label": "step 5 of 7 · invoices",
         "title": "Invoices arrived!",
-        "text": "Payment was never a thing before - now paid keys come with an invoice: one common bill for all paid keys at once, no separate bill per key.",
-        "cta": "Next",
-        "cards": [
-          {
-            "name": "One bill",
-            "price": "on the 1st",
-            "body": "All paid keys in one bill, paid once a month."
-          },
-          {
-            "name": "A key mid-month",
-            "price": "by days",
-            "body": "The first payment covers only the remaining days, not the whole month."
-          },
-          {
-            "name": "Overdue",
-            "price": "7 days of grace",
-            "body": "Then paid keys are switched off temporarily; Free keys keep working."
-          }
-        ]
+        "text": "Invoices arrived! When you create a new Basic or Unlim key, its price is charged to your linked payment method immediately. The key activates after successful payment. Free keys cost nothing.\n\nAfter a month, all active paid keys are grouped into one invoice for the next billing period, listing key types, quantities and the total. From then on, your paid keys are billed automatically in one monthly payment.\n\nAll your keys on one invoice. Accounting Tetris: complete.",
+        "cta": "Next"
       },
       "s6": {
         "label": "step 6 of 7 · analytics",
@@ -1025,7 +1035,7 @@
         "label": "step 7 of 7",
         "title": "Welcome to a world with no shortage",
         "text": "The guide can always be reopened - “How PRO works” in the top menu. Happy selling!",
-        "cta": "Go to the Keydesk"
+        "cta": "Go to keys"
       }
     },
     "toasts": {

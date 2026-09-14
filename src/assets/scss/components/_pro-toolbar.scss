@@ -46,6 +46,23 @@
 		color: v.$pro-color-muted;
 	}
 
+	// Чип точной выборки из аналитики; клик снимает выборку.
+	&__chip {
+		@include pro.pro-control-reset;
+
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		border: 1px solid v.$pro-color-ink;
+		padding: 0 12px;
+		height: 40px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink;
+		background: v.$pro-color-shade;
+	}
+
 	&__select {
 		appearance: none;
 		flex: 1 1 130px;

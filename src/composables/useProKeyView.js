@@ -3,7 +3,7 @@ import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import {useProBillingStore} from '@/store/proBilling';
 import {statusOf, profitOf, countsIn, tierPrice} from '@/utils/proKeys';
-import {money, formatIso, formatShort, nextBilling, daysUntil, lastVisitParts, formatGb} from '@/utils/proFormat';
+import {money, formatIso, formatShort, formatDate, nextBilling, daysUntil, lastVisitParts, formatGb} from '@/utils/proFormat';
 
 /**
  * Вью-модель одного PRO-ключа (общая для карточки и строки таблицы):
@@ -34,7 +34,11 @@ export function useProKeyView(keyRef) {
 
   const lastLabel = computed(() => {
     const parts = lastVisitParts(keyRef.value.lastVisit);
-    if (!parts.key) return '—';
+    // Ни разу не использованный ключ: вместо «—» показываем его возраст.
+    if (!parts.key) {
+      const created = keyRef.value.createdAt ? new Date(keyRef.value.createdAt) : null;
+      return created && !Number.isNaN(created.getTime()) ? t('pro.card.createdOn', {date: formatDate(created)}) : '—';
+    }
     if (parts.key === 'date') return parts.date;
     return `${t(`pro.card.${parts.key}`)}, ${parts.time}`;
   });

@@ -39,8 +39,10 @@ import ProMrrPanel from '@/components/pro/analytics/ProMrrPanel.vue';
 import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
-import {REVENUE_HISTORY, ALL_TIME_EXTRA} from '@/api/proMockData';
-import {tierPrice} from '@/utils/proKeys';
+import {useProfileStore} from '@/store/profile';
+import {REVENUE_HISTORY} from '@/api/proMockData';
+import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
+import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
 import {money, monthShift, daysSinceVisit, today} from '@/utils/proFormat';
 
 const {t, tm} = useI18n();
@@ -49,6 +51,10 @@ const router = useRouter();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
 const {keysList, brigadeName} = storeToRefs(proKeysStore);
+const {isPRO} = storeToRefs(useProfileStore());
+// Реальная PRO-бригада: истории выручки на бэкенде нет, поэтому прошлые месяцы
+// показываем без значений, а не цифрами из макета. Фикстура - только для мок-стенда.
+const isReal = computed(() => isPRO.value === true);
 
 const monthsShort = computed(() => tm('pro.months.short'));
 const monthsFull = computed(() => tm('pro.months.full'));
@@ -62,7 +68,8 @@ const profitMonth = computed(() => revenue.value - cost.value);
 const mrr = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.tier === 'free' ? 0 : (k.sold || 0)), 0));
 
 const history = computed(() => {
-  const values = [...REVENUE_HISTORY, revenue.value];
+  const past = isReal.value ? REVENUE_HISTORY.map(() => null) : REVENUE_HISTORY;
+  const values = [...past, revenue.value];
   return values.map((value, i) => ({
     label: monthsShort.value[monthShift(i - 5).getMonth()],
     value,
@@ -70,28 +77,40 @@ const history = computed(() => {
 });
 
 const chartBars = computed(() => {
-  const maxRev = history.value.reduce((max, h) => Math.max(max, h.value), 1);
+  const maxRev = history.value.reduce((max, h) => Math.max(max, h.value || 0), 1);
   return history.value.map((h, i) => ({
     label: h.label,
-    value: `€${h.value}`,
-    height: `${Math.max(6, Math.round(h.value / maxRev * 150))}px`,
+    value: h.value === null ? '—' : `€${h.value}`,
+    height: `${Math.max(6, Math.round((h.value || 0) / maxRev * 150))}px`,
     isLast: i === history.value.length - 1,
   }));
 });
 
-const allTime = computed(() => history.value.reduce((sum, h) => sum + h.value, 0) + ALL_TIME_EXTRA);
+// «За всё время» = сумма столбцов графика: подпись «за 6 месяцев» и цифра совпадают.
+const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0));
 
 const mrrPoints = computed(() => {
-  const hist = [0.55, 0.65, 0.75, 0.84, 0.92, 1].map((f) => Math.round(mrr.value * f));
+  const factors = isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1];
+  const hist = factors.map((f) => Math.round(mrr.value * f));
   const maxMrr = hist.reduce((max, v) => Math.max(max, v), 1);
   return hist
     .map((v, i) => `${Math.round(i * (320 / (hist.length - 1)))},${Math.round(115 - v / maxMrr * 100)}`)
     .join(' ');
 });
 
-const inactive = computed(() => liveKeys.value.filter((k) => !k.lastVisit || daysSinceVisit(k.lastVisit) >= 30).length);
-const topActive = computed(() => liveKeys.value.filter((k) => k.tier === 'basic' && k.gb > 50).length);
-const joined = computed(() => liveKeys.value.filter((k) => k.num >= 33).length);
+// «Нет подключений 30+ дней» - только ранее использованные ключи; экономия -
+// цена только платных из них (Free ничего не стоит).
+const inactiveKeys = computed(() => liveKeys.value.filter(isInactive30));
+const inactive = computed(() => inactiveKeys.value.length);
+const inactiveSavings = computed(() => inactiveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
+// Апгрейд советуем по измеренному расходу (>50 ГБ), а не по лимиту тарифа;
+// без данных о расходе ключ в выборку не попадает.
+const topActiveKeys = computed(() => liveKeys.value.filter((k) => k.tier === 'basic' && (usedGb(k) ?? 0) > 50));
+const topActive = computed(() => topActiveKeys.value.length);
+const upgradeExtraCost = computed(() => topActive.value * (tierPrice('unlim') - tierPrice('basic')));
+// Новые за 30 дней - по дате создания ключа (реальный keydesk отдаёт CreatedAt).
+const joinedKeys = computed(() => liveKeys.value.filter((k) => k.createdAt && daysSinceVisit(k.createdAt) < INACTIVE_DAYS));
+const joined = computed(() => joinedKeys.value.length);
 const left = computed(() => keysList.value.filter((k) => k.off).length);
 const retained = computed(() => liveKeys.value.filter((k) => k.lastVisit && daysSinceVisit(k.lastVisit) < 30).length);
 const paying = computed(() => liveKeys.value.filter((k) => k.tier !== 'free' && k.sold > 0).length);
@@ -99,15 +118,16 @@ const net = computed(() => joined.value - left.value);
 
 const statCards = computed(() => [
   {
-    label: t('pro.analytics.statRevMonth', {month: monthsFull.value[today().getMonth()]}),
+    // Выручка считается по введённым ценам продажи - это ожидание, не факт оплаты.
+    label: t('pro.analytics.statRevMonth'),
     value: money(revenue.value),
-    hint: t('pro.analytics.statRevMonthHint', {count: liveKeys.value.filter((k) => k.sold).length}),
+    hint: t('pro.analytics.statRevMonthHint'),
     tone: 'ink',
   },
   {
     label: t('pro.analytics.statRevAll'),
     value: money(allTime.value),
-    hint: t('pro.analytics.statRevAllHint'),
+    hint: isReal.value ? t('pro.analytics.statRevAllHintReal') : t('pro.analytics.statRevAllHint'),
     tone: 'ink',
   },
   {
@@ -134,24 +154,27 @@ const growthRows = computed(() => [
   {label: t('pro.analytics.growth.retention'), value: t('pro.analytics.growth.retentionValue', {kept: retained.value, total: liveKeys.value.length}), tone: 'green', tip: t('pro.analytics.growth.tipRetention')},
 ]);
 
-const adviceCards = computed(() => [
+// Рекомендации без данных (0 ключей) не показываем.
+const allAdviceCards = computed(() => [
   {
     id: 'inactive',
+    hidden: inactive.value === 0,
     n: String(inactive.value),
     tone: 'amber',
     title: t('pro.analytics.advice.inactive.title'),
     body: t('pro.analytics.advice.inactive.body'),
     cta: t('pro.analytics.advice.inactive.cta'),
-    foot: t('pro.analytics.advice.inactive.foot', {sum: money(inactive.value * 2)}),
+    foot: t('pro.analytics.advice.inactive.foot', {sum: money(inactiveSavings.value)}),
   },
   {
     id: 'topActive',
+    hidden: topActive.value === 0,
     n: String(topActive.value),
     tone: 'blue',
     title: t('pro.analytics.advice.topActive.title'),
     body: t('pro.analytics.advice.topActive.body'),
     cta: t('pro.analytics.advice.topActive.cta'),
-    foot: t('pro.analytics.advice.topActive.foot', {sum: money(topActive.value * 3)}),
+    foot: t('pro.analytics.advice.topActive.foot', {amount: money(upgradeExtraCost.value)}),
   },
   {
     id: 'joined',
@@ -173,19 +196,23 @@ const adviceCards = computed(() => [
   },
 ]);
 
+const adviceCards = computed(() => allAdviceCards.value.filter((card) => card.hidden !== true));
+
 const onAdvice = (id) => {
   if (id === 'inactive') {
-    filterStore.applyPreset({status: 'idle', viewMode: 'table'});
+    filterStore.applyPreset({status: 'inactive', viewMode: 'table'});
     router.push({path: '/', query: route.query});
     return;
   }
   if (id === 'topActive') {
-    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table'});
+    // Та же выборка, что в рекомендации, - не просто «Basic по трафику».
+    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table', ids: topActiveKeys.value.map((k) => k.id), label: t('pro.toolbar.presetActive')});
     router.push({path: '/', query: route.query});
     return;
   }
   if (id === 'joined') {
-    filterStore.applyPreset({sort: 'last', viewMode: 'cards'});
+    // Та же выборка, что в показателе: созданные за 30 дней, новые сверху.
+    filterStore.applyPreset({sort: 'created', viewMode: 'cards', ids: joinedKeys.value.map((k) => k.id), label: t('pro.toolbar.presetNew')});
     router.push({path: '/', query: route.query});
     return;
   }

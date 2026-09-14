@@ -28,7 +28,7 @@
     </div>
     <div v-if="value" class="pro-proto__value-row">
       <div :title="value" class="pro-proto__value">{{ value }}</div>
-      <button :title="t('pro.card.copyValue')" class="pro-proto__copy" type="button" @click.stop="emit('copy')">⧉</button>
+      <button :aria-label="copyLabel" :title="copyLabel" class="pro-proto__copy" type="button" @click.stop="emit('copy')">⧉</button>
     </div>
     <div v-else class="pro-proto__value pro-proto__value--empty">{{ t('pro.card.noStoredKey') }}</div>
     <slot/>
@@ -62,5 +62,6 @@ const currentProto = computed(() => {
   return protos.value.includes(selected) ? selected : protos.value[0];
 });
 const currentFormat = computed(() => formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem));
+const copyLabel = computed(() => (currentFormat.value === 'link' ? t('pro.card.copyLink') : t('pro.card.copyKey')));
 const value = computed(() => accessString(props.keyItem, currentProto.value, currentFormat.value));
 </script>

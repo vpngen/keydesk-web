@@ -6,6 +6,7 @@
 
 import {PRO_PROTOCOLS} from '@/assets/constants/proConstants';
 import {toIso, today, parseIso, invoiceNumber, monthShift, formatDate} from '@/utils/proFormat';
+import {usedFromRemaining} from '@/utils/proKeys';
 
 const inDays = (d) => {
   const x = today();
@@ -121,6 +122,9 @@ export function enrichUser(user, index) {
     off: false,
     lastVisit: user.LastVisitHour || null,
     gb: user.MonthlyQuotaRemainingGB ?? 0,
+    // gb здесь - остаток квоты keydesk, а не расход: иначе неиспользованные
+    // ключи с полной квотой выглядят «самыми активными».
+    usedGb: usedFromRemaining(user.MonthlyQuotaRemainingGB),
     createdAt: user.CreatedAt || null,
   };
 }

@@ -248,8 +248,12 @@
 		@include pro.pro-control-reset;
 		@include pro.pro-cta(v.$pro-color-red);
 
+		display: block;
 		align-self: stretch;
 		padding: 13px 22px;
+		box-sizing: border-box;
+		text-align: center;
+		text-decoration: none;
 	}
 
 	&__support-tip {
@@ -361,5 +365,16 @@
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 		color: v.$pro-color-blue;
+	}
+}
+
+// Контакты поддержки - ссылки в стиле макета (моно, пунктирное подчёркивание).
+.pro-help__support-link {
+	text-decoration: underline dotted;
+	color: inherit;
+	text-underline-offset: 3px;
+
+	&:hover {
+		text-decoration-style: solid;
 	}
 }

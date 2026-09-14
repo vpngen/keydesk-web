@@ -9,7 +9,7 @@
         <div class="pro-page__eyebrow">{{ t('pro.invoices.account', {num: accountNumber}) }}</div>
         <h1 class="pro-page__title">{{ t('pro.invoices.title') }}</h1>
       </div>
-      <div class="pro-invoices__totals">
+      <div v-if="PRO_INVOICES_ENABLED" class="pro-invoices__totals">
         <div class="pro-invoices__total">
           <div class="pro-invoices__total-label">{{ t('pro.invoices.due') }}</div>
           <div :class="{'pro-invoices__total-value--danger': dueDanger}" class="pro-invoices__total-value pro-invoices__total-value--strong">
@@ -23,7 +23,13 @@
       </div>
     </div>
 
-    <div class="pro-invoices__grid">
+    <!-- Первый месяц: платные ключи оплачиваются при создании, общего счёта
+         ещё нет. Возвращается вместе с PRO_INVOICES_ENABLED. -->
+    <div v-if="!PRO_INVOICES_ENABLED" class="pro-invoices__state" data-tour="invoices-state">
+      {{ t('pro.invoices.emptyFirstMonth') }}
+    </div>
+
+    <div v-else class="pro-invoices__grid">
       <ProInvoiceCard
         v-for="invoice in invoiceCards"
         :key="invoice.num + invoice.status"
@@ -55,6 +61,7 @@ import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
 import {useProfileStore} from '@/store/profile';
 import {money, invoiceNumber, monthShift, formatDate, today} from '@/utils/proFormat';
+import {PRO_INVOICES_ENABLED} from '@/assets/constants/proConstants';
 
 const {t, tm} = useI18n();
 const route = useRoute();

@@ -1,10 +1,11 @@
 <template>
   <ProDialog
     :max-width="560"
+    :primary-disabled="isNegative || isInvalid"
     :primary-label="t('pro.dialogs.common.save')"
     :title="t('pro.dialogs.sold.title')"
     @close="emit('close')"
-    @primary="emit('save', soldNum)"
+    @primary="onSave"
   >
     <div class="pro-dialog__body">
       <div class="pro-dialog__key-row">
@@ -19,10 +20,13 @@
           class="pro-dialog__sold-input"
           placeholder="0"
           type="text"
-          @input="text = text.replace(/[^0-9.,]/g, '').slice(0, PRO_LIMITS.sold)"
+          @input="text = text.replace(/[^0-9.,-]/g, '').replace(/(?!^)-/g, '').slice(0, PRO_LIMITS.sold)"
         >
         <div class="pro-dialog__sold-per">{{ t('pro.dialogs.create.soldPer') }}</div>
       </div>
+      <!-- Введённое остаётся в поле, ошибка видна, сохранить нельзя. -->
+      <div v-if="isNegative" class="pro-dialog__danger">{{ t('pro.dialogs.sold.negative') }}</div>
+      <div v-else-if="isInvalid" class="pro-dialog__danger">{{ t('pro.dialogs.sold.invalid') }}</div>
       <div class="pro-dialog__calc">
         <div class="pro-dialog__calc-line">
           <div>{{ t('pro.dialogs.sold.cost') }}</div>
@@ -60,8 +64,21 @@ const {t} = useI18n();
 const text = ref(props.keyItem.sold ? String(props.keyItem.sold) : '');
 
 const keyLabel = computed(() => props.keyItem.user + (props.keyItem.name ? ` · ${props.keyItem.name}` : ''));
-const soldNum = computed(() => Math.max(0, parseFloat(String(text.value).replace(',', '.')) || 0));
+
+// Пусто - цена не указана (null); «10,50» и «10.50» - одно и то же число.
+const parsed = computed(() => {
+  const raw = String(text.value).trim();
+  return raw === '' ? null : Number(raw.replace(',', '.'));
+});
+const isInvalid = computed(() => parsed.value !== null && Number.isNaN(parsed.value));
+const isNegative = computed(() => parsed.value !== null && !isInvalid.value && parsed.value < 0);
+const soldNum = computed(() => (parsed.value === null || isInvalid.value || isNegative.value ? 0 : parsed.value));
 const cost = computed(() => tierPrice(props.keyItem.tier));
+
+const onSave = () => {
+  if (isNegative.value || isInvalid.value) return;
+  emit('save', soldNum.value);
+};
 
 const costText = computed(() => (props.keyItem.tier === 'free'
   ? `${t('pro.tiers.free.name')} · ${money(0)}`

@@ -61,7 +61,7 @@
       >
         {{ t('pro.nav.help') }}
       </RouterLink>
-      <button class="pro-header__nav-item pro-header__nav-item--button" type="button" @click="emit('open-tour')">
+      <button class="pro-header__nav-item pro-header__nav-item--button" data-tour="nav-tour" type="button" @click="emit('open-tour')">
         {{ t('pro.nav.howItWorks') }}
       </button>
       <!-- Скрыто: в PRO-дизайне нет страницы уведомлений, а /notifications

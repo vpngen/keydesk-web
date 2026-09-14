@@ -69,10 +69,9 @@
     />
     <ProDialogUpgrade
       v-if="showDialogUpgrade && dialogKey"
-      :forecast-sum="forecastSum"
       :key-item="dialogKey"
       @close="showDialogUpgrade = false"
-      @upgrade="upgradeKey"
+      @upgraded="onUpgraded"
     />
     <ProDialogExtend
       v-if="showDialogExtend && dialogKey"
@@ -137,7 +136,7 @@ import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
-import {statusOf, profitOf, accessString, availableProtos, defaultFormat} from '@/utils/proKeys';
+import {statusOf, profitOf, accessString, availableProtos, defaultFormat, isInactive30} from '@/utils/proKeys';
 import {formatIso, parseIso, daysSinceVisit} from '@/utils/proFormat';
 
 const {t} = useI18n();
@@ -147,7 +146,7 @@ const billingStore = useProBillingStore();
 const toastStore = useProToastStore();
 
 const {keysList, brigadierName, brigadeName, isLoaded, forecastSum, freeCount, protoByKey, formatByKey} = storeToRefs(proKeysStore);
-const {filterText, selectedTier, selectedStatus, selectedSort, view} = storeToRefs(filterStore);
+const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds} = storeToRefs(filterStore);
 const {status: billingStatus} = storeToRefs(billingStore);
 
 const openMenuId = ref(null);
@@ -163,6 +162,9 @@ const showDialogSold = ref(false);
 const showDialogConfirm = ref(false);
 const showDialogPay = ref(false);
 
+// Новые - по дате создания (новые сверху); без даты - в конец.
+const createdTs = (k) => (k.createdAt ? new Date(k.createdAt).getTime() || 0 : 0);
+
 const filteredKeys = computed(() => {
   const q = filterText.value.trim().toLowerCase();
   const list = keysList.value.filter((k) => {
@@ -170,7 +172,10 @@ const filteredKeys = computed(() => {
       && !(k.name || '').toLowerCase().includes(q)
       && !(k.note || '').toLowerCase().includes(q)
       && !k.user.includes(q)) return false;
+    if (keyIds.value && !keyIds.value.includes(k.id)) return false;
     if (selectedTier.value !== 'all' && k.tier !== selectedTier.value) return false;
+    // «нет подключений 30+ дней» - не статус ключа, а выборка аналитики.
+    if (selectedStatus.value === 'inactive') return isInactive30(k);
     if (selectedStatus.value !== 'all' && statusOf(k, billingStatus.value) !== selectedStatus.value) return false;
     return true;
   });
@@ -180,14 +185,15 @@ const filteredKeys = computed(() => {
     if (selectedSort.value === 'traffic') return b.gb - a.gb;
     if (selectedSort.value === 'profit') return profitOf(b) - profitOf(a);
     if (selectedSort.value === 'last') return daysSinceVisit(a.lastVisit) - daysSinceVisit(b.lastVisit);
+    if (selectedSort.value === 'created') return createdTs(b) - createdTs(a);
     const ax = a.until ? parseIso(a.until).getTime() : 9e15;
     const bx = b.until ? parseIso(b.until).getTime() : 9e15;
     return ax - bx;
   });
 });
 
-const countsLine = computed(() => t('pro.table.countsLine', {
-  shown: filteredKeys.value.length,
+// Подвал страницы: числа по всей ключнице, явно подписанные как общие.
+const countsLine = computed(() => t('pro.table.allKeys', {
   total: keysList.value.length,
   free: freeCount.value,
   pro: keysList.value.length - freeCount.value,
@@ -230,15 +236,21 @@ const closeCreate = () => {
   showDialogCreate.value = false;
 };
 
-// «Перейти к ключу»: закрыть диалог и подсветить карточку созданного ключа.
+// «Перейти к ключу»: закрыть диалог, снять поиск/фильтры, которые прячут
+// новый ключ (вид карточки⇄таблица сохраняем), проскроллить и подсветить.
 const gotoKey = async (key) => {
   closeCreate();
+  if (!key) return;
+  if (!filteredKeys.value.some((k) => k.id === key.id)) {
+    filterStore.reset();
+  }
   await nextTick();
-  const el = key && document.querySelector(`[data-key-id="${key.id}"]`);
+  const el = document.querySelector(`[data-key-id="${key.id}"]`);
   if (!el) return;
+  const flashClass = el.classList.contains('pro-key-table__row') ? 'pro-key-table__row--flash' : 'pro-key-card--flash';
   el.scrollIntoView({behavior: 'smooth', block: 'center'});
-  el.classList.add('pro-key-card--flash');
-  setTimeout(() => el.classList.remove('pro-key-card--flash'), 2500);
+  el.classList.add(flashClass);
+  setTimeout(() => el.classList.remove(flashClass), 2500);
 };
 
 const clearFilters = () => {
@@ -276,8 +288,8 @@ const restoreKey = async (key) => {
   toastStore.show(t('pro.toasts.restored', {user: key.user}));
 };
 
-const upgradeKey = async ({tier, months}) => {
-  await proKeysStore.setKeyTier(dialogKey.value.id, tier, months);
+// Списание и смена тарифа идут внутри диалога; здесь только тост.
+const onUpgraded = (tier) => {
   toastStore.show(t('pro.toasts.upgraded', {tier: t(`pro.tiers.${tier}.name`)}));
 };
 

@@ -1,5 +1,5 @@
 <template>
-  <div :class="`pro-banner--${displayStatus}`" class="pro-banner">
+  <div :class="`pro-banner--${displayStatus}`" class="pro-banner" data-tour="banner">
     <!-- Пока PRO_INVOICES_ENABLED = false: статус всегда «оплачено», баннер
          не раскрывается (нет шеврона, клика и блока инвойса). -->
     <div :class="{'pro-banner__header--static': !PRO_INVOICES_ENABLED}" class="pro-banner__header" @click="toggle">

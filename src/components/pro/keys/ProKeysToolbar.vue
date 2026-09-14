@@ -22,15 +22,20 @@
       <option value="warn">{{ t('pro.status.warn') }}</option>
       <option value="blocked">{{ t('pro.status.blocked') }}</option>
       <option value="idle">{{ t('pro.status.idle') }}</option>
+      <option value="inactive">{{ t('pro.status.inactive') }}</option>
       <option value="off">{{ t('pro.status.off') }}</option>
     </select>
+    <button v-if="keyIds" class="pro-toolbar__chip" type="button" @click="keyIds = null">
+      {{ keyIdsLabel || t('pro.toolbar.fromAnalytics') }} · {{ keyIds.length }} ✕
+    </button>
     <select v-model="selectedSort" class="pro-toolbar__select">
       <option value="until">{{ t('pro.toolbar.sortUntil') }}</option>
       <option value="last">{{ t('pro.toolbar.sortLast') }}</option>
       <option value="name">{{ t('pro.toolbar.sortName') }}</option>
       <option value="traffic">{{ t('pro.toolbar.sortTraffic') }}</option>
+      <option value="created">{{ t('pro.toolbar.sortCreated') }}</option>
     </select>
-    <div class="pro-toolbar__view">
+    <div class="pro-toolbar__view" data-tour="view-toggle">
       <button
         :class="{'pro-toolbar__view-btn--active': view === 'cards'}"
         class="pro-toolbar__view-btn"
@@ -48,7 +53,7 @@
         <SvgIcon name="pro-view-table"/> {{ t('pro.toolbar.table') }}
       </button>
     </div>
-    <button class="pro-toolbar__create" type="button" @click="emit('create')">
+    <button class="pro-toolbar__create" data-tour="new-key" type="button" @click="emit('create')">
       + {{ t('pro.toolbar.newKey') }}
     </button>
   </div>
@@ -64,5 +69,5 @@ const emit = defineEmits(['create']);
 
 const {t} = useI18n();
 const filterStore = useProKeysFilterStore();
-const {filterText, selectedTier, selectedStatus, selectedSort, view} = storeToRefs(filterStore);
+const {filterText, selectedTier, selectedStatus, selectedSort, view, keyIds, keyIdsLabel} = storeToRefs(filterStore);
 </script>

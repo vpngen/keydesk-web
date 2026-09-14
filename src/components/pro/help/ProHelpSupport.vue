@@ -7,12 +7,14 @@
         <div class="pro-help__support-rows">
           <div v-for="row in rows" :key="row.label" class="pro-help__support-row">
             <div class="pro-help__support-row-label">{{ row.label }}</div>
-            <div class="pro-help__support-row-value">{{ row.value }}</div>
+            <div class="pro-help__support-row-value">
+              <a :href="row.href" class="pro-help__support-link" rel="noopener" target="_blank">{{ row.value }}</a>
+            </div>
           </div>
         </div>
-        <button class="pro-help__support-cta" type="button" @click="openSupport">
+        <a :href="SUPPORT_BOT_URL" class="pro-help__support-cta" rel="noopener" target="_blank">
           {{ t('pro.help.support.cta') }}
-        </button>
+        </a>
       </div>
     </div>
     <div class="pro-help__support-card pro-help__support-card--tips">
@@ -30,26 +32,17 @@
 
 <script setup>
 import {computed} from 'vue';
-import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
-import {useProToastStore} from '@/store/proToast';
-import {useProfileStore} from '@/store/profile';
 
 const SUPPORT_BOT = '@vpngen_support';
+const SUPPORT_BOT_URL = 'https://t.me/vpngen_support';
 const SUPPORT_MAIL = 'vpngenerator@vpn.support';
 
 const {t} = useI18n();
-const toastStore = useProToastStore();
-const profileStore = useProfileStore();
-const {uuid} = storeToRefs(profileStore);
 
+// Контакты - живые ссылки; «номер счёта» убран: он путался с инвойсом.
 const rows = computed(() => [
-  {label: t('pro.help.support.bot'), value: SUPPORT_BOT},
-  {label: t('pro.help.support.mail'), value: SUPPORT_MAIL},
-  {label: t('pro.help.support.account'), value: uuid.value ? `#${uuid.value.replace(/-/g, '').slice(0, 6)}` : '#112233'},
+  {label: t('pro.help.support.bot'), value: SUPPORT_BOT, href: SUPPORT_BOT_URL},
+  {label: t('pro.help.support.mail'), value: SUPPORT_MAIL, href: `mailto:${SUPPORT_MAIL}`},
 ]);
-
-const openSupport = () => {
-  toastStore.show(t('pro.toasts.supportChat', {bot: SUPPORT_BOT}));
-};
 </script>
