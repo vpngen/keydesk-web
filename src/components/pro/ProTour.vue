@@ -1,6 +1,17 @@
 <template>
-  <div class="pro-tour">
-    <div class="pro-tour__window">
+  <div
+    :class="{'pro-tour--spotlit': Boolean(spot), 'pro-tour--bottom': placement === 'bottom'}"
+    :style="{paddingTop: `${topOffset}px`}"
+    class="pro-tour"
+  >
+    <!-- «Дырка» в затемнении вокруг целевого элемента шага -->
+    <div
+      v-if="spot"
+      :style="{top: `${spot.top}px`, left: `${spot.left}px`, width: `${spot.width}px`, height: `${spot.height}px`}"
+      class="pro-tour__spotlight"
+    ></div>
+
+    <div ref="windowRef" class="pro-tour__window">
       <div class="pro-tour__head">
         <div class="pro-tour__brand">
           <div class="pro-tour__wordmark">
@@ -54,7 +65,8 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue';
+import {computed, nextTick, onBeforeUnmount, ref, watch} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import {useI18n} from 'vue-i18n';
 
 const emit = defineEmits(['close']);
@@ -62,10 +74,31 @@ const emit = defineEmits(['close']);
 const TOTAL_STEPS = 7;
 // Карточки тарифов только на шаге 2: правила оплаты (шаг 5) теперь текстом.
 const CARD_STEPS = {2: 3};
+// Отступ окна от шапки (и от края экрана, когда шапка уже проскроллена).
+const TOP_GAP = 24;
+
+// Каждый шаг открывает свой раздел и подсвечивает элемент, о котором говорит.
+const STEPS = {
+  1: {path: '/', target: '[data-tour="banner"]'},
+  2: {path: '/', target: '.pro-key-card__tariff, .pro-key-table__tariff'},
+  3: {path: '/', target: '[data-tour="view-toggle"]'},
+  4: {path: '/', target: '[data-tour="new-key"]'},
+  5: {path: '/invoices', target: '[data-tour="invoices-state"], .pro-invoices__grid'},
+  6: {path: '/analytics', target: '[data-tour="advice"]'},
+  7: {path: '/', target: '[data-tour="nav-tour"]'},
+};
 
 const {t, tm} = useI18n();
+const route = useRoute();
+const router = useRouter();
 
 const step = ref(1);
+const windowRef = ref(null);
+const spot = ref(null);
+const placement = ref('top');
+const topOffset = ref(TOP_GAP);
+
+let targetEl = null;
 
 const cards = computed(() => {
   const count = CARD_STEPS[step.value];
@@ -74,8 +107,76 @@ const cards = computed(() => {
   return Array.isArray(list) ? list : [];
 });
 
-const next = () => {
+const sleep = (ms) => new Promise((resolve) => { setTimeout(resolve, ms); });
+
+const measureTop = () => {
+  const header = document.querySelector('.pro-header');
+  const bottom = header ? header.getBoundingClientRect().bottom : 0;
+  topOffset.value = Math.max(TOP_GAP, Math.round(bottom) + TOP_GAP);
+};
+
+const measureSpot = () => {
+  if (!targetEl || !targetEl.isConnected) {
+    spot.value = null;
+    return;
+  }
+  const r = targetEl.getBoundingClientRect();
+  spot.value = {top: r.top - 6, left: r.left - 6, width: r.width + 12, height: r.height + 12};
+};
+
+// Окно не должно перекрывать цель: если пересекаются - опускаем его вниз экрана.
+const choosePlacement = () => {
+  placement.value = 'top';
+  if (!spot.value || !windowRef.value) return;
+  const w = windowRef.value.getBoundingClientRect();
+  const s = spot.value;
+  const overlaps = w.top < s.top + s.height && w.top + w.height > s.top;
+  if (overlaps) placement.value = 'bottom';
+};
+
+const onViewportChange = () => {
+  measureTop();
+  measureSpot();
+};
+
+const applyStep = async () => {
+  const cfg = STEPS[step.value];
+  targetEl = null;
+  spot.value = null;
+
+  if (cfg.path !== route.path) {
+    await router.push({path: cfg.path, query: route.query});
+    await nextTick();
+    await sleep(120);
+  }
+
+  targetEl = document.querySelector(cfg.target);
+  if (targetEl) {
+    targetEl.scrollIntoView({block: 'center', behavior: 'auto'});
+  } else {
+    window.scrollTo({top: 0});
+  }
+  await nextTick();
+  measureTop();
+  measureSpot();
+  await nextTick();
+  choosePlacement();
+};
+
+watch(step, applyStep, {immediate: true});
+
+window.addEventListener('scroll', onViewportChange, {passive: true});
+window.addEventListener('resize', onViewportChange, {passive: true});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', onViewportChange);
+  window.removeEventListener('resize', onViewportChange);
+});
+
+const next = async () => {
   if (step.value >= TOTAL_STEPS) {
+    // «К ключам»: завершение тура возвращает в Ключницу.
+    if (route.path !== '/') await router.push({path: '/', query: route.query});
     emit('close');
     return;
   }

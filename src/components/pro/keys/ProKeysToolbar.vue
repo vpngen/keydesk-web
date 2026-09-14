@@ -34,7 +34,7 @@
       <option value="name">{{ t('pro.toolbar.sortName') }}</option>
       <option value="traffic">{{ t('pro.toolbar.sortTraffic') }}</option>
     </select>
-    <div class="pro-toolbar__view">
+    <div class="pro-toolbar__view" data-tour="view-toggle">
       <button
         :class="{'pro-toolbar__view-btn--active': view === 'cards'}"
         class="pro-toolbar__view-btn"
@@ -52,7 +52,7 @@
         <SvgIcon name="pro-view-table"/> {{ t('pro.toolbar.table') }}
       </button>
     </div>
-    <button class="pro-toolbar__create" type="button" @click="emit('create')">
+    <button class="pro-toolbar__create" data-tour="new-key" type="button" @click="emit('create')">
       + {{ t('pro.toolbar.newKey') }}
     </button>
   </div>
