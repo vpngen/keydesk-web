@@ -114,6 +114,14 @@ async function fetchUsers() {
   return Array.isArray(r.data) ? r.data : [];
 }
 
+/** Актуальное состояние одного ключа (после смены тарифа/продления). Мок: null. */
+export async function fetchProKey(id) {
+  if (!isRealPro()) return null;
+  const users = await fetchUsers();
+  const fresh = users.find((u) => String(u.UserID) === String(id));
+  return fresh ? mapRealUser(fresh) : null;
+}
+
 /** GET /user + маппинг. Возвращает {brigadierName, brigadeName?, keys}. */
 export async function fetchProKeys() {
   if (isRealPro()) {

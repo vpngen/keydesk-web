@@ -91,7 +91,10 @@ export const useProKeysStore = defineStore('proKeys', () => {
   const setKeyTier = async (id, tier, months) => {
     const revive = reviveFields(id);
     const until = await proApi.setProKeyTier(id, tier, months);
-    mergeKey(id, {tier, until, ...(until ? revive : {})});
+    // Лимит, срок и стоимость - из актуального состояния ключа, без reload
+    // (unlim получает безлимитную квоту на бэкенде).
+    const fresh = await proApi.fetchProKey(id);
+    mergeKey(id, fresh || {tier, until, ...(until ? revive : {})});
     return until;
   };
 
@@ -100,7 +103,8 @@ export const useProKeysStore = defineStore('proKeys', () => {
     const current = keysList.value.find((k) => k.id === id);
     const revive = reviveFields(id);
     const until = await proApi.extendProKey(id, months, current?.until || null);
-    mergeKey(id, {until, ...(until ? revive : {})});
+    const fresh = await proApi.fetchProKey(id);
+    mergeKey(id, fresh || {until, ...(until ? revive : {})});
     return until;
   };
 
