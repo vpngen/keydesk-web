@@ -520,14 +520,16 @@
       "upgrade": "Upgrade",
       "pay": "Pay",
       "extend": "Extend",
-      "actions": "Actions",
+      "actions": "Key actions",
       "blockedNote": "Switched off because of an unpaid invoice.",
       "expiredNote": "The key's paid period is over - extend it to switch it back on.",
       "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
       "copyValue": "Copy",
       "boughtOn": "Bought {date}",
       "bought": "Bought",
-      "createdOn": "created {date}"
+      "createdOn": "created {date}",
+      "copyLink": "Copy link",
+      "copyKey": "Copy key"
     },
     "menu": {
       "sectionKey": "key",

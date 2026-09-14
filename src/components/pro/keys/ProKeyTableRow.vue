@@ -19,7 +19,7 @@
         </div>
         <div :title="keyItem.user" class="pro-key-table__user">{{ keyItem.user }}</div>
       </div>
-      <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-table__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
+      <button v-if="hasNote" :aria-label="t('pro.menu.comment')" :title="t('pro.card.hasNote')" class="pro-key-table__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
         <SvgIcon name="pro-note"/>
       </button>
     </div>
@@ -53,8 +53,9 @@
     </div>
     <div class="pro-key-table__cell pro-key-table__cell--actions">
       <button
+        :aria-label="isBlocked ? t('pro.toasts.copyBlocked') : copyLabel"
         :class="{'pro-key-table__copy--blocked': isBlocked}"
-        :title="isBlocked ? t('pro.toasts.copyBlocked') : t('pro.menu.copy')"
+        :title="isBlocked ? t('pro.toasts.copyBlocked') : copyLabel"
         class="pro-key-table__copy"
         type="button"
         @click.stop="emit('copy', keyItem)"
@@ -97,7 +98,7 @@
     <div v-if="expanded" class="pro-key-table__expanded" @click.stop>
       <ProKeyProtoSwitcher :key-item="keyItem" class="pro-key-table__proto" @copy="emit('copy', keyItem)">
         <button v-if="!isDead && !isBlocked" class="pro-key-table__proto-copy" type="button" @click="emit('copy', keyItem)">
-          {{ t('pro.table.copy') }}
+          {{ copyLabel }}
         </button>
       </ProKeyProtoSwitcher>
     </div>
@@ -107,11 +108,14 @@
 
 <script setup>
 import {computed, nextTick, ref, toRef} from 'vue';
+import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
+import {useProKeysStore} from '@/store/proKeys';
+import {defaultFormat} from '@/utils/proKeys';
 
 const props = defineProps({
   keyItem: {
@@ -137,6 +141,12 @@ const {
 } = useProKeyView(toRef(props, 'keyItem'));
 
 const gearRef = ref(null);
+
+// Подпись копирования по выбранному формату (ссылка / ключ).
+const {formatByKey} = storeToRefs(useProKeysStore());
+const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
+  ? t('pro.card.copyLink')
+  : t('pro.card.copyKey')));
 
 // Esc закрывает меню и возвращает фокус на кнопку; клик мимо - просто закрывает.
 const onMenuClose = (reason) => {

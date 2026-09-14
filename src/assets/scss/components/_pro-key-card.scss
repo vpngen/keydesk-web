@@ -365,3 +365,24 @@
 	box-shadow: 0 0 0 3px v.$pro-color-red, 4px 4px 0 rgba(33, 30, 25, 0.14);
 	transition: box-shadow 0.4s;
 }
+
+// Иконки карточки: зона нажатия ≥ 44px без изменения рисунка, видимый фокус.
+.pro-key-card__gear,
+.pro-key-card__note-icon {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: -9px;
+	}
+
+	&:focus-visible {
+		outline: 2px solid v.$pro-color-ink;
+		outline-offset: 2px;
+	}
+}
+
+.pro-key-card__note-icon::before {
+	inset: -14px;
+}

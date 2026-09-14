@@ -153,3 +153,19 @@
 		bottom: auto;
 	}
 }
+
+// Инлайн-копирование строки доступа: зона нажатия ≥ 44px, видимый фокус.
+.pro-proto__copy {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: -12px;
+	}
+
+	&:focus-visible {
+		outline: 2px solid v.$pro-color-ink;
+		outline-offset: 2px;
+	}
+}

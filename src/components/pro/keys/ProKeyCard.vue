@@ -12,7 +12,7 @@
           >
             {{ displayName }}
           </button>
-          <button v-if="hasNote" :title="t('pro.card.hasNote')" class="pro-key-card__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
+          <button v-if="hasNote" :aria-label="t('pro.menu.comment')" :title="t('pro.card.hasNote')" class="pro-key-card__note-icon" type="button" @click.stop="emit('open-note', keyItem)">
             <SvgIcon name="pro-note"/>
           </button>
         </div>
@@ -72,7 +72,7 @@
 
     <div class="pro-key-card__footer">
       <button v-if="canCopy" class="pro-key-card__copy" type="button" @click="emit('copy', keyItem)">
-        {{ t('pro.card.copy') }}
+        {{ copyLabel }}
       </button>
       <div v-if="isBlocked" class="pro-key-card__copy-blocked">
         <span class="pro-key-card__copy-blocked-x">✕</span> {{ t('pro.card.copyBlocked') }}
@@ -126,11 +126,14 @@
 
 <script setup>
 import {computed, nextTick, ref, toRef} from 'vue';
+import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
+import {useProKeysStore} from '@/store/proKeys';
+import {defaultFormat} from '@/utils/proKeys';
 
 const props = defineProps({
   keyItem: {
@@ -155,6 +158,12 @@ const {
 } = useProKeyView(toRef(props, 'keyItem'));
 
 const canCopy = computed(() => !isDead.value && !isBlocked.value);
+
+// Основное действие называется по выбранному формату: ссылка или ключ.
+const {formatByKey} = storeToRefs(useProKeysStore());
+const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
+  ? t('pro.card.copyLink')
+  : t('pro.card.copyKey')));
 
 const gearRef = ref(null);
 

@@ -439,3 +439,29 @@ $narrow: 767px;
 		background: v.$pro-color-card;
 	}
 }
+
+// Иконки в ячейке действий: высокая зона нажатия (в ширину места на две по 44 нет), видимый фокус.
+.pro-key-table__gear,
+.pro-key-table__copy,
+.pro-key-table__note-icon {
+	position: relative;
+
+	&::before {
+		content: "";
+		position: absolute;
+		inset: -10px -4px;
+	}
+
+	&:focus-visible {
+		outline: 2px solid v.$pro-color-ink;
+		outline-offset: 2px;
+	}
+}
+
+.pro-key-table__copy::before {
+	inset: -14px -8px;
+}
+
+.pro-key-table__note-icon::before {
+	inset: -14px;
+}

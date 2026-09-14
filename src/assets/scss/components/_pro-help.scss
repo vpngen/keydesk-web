@@ -248,8 +248,12 @@
 		@include pro.pro-control-reset;
 		@include pro.pro-cta(v.$pro-color-red);
 
+		display: block;
 		align-self: stretch;
 		padding: 13px 22px;
+		box-sizing: border-box;
+		text-align: center;
+		text-decoration: none;
 	}
 
 	&__support-tip {
