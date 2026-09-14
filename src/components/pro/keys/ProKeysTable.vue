@@ -24,10 +24,9 @@
         <div class="pro-key-table__head-cell pro-key-table__head-cell--center pro-key-table__head-cell--actions">{{ t('pro.table.colActions') }}</div>
       </div>
       <ProKeyTableRow
-        v-for="(key, index) in keys"
+        v-for="key in keys"
         :key="key.id"
         :expanded="expandedId === key.id"
-        :opens-up="keys.length > 3 && index >= keys.length - 2"
         :key-item="key"
         :menu-open="openMenuId === key.id"
         @close-menu="closeMenu"

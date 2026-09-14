@@ -144,4 +144,12 @@
 		top: 38px;
 		bottom: auto;
 	}
+
+	// Телепортированное меню таблицы: координаты выставляет компонент.
+	&--floating {
+		position: fixed;
+		right: auto;
+		top: auto;
+		bottom: auto;
+	}
 }

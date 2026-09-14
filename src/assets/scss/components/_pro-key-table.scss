@@ -120,11 +120,6 @@ $narrow: 767px;
 			opacity: 0.55;
 		}
 
-		// Строка с открытым меню поднимается над закреплёнными ячейками соседей.
-		&--menu-open {
-			z-index: 2;
-		}
-
 		@media (max-width: $narrow) {
 			grid-template-columns: $columns-narrow;
 		}
@@ -443,17 +438,4 @@ $narrow: 767px;
 	100% {
 		background: v.$pro-color-card;
 	}
-}
-
-// Меню шестерёнки внутри закреплённой ячейки действий: раскрывается под ней
-// (у нижних строк - над ней) и остаётся на экране при любой прокрутке.
-.pro-key-table__cell--actions .pro-key-menu {
-	right: 4px;
-	top: calc(100% - 4px);
-	bottom: auto;
-}
-
-.pro-key-table__cell--actions .pro-key-menu--up {
-	top: auto;
-	bottom: calc(100% - 4px);
 }

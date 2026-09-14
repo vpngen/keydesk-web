@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'pro-key-table__row--muted': isDead || isBlocked, 'pro-key-table__row--menu-open': menuOpen}"
+    :class="{'pro-key-table__row--muted': isDead || isBlocked}"
     :data-key-id="keyItem.id"
     :title="t('pro.table.expandHint')"
     class="pro-key-table__row"
@@ -61,20 +61,29 @@
       >
         ⧉
       </button>
-      <button class="pro-key-table__gear" type="button" @click.stop="emit('toggle-menu', keyItem.id)">⚙</button>
+      <button
+        ref="gearRef"
+        :aria-label="t('pro.card.actions')"
+        :title="t('pro.card.actions')"
+        class="pro-key-table__gear"
+        type="button"
+        @click.stop="emit('toggle-menu', keyItem.id)"
+      >
+        ⚙
+      </button>
 
-      <!-- Меню живёт в закреплённой ячейке действий: видно при любой
-           горизонтальной прокрутке; у нижних строк раскрывается вверх. -->
+      <!-- Меню позиционируется от шестерёнки (телепорт в #app): его не режет
+           прокрутка таблицы, при нехватке места снизу раскрывается вверх. -->
       <ProKeyMenu
         v-if="menuOpen"
+        :anchor="gearRef"
         :can-upgrade="keyItem.tier !== 'unlim'"
-        :class="{'pro-key-menu--up': opensUp}"
         :has-name="hasName"
         :has-note="hasNote"
         :has-sold="Boolean(keyItem.sold)"
         :is-free="isFree"
         variant="table"
-        @close="emit('close-menu', keyItem)"
+        @close="onMenuClose"
         @deactivate="emit('open-confirm', keyItem, 'off')"
         @delete="emit('open-confirm', keyItem, 'del')"
         @extend="emit('open-extend', keyItem)"
@@ -97,7 +106,7 @@
 </template>
 
 <script setup>
-import {computed, toRef} from 'vue';
+import {computed, nextTick, ref, toRef} from 'vue';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
@@ -111,8 +120,6 @@ const props = defineProps({
   },
   menuOpen: {type: Boolean},
   expanded: {type: Boolean},
-  // Нижние строки таблицы: меню раскрывается вверх, чтобы не уходить за край.
-  opensUp: {type: Boolean},
 });
 
 const emit = defineEmits([
@@ -128,6 +135,14 @@ const {
   untilText, lastLabel, gbText,
   profitText, profitTone, soldText,
 } = useProKeyView(toRef(props, 'keyItem'));
+
+const gearRef = ref(null);
+
+// Esc закрывает меню и возвращает фокус на кнопку; клик мимо - просто закрывает.
+const onMenuClose = (reason) => {
+  emit('close-menu', props.keyItem);
+  if (reason === 'escape') nextTick(() => gearRef.value?.focus());
+};
 
 // Системные имена keydesk - «095 Беспробудный Маршалл»: в узкой колонке
 // показываем только номер (или всё имя, если номера нет).
