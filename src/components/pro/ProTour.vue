@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'pro-tour--spotlit': Boolean(spot), 'pro-tour--bottom': placement === 'bottom'}"
+    :class="{'pro-tour--spotlit': Boolean(spot), 'pro-tour--bottom': placement === 'bottom', 'pro-tour--side': placement === 'side'}"
     :style="{paddingTop: `${topOffset}px`}"
     class="pro-tour"
   >
@@ -84,7 +84,7 @@ const STEPS = {
   3: {path: '/', target: '[data-tour="view-toggle"]'},
   4: {path: '/', target: '[data-tour="new-key"]'},
   5: {path: '/invoices', target: '[data-tour="invoices-state"], .pro-invoices__grid'},
-  6: {path: '/analytics', target: '[data-tour="advice"]'},
+  6: {path: '/analytics', target: '.pro-advice-card, [data-tour="advice"]'},
   7: {path: '/', target: '[data-tour="nav-tour"]'},
 };
 
@@ -124,14 +124,38 @@ const measureSpot = () => {
   spot.value = {top: r.top - 6, left: r.left - 6, width: r.width + 12, height: r.height + 12};
 };
 
-// Окно не должно перекрывать цель: если пересекаются - опускаем его вниз экрана.
-const choosePlacement = () => {
-  placement.value = 'top';
-  if (!spot.value || !windowRef.value) return;
+// Минимальная ширина экрана, на которой окно можно увести вбок от цели.
+const SIDE_MIN_WIDTH = 1200;
+
+const overlapsTarget = () => {
+  if (!spot.value || !windowRef.value) return false;
   const w = windowRef.value.getBoundingClientRect();
   const s = spot.value;
-  const overlaps = w.top < s.top + s.height && w.top + w.height > s.top;
-  if (overlaps) placement.value = 'bottom';
+  return w.left < s.left + s.width && w.left + w.width > s.left
+    && w.top < s.top + s.height && w.top + w.height > s.top;
+};
+
+// Окно не должно перекрывать цель: сначала ставим его сверху (и даём DOM
+// перерисоваться - иначе измеряем позицию прошлого шага), при пересечении
+// опускаем вниз экрана.
+const choosePlacement = async () => {
+  placement.value = 'top';
+  await nextTick();
+  if (!overlapsTarget()) return;
+  placement.value = 'bottom';
+  await nextTick();
+  // Всё ещё пересекаются (цель в середине экрана) - прижимаем цель к верху.
+  if (overlapsTarget() && targetEl) {
+    targetEl.scrollIntoView({block: 'start', behavior: 'auto'});
+    measureTop();
+    measureSpot();
+    await nextTick();
+  }
+  // Короткая страница, скроллить некуда: на широком экране уводим окно вбок.
+  if (overlapsTarget() && window.innerWidth >= SIDE_MIN_WIDTH) {
+    placement.value = 'side';
+    await nextTick();
+  }
 };
 
 const onViewportChange = () => {
@@ -152,15 +176,16 @@ const applyStep = async () => {
 
   targetEl = document.querySelector(cfg.target);
   if (targetEl) {
-    targetEl.scrollIntoView({block: 'center', behavior: 'auto'});
+    // Высокую цель прижимаем к верху экрана, чтобы окно снизу её не накрыло.
+    const tall = targetEl.getBoundingClientRect().height > window.innerHeight * 0.45;
+    targetEl.scrollIntoView({block: tall ? 'start' : 'center', behavior: 'auto'});
   } else {
     window.scrollTo({top: 0});
   }
   await nextTick();
   measureTop();
   measureSpot();
-  await nextTick();
-  choosePlacement();
+  await choosePlacement();
 };
 
 watch(step, applyStep, {immediate: true});

@@ -196,6 +196,17 @@
 		}
 	}
 
+	// Последний вариант на широких экранах: окно справа, цель остаётся слева.
+	&--side {
+		align-items: center;
+		justify-content: flex-end;
+		padding-right: 24px;
+	}
+
+	&--side &__window {
+		max-width: 520px;
+	}
+
 	// Затемнение рисует «прожектор» вокруг цели; сам оверлей тогда прозрачный.
 	&--spotlit {
 		background: transparent;
