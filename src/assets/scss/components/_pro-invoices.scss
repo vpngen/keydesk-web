@@ -32,6 +32,15 @@
 		}
 	}
 
+	&__state {
+		border: 1px dashed v.$pro-color-hairline;
+		padding: 22px 24px;
+		max-width: 760px;
+		font: 400 15px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+		background: v.$pro-color-card;
+	}
+
 	&__grid {
 		display: grid;
 		align-items: start;

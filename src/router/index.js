@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { homePage, notificationsPage, proAnalyticsPage, proHelpPage } from '@/pages'; // + proInvoicesPage, когда вернём /invoices
+import { homePage, notificationsPage, proInvoicesPage, proAnalyticsPage, proHelpPage } from '@/pages';
 import { useAuthStore } from '@/store/auth';
 import { useProfileStore } from '@/store/profile';
 import { isDevOrStageHost } from '@/const/api';
@@ -19,14 +19,14 @@ const router = createRouter({
       name: 'Notifications',
       component: notificationsPage,
     },
-    // Временно отключено: покупка ключей идёт напрямую с карты; страница инвойсов
-    // сохранена и вернётся, когда покупки переедут в инвойсы.
-    // {
-    //   path: '/invoices',
-    //   name: 'ProInvoices',
-    //   component: proInvoicesPage,
-    //   meta: { proOnly: true },
-    // },
+    // Пункт меню «Инвойсы» пока скрыт, но маршрут живёт в PRO-оформлении:
+    // пока инвойсов нет, страница объясняет, как идёт оплата в первый месяц.
+    {
+      path: '/invoices',
+      name: 'ProInvoices',
+      component: proInvoicesPage,
+      meta: { proOnly: true },
+    },
     {
       path: '/analytics',
       name: 'ProAnalytics',
