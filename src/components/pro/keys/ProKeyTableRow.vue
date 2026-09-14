@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="{'pro-key-table__row--muted': isDead || isBlocked}"
+    :class="{'pro-key-table__row--muted': isDead || isBlocked, 'pro-key-table__row--menu-open': menuOpen}"
     :data-key-id="keyItem.id"
     :title="t('pro.table.expandHint')"
     class="pro-key-table__row"
@@ -62,6 +62,27 @@
         ⧉
       </button>
       <button class="pro-key-table__gear" type="button" @click.stop="emit('toggle-menu', keyItem.id)">⚙</button>
+
+      <!-- Меню живёт в закреплённой ячейке действий: видно при любой
+           горизонтальной прокрутке; у нижних строк раскрывается вверх. -->
+      <ProKeyMenu
+        v-if="menuOpen"
+        :can-upgrade="keyItem.tier !== 'unlim'"
+        :class="{'pro-key-menu--up': opensUp}"
+        :has-name="hasName"
+        :has-note="hasNote"
+        :has-sold="Boolean(keyItem.sold)"
+        :is-free="isFree"
+        variant="table"
+        @close="emit('close-menu', keyItem)"
+        @deactivate="emit('open-confirm', keyItem, 'off')"
+        @delete="emit('open-confirm', keyItem, 'del')"
+        @extend="emit('open-extend', keyItem)"
+        @note="emit('open-note', keyItem)"
+        @rename="emit('open-name', keyItem)"
+        @sold="emit('open-sold', keyItem)"
+        @upgrade="emit('open-upgrade', keyItem)"
+      />
     </div>
 
     <div v-if="expanded" class="pro-key-table__expanded" @click.stop>
@@ -72,23 +93,6 @@
       </ProKeyProtoSwitcher>
     </div>
 
-    <ProKeyMenu
-      v-if="menuOpen"
-      :has-name="hasName"
-      :has-note="hasNote"
-      :has-sold="Boolean(keyItem.sold)"
-      :can-upgrade="keyItem.tier !== 'unlim'"
-      :is-free="isFree"
-      variant="table"
-      @close="emit('close-menu', keyItem)"
-      @deactivate="emit('open-confirm', keyItem, 'off')"
-      @delete="emit('open-confirm', keyItem, 'del')"
-      @extend="emit('open-extend', keyItem)"
-      @note="emit('open-note', keyItem)"
-      @rename="emit('open-name', keyItem)"
-      @sold="emit('open-sold', keyItem)"
-      @upgrade="emit('open-upgrade', keyItem)"
-    />
   </div>
 </template>
 
@@ -107,6 +111,8 @@ const props = defineProps({
   },
   menuOpen: {type: Boolean},
   expanded: {type: Boolean},
+  // Нижние строки таблицы: меню раскрывается вверх, чтобы не уходить за край.
+  opensUp: {type: Boolean},
 });
 
 const emit = defineEmits([

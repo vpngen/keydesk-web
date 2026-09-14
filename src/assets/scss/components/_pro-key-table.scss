@@ -48,7 +48,20 @@ $narrow: 767px;
 			padding: 11px 8px 11px 14px;
 		}
 
-		// Закреплённые при горизонтальной прокрутке: ключ + название слева, действия справа.
+		&--sortable {
+			@include pro.pro-control-reset;
+
+			border-left: 1px solid v.$pro-color-hairline;
+			padding: 11px 12px;
+			font: inherit;
+			letter-spacing: inherit;
+			text-align: left;
+			text-transform: inherit;
+			color: inherit;
+		}
+
+		// Закреплённые при горизонтальной прокрутке: ключ + название слева, действия
+		// справа. Идут после --sortable, чтобы фон перекрыл background: none кнопки.
 		&--first,
 		&--name,
 		&--actions {
@@ -59,6 +72,13 @@ $narrow: 767px;
 
 		&--first {
 			left: 0;
+
+			// На телефоне колонка «ключ» - 28px, заголовок в неё не помещается.
+			@media (max-width: $narrow) {
+				overflow: hidden;
+				padding: 11px 4px;
+				color: transparent;
+			}
 		}
 
 		&--name {
@@ -71,18 +91,6 @@ $narrow: 767px;
 
 		&--actions {
 			right: 0;
-		}
-
-		&--sortable {
-			@include pro.pro-control-reset;
-
-			border-left: 1px solid v.$pro-color-hairline;
-			padding: 11px 12px;
-			font: inherit;
-			letter-spacing: inherit;
-			text-align: left;
-			text-transform: inherit;
-			color: inherit;
 		}
 
 		&--right {
@@ -313,6 +321,11 @@ $narrow: 767px;
 			border-color: v.$pro-color-disabled;
 			color: v.$pro-color-faded;
 		}
+
+		// Строка с открытым меню поднимается над закреплёнными ячейками соседей.
+		&--menu-open {
+			z-index: 2;
+		}
 	}
 
 	&__status-dot {
@@ -430,4 +443,17 @@ $narrow: 767px;
 	100% {
 		background: v.$pro-color-card;
 	}
+}
+
+// Меню шестерёнки внутри закреплённой ячейки действий: раскрывается под ней
+// (у нижних строк - над ней) и остаётся на экране при любой прокрутке.
+.pro-key-table__cell--actions .pro-key-menu {
+	right: 4px;
+	top: calc(100% - 4px);
+	bottom: auto;
+}
+
+.pro-key-table__cell--actions .pro-key-menu--up {
+	top: auto;
+	bottom: calc(100% - 4px);
 }
