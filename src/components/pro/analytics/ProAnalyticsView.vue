@@ -65,6 +65,7 @@ const liveKeys = computed(() => keysList.value.filter((k) => !k.off));
 const revenue = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.sold || 0), 0));
 const cost = computed(() => liveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
 const profitMonth = computed(() => revenue.value - cost.value);
+const profitShown = computed(() => Math.max(0, profitMonth.value));
 const mrr = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.tier === 'free' ? 0 : (k.sold || 0)), 0));
 
 const history = computed(() => {
@@ -137,10 +138,11 @@ const statCards = computed(() => [
     tone: 'blue',
   },
   {
+    // Профит не уходит в минус: ниже нуля показываем €0 серым.
     label: t('pro.analytics.statProfit'),
-    value: `${profitMonth.value > 0 ? '+' : ''}${money(profitMonth.value)}`,
+    value: profitShown.value > 0 ? `+${money(profitShown.value)}` : money(0),
     hint: t('pro.analytics.statProfitHint'),
-    tone: profitMonth.value > 0 ? 'green' : 'red',
+    tone: profitShown.value > 0 ? 'green' : 'muted',
     raised: true,
   },
 ]);

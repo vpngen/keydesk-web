@@ -140,8 +140,15 @@ const overlapsTarget = () => {
 // опускаем вниз экрана.
 const choosePlacement = async () => {
   placement.value = 'top';
+  measureTop();
   await nextTick();
   if (!overlapsTarget()) return;
+  // Сначала пробуем встать под целью, к низу экрана прижимаемся в крайнем случае.
+  if (placeBelow()) {
+    await nextTick();
+    if (!overlapsTarget()) return;
+  }
+  measureTop();
   placement.value = 'bottom';
   await nextTick();
   // Всё ещё пересекаются (цель в середине экрана) - прижимаем цель к верху.
@@ -158,9 +165,28 @@ const choosePlacement = async () => {
   }
 };
 
+// Окно под целью: по центру свободного места между целью и низом экрана
+// (а не прижато к низу). Возвращает false, если окно туда не помещается.
+const placeBelow = () => {
+  if (!spot.value || !windowRef.value) return false;
+  const s = spot.value;
+  const h = windowRef.value.getBoundingClientRect().height;
+  const targetBottom = s.top + s.height;
+  const free = window.innerHeight - targetBottom - h;
+  const top = targetBottom + Math.max(TOP_GAP, free / 2);
+  if (top + h > window.innerHeight - TOP_GAP) return false;
+  topOffset.value = Math.round(top);
+  placement.value = 'below';
+  return true;
+};
+
 const onViewportChange = () => {
-  measureTop();
   measureSpot();
+  if (placement.value === 'below') {
+    placeBelow();
+  } else {
+    measureTop();
+  }
 };
 
 const applyStep = async () => {

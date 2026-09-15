@@ -57,6 +57,10 @@
 		&--red {
 			color: v.$pro-color-red;
 		}
+
+		&--muted {
+			color: v.$pro-color-muted;
+		}
 	}
 
 	&__stat-hint {
