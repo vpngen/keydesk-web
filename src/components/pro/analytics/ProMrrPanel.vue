@@ -1,7 +1,10 @@
 <template>
   <div class="pro-analytics__panel">
     <div class="pro-analytics__panel-head">
-      <div class="pro-analytics__panel-title">{{ t('pro.analytics.mrrTitle') }}</div>
+      <div class="pro-analytics__panel-title">
+        {{ t('pro.analytics.mrrTitle') }}
+        <span v-if="hint" :aria-label="hint" :title="hint" class="pro-analytics__hint" role="img">?</span>
+      </div>
     </div>
     <div class="pro-analytics__mrr">
       <svg class="pro-analytics__mrr-chart" viewBox="0 0 320 120">
@@ -11,8 +14,11 @@
         <polyline :points="points" fill="none" opacity="0.1" stroke="#2b4a78" stroke-width="7"></polyline>
       </svg>
       <div class="pro-analytics__growth">
-        <div v-for="row in rows" :key="row.label" :title="row.tip || ''" class="pro-analytics__growth-row">
-          <div class="pro-analytics__growth-label">{{ row.label }}</div>
+        <div v-for="row in rows" :key="row.label" class="pro-analytics__growth-row">
+          <div class="pro-analytics__growth-label">
+            {{ row.label }}
+            <span v-if="row.tip" :aria-label="row.tip" :title="row.tip" class="pro-analytics__hint" role="img">?</span>
+          </div>
           <div :class="`pro-analytics__growth-value--${row.tone}`" class="pro-analytics__growth-value">{{ row.value }}</div>
         </div>
       </div>
@@ -31,6 +37,11 @@ defineProps({
   rows: {
     type: Array,
     required: true,
+  },
+  // Подсказка «?» у заголовка блока.
+  hint: {
+    type: String,
+    default: '',
   },
 });
 

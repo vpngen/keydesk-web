@@ -357,15 +357,49 @@
 		color: v.$pro-color-muted;
 	}
 
-	&__more {
+	&__links {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 14px;
+	}
+
+	&__more,
+	&__download {
 		@include pro.pro-control-reset;
 
+		display: inline-block;
 		border-bottom: 1px solid v.$pro-color-blue;
 		font: 700 10px/1 v.$pro-font-narrow;
 		letter-spacing: 0.14em;
+		white-space: nowrap;
+		text-decoration: none;
 		text-transform: uppercase;
 		color: v.$pro-color-blue;
 	}
+
+	&__download {
+		border-bottom-color: v.$pro-color-ink-soft;
+		color: v.$pro-color-ink-soft;
+	}
+}
+
+// Запасные инструкции в пустом состоянии фильтров.
+.pro-help__alternatives {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-top: 12px;
+	gap: 10px 18px;
+}
+
+.pro-help__alternative {
+	border-bottom: 1px solid v.$pro-color-blue;
+	font: 700 11px/1 v.$pro-font-narrow;
+	letter-spacing: 0.14em;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: v.$pro-color-blue;
 }
 
 // Контакты поддержки - ссылки в стиле макета (моно, пунктирное подчёркивание).

@@ -14,16 +14,14 @@ export const PRO_STATUSES = ['ok', 'warn', 'blocked', 'off', 'idle'];
 
 export const BILLING_STATES = ['paid', 'issued', 'overdue', 'suspended'];
 
-// Временно: в этом месяце инвойсов нет (покупка ключей идёт напрямую с карты),
-// баннер подписки показывает «оплачено» и не раскрывается. Включим вместе
-// с возвратом раздела «Инвойсы».
-export const PRO_INVOICES_ENABLED = false;
+// Инвойсы включены: скользящий месячный цикл бригады (см. keydesk procycle).
+// Пункт меню «Инвойсы» пока скрыт - вход через баннер подписки.
+export const PRO_INVOICES_ENABLED = true;
 
-export const PRO_PROTOCOLS = ['vless', 'outline', 'gate19'];
+// Способы подключения на карточке. Gate 19 - приложение (поддерживает оба), не протокол.
+export const PRO_PROTOCOLS = ['vless', 'outline'];
 
 export const PRO_FORMATS = ['link', 'key'];
-
-export const TERM_MONTHS = [1, 3, 6, 12];
 
 export const PRO_LIMITS = {
   name: 60,

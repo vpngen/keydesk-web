@@ -21,7 +21,7 @@
 
     <div class="pro-analytics__panels">
       <ProRevenueChart :bars="chartBars"/>
-      <ProMrrPanel :points="mrrPoints" :rows="growthRows"/>
+      <ProMrrPanel :hint="t('pro.analytics.growth.tipBlock')" :points="mrrPoints" :rows="growthRows"/>
     </div>
 
     <ProAdviceCards :cards="adviceCards" @action="onAdvice"/>
@@ -29,7 +29,7 @@
 </template>
 
 <script setup>
-import {computed} from 'vue';
+import {computed, onMounted, ref} from 'vue';
 import {RouterLink, useRoute, useRouter} from 'vue-router';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
@@ -41,6 +41,7 @@ import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProfileStore} from '@/store/profile';
 import {REVENUE_HISTORY} from '@/api/proMockData';
+import * as proApi from '@/api/pro';
 import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
 import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
 import {money, monthShift, daysSinceVisit, today} from '@/utils/proFormat';
@@ -56,19 +57,43 @@ const {isPRO} = storeToRefs(useProfileStore());
 // показываем без значений, а не цифрами из макета. Фикстура - только для мок-стенда.
 const isReal = computed(() => isPRO.value === true);
 
+// Платящая аудитория и история - из PRO-леджера бэкенда (GET /pro/analytics).
+// Пока не загружено (или мок-стенд) - приближение по текущим ключам.
+const ledger = ref(null);
+
+onMounted(async () => {
+  if (!isReal.value) return;
+  try {
+    ledger.value = await proApi.fetchProAnalytics();
+  } catch (error) {
+    console.error(error);
+  }
+});
+
 const monthsShort = computed(() => tm('pro.months.short'));
 const monthsFull = computed(() => tm('pro.months.full'));
 
 const reportMonth = computed(() => `${monthsFull.value[today().getMonth()]} ${today().getFullYear()}`);
 
 const liveKeys = computed(() => keysList.value.filter((k) => !k.off));
-const revenue = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.sold || 0), 0));
+// Платящий ключ (правило продукта): платный тариф, включён, цена продажи указана.
+// Free-ключи в блок платящей аудитории не входят.
+const payingKeys = computed(() => liveKeys.value.filter((k) => k.tier !== 'free' && (k.sold || 0) > 0));
+const revenue = computed(() => (ledger.value ? ledger.value.MRRCents / 100 : payingKeys.value.reduce((sum, k) => sum + k.sold, 0)));
 const cost = computed(() => liveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
 const profitMonth = computed(() => revenue.value - cost.value);
 const profitShown = computed(() => Math.max(0, profitMonth.value));
-const mrr = computed(() => liveKeys.value.reduce((sum, k) => sum + (k.tier === 'free' ? 0 : (k.sold || 0)), 0));
+const mrr = computed(() => revenue.value);
 
 const history = computed(() => {
+  // Леджер: ожидаемая выручка на конец каждого месяца; месяцы до начала
+  // леджера - без данных. Мок-стенд: фикстура макета.
+  if (ledger.value) {
+    return ledger.value.Months.map((m) => ({
+      label: monthsShort.value[Number(m.Month.slice(5, 7)) - 1],
+      value: m.Available ? (m.ExpectedCents || 0) / 100 : null,
+    }));
+  }
   const past = isReal.value ? REVENUE_HISTORY.map(() => null) : REVENUE_HISTORY;
   const values = [...past, revenue.value];
   return values.map((value, i) => ({
@@ -91,8 +116,9 @@ const chartBars = computed(() => {
 const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0));
 
 const mrrPoints = computed(() => {
-  const factors = isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1];
-  const hist = factors.map((f) => Math.round(mrr.value * f));
+  const hist = ledger.value
+    ? history.value.map((h) => (h.value === null ? 0 : Math.round(h.value)))
+    : (isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1]).map((f) => Math.round(mrr.value * f));
   const maxMrr = hist.reduce((max, v) => Math.max(max, v), 1);
   return hist
     .map((v, i) => `${Math.round(i * (320 / (hist.length - 1)))},${Math.round(115 - v / maxMrr * 100)}`)
@@ -112,10 +138,25 @@ const upgradeExtraCost = computed(() => topActive.value * (tierPrice('unlim') - 
 // Новые за 30 дней - по дате создания ключа (реальный keydesk отдаёт CreatedAt).
 const joinedKeys = computed(() => liveKeys.value.filter((k) => k.createdAt && daysSinceVisit(k.createdAt) < INACTIVE_DAYS));
 const joined = computed(() => joinedKeys.value.length);
+// Блок «Регулярная выручка и удержание» - только платящие ключи. С леджером
+// «новые» и «перестали платить» - разница платящих множеств с начала месяца;
+// без него (мок-стенд) - приближение: платящие, созданные в этом месяце.
+const paying = computed(() => (ledger.value ? ledger.value.PayingKeys : payingKeys.value.length));
+const newPaying = computed(() => (ledger.value
+  ? ledger.value.NewPaying
+  : payingKeys.value.filter((k) => k.createdAt && k.createdAt.slice(0, 7) === today().toISOString().slice(0, 7)).length));
+const stoppedPaying = computed(() => (ledger.value
+  ? ledger.value.StoppedPaying
+  : keysList.value.filter((k) => k.off && k.tier !== 'free' && (k.sold || 0) > 0).length));
+const netPaying = computed(() => newPaying.value - stoppedPaying.value);
+// Карточка «Чистый прирост» ниже считает все ключи бригады (не только платящие).
 const left = computed(() => keysList.value.filter((k) => k.off).length);
-const retained = computed(() => liveKeys.value.filter((k) => k.lastVisit && daysSinceVisit(k.lastVisit) < 30).length);
-const paying = computed(() => liveKeys.value.filter((k) => k.tier !== 'free' && k.sold > 0).length);
 const net = computed(() => joined.value - left.value);
+const retention = computed(() => {
+  const r = ledger.value?.Retention;
+  if (!r || !r.Base) return null;
+  return {base: r.Base, kept: r.Kept, pct: Math.round(r.Kept / r.Base * 1000) / 10};
+});
 
 const statCards = computed(() => [
   {
@@ -150,10 +191,17 @@ const statCards = computed(() => [
 const growthRows = computed(() => [
   {label: t('pro.analytics.growth.mrr'), value: money(mrr.value), tone: 'blue', tip: t('pro.analytics.growth.tipMrr')},
   {label: t('pro.analytics.growth.paying'), value: String(paying.value), tone: 'ink'},
-  {label: t('pro.analytics.growth.joined'), value: `+${joined.value}`, tone: 'green'},
-  {label: t('pro.analytics.growth.left'), value: `−${left.value}`, tone: 'red'},
-  {label: t('pro.analytics.growth.net'), value: `${net.value >= 0 ? '+' : ''}${net.value}`, tone: 'ink'},
-  {label: t('pro.analytics.growth.retention'), value: t('pro.analytics.growth.retentionValue', {kept: retained.value, total: liveKeys.value.length}), tone: 'green', tip: t('pro.analytics.growth.tipRetention')},
+  {label: t('pro.analytics.growth.joined'), value: `+${newPaying.value}`, tone: 'green'},
+  {label: t('pro.analytics.growth.left'), value: `−${stoppedPaying.value}`, tone: 'red'},
+  {label: t('pro.analytics.growth.net'), value: `${netPaying.value >= 0 ? '+' : ''}${netPaying.value}`, tone: 'ink'},
+  {
+    label: t('pro.analytics.growth.retention'),
+    value: retention.value
+      ? t('pro.analytics.growth.retentionValue', {pct: String(retention.value.pct).replace('.', ','), kept: retention.value.kept, base: retention.value.base})
+      : t('pro.analytics.growth.retentionNoData'),
+    tone: retention.value ? 'green' : 'muted',
+    tip: t('pro.analytics.growth.tipRetention'),
+  },
 ]);
 
 // Рекомендации без данных (0 ключей) не показываем.

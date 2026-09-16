@@ -1,5 +1,9 @@
 <template>
   <div class="pro-dialog__body">
+    <div v-if="keyLine" class="pro-dialog__key-row">
+      <div class="pro-dialog__key-row-label">{{ t('pro.dialogs.upgrade.key') }}</div>
+      <div class="pro-dialog__key-row-value">{{ keyLine }}</div>
+    </div>
     <div class="pro-dialog__question">{{ question }}</div>
     <div
       v-for="tier in tiers"
@@ -35,6 +39,11 @@ defineProps({
   question: {
     type: String,
     required: true,
+  },
+  // Строка «название · псевдоним · тариф» над вопросом (апгрейд).
+  keyLine: {
+    type: String,
+    default: '',
   },
 });
 

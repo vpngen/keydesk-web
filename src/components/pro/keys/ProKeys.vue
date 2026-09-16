@@ -17,7 +17,6 @@
       :open-menu-id="openMenuId"
       @copy="copyKey"
       @open-confirm="openConfirm"
-      @open-extend="openExtend"
       @open-name="openName"
       @open-note="openNote"
       @open-pay="openPay"
@@ -33,7 +32,6 @@
       :open-menu-id="openMenuId"
       @copy="copyKey"
       @open-confirm="openConfirm"
-      @open-extend="openExtend"
       @open-name="openName"
       @open-note="openNote"
       @open-pay="openPay"
@@ -72,13 +70,6 @@
       :key-item="dialogKey"
       @close="showDialogUpgrade = false"
       @upgraded="onUpgraded"
-    />
-    <ProDialogExtend
-      v-if="showDialogExtend && dialogKey"
-      :forecast-sum="forecastSum"
-      :key-item="dialogKey"
-      @close="showDialogExtend = false"
-      @extend="extendKey"
     />
     <ProDialogName
       v-if="showDialogName && dialogKey"
@@ -126,7 +117,6 @@ import ProKeysEmpty from '@/components/pro/keys/ProKeysEmpty.vue';
 import ProPhotoStrip from '@/components/pro/keys/ProPhotoStrip.vue';
 import ProDialogCreateKey from '@/components/pro/dialogs/ProDialogCreateKey.vue';
 import ProDialogUpgrade from '@/components/pro/dialogs/ProDialogUpgrade.vue';
-import ProDialogExtend from '@/components/pro/dialogs/ProDialogExtend.vue';
 import ProDialogName from '@/components/pro/dialogs/ProDialogName.vue';
 import ProDialogNote from '@/components/pro/dialogs/ProDialogNote.vue';
 import ProDialogSold from '@/components/pro/dialogs/ProDialogSold.vue';
@@ -155,7 +145,6 @@ const confirmKind = ref('off');
 
 const showDialogCreate = ref(false);
 const showDialogUpgrade = ref(false);
-const showDialogExtend = ref(false);
 const showDialogName = ref(false);
 const showDialogNote = ref(false);
 const showDialogSold = ref(false);
@@ -212,7 +201,6 @@ const withKey = (show) => (key) => {
 const openSold = withKey(showDialogSold);
 const openName = withKey(showDialogName);
 const openNote = withKey(showDialogNote);
-const openExtend = withKey(showDialogExtend);
 const openUpgrade = withKey(showDialogUpgrade);
 
 const openConfirm = (key, kind) => {
@@ -257,6 +245,9 @@ const clearFilters = () => {
   filterStore.reset();
 };
 
+// Ключ в тостах: «Название» (системный псевдоним), без названия - только псевдоним.
+const keyRefOf = (key) => (key.name ? t('pro.toasts.keyRef', {name: key.name, user: key.user}) : key.user);
+
 const copyKey = async (key) => {
   const status = statusOf(key, billingStatus.value);
   if (status === 'blocked') {
@@ -279,24 +270,18 @@ const copyKey = async (key) => {
   }
   const protoName = t(`pro.protocols.${proto}`);
   toastStore.show(format === 'key'
-    ? t('pro.toasts.copiedKey', {proto: protoName, user: key.user})
-    : t('pro.toasts.copiedLink', {proto: protoName, user: key.user}));
+    ? t('pro.toasts.copiedKey', {proto: protoName, user: keyRefOf(key)})
+    : t('pro.toasts.copiedLink', {proto: protoName, user: keyRefOf(key)}));
 };
 
 const restoreKey = async (key) => {
   await proKeysStore.setKeyOff(key.id, false);
-  toastStore.show(t('pro.toasts.restored', {user: key.user}));
+  toastStore.show(t('pro.toasts.restored', {user: keyRefOf(key)}));
 };
 
 // Списание и смена тарифа идут внутри диалога; здесь только тост.
 const onUpgraded = (tier) => {
   toastStore.show(t('pro.toasts.upgraded', {tier: t(`pro.tiers.${tier}.name`)}));
-};
-
-const extendKey = async ({months}) => {
-  const until = await proKeysStore.extendKey(dialogKey.value.id, months);
-  showDialogExtend.value = false;
-  toastStore.show(t('pro.toasts.extended', {date: formatIso(until)}));
 };
 
 const saveName = async (text) => {

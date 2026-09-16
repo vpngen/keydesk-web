@@ -35,32 +35,58 @@
       </div>
     </div>
 
-    <div v-if="deviceFilter || protoFilter" class="pro-help__filter-state">
+    <div v-if="hasFilter" class="pro-help__filter-state">
       <div>{{ t('pro.help.shownOf', {shown: guides.length, total: GUIDES.length}) }}</div>
       <button class="pro-help__filter-clear" type="button" @click="clearFilter">
         {{ t('pro.help.clearFilter') }}
       </button>
     </div>
 
-    <div v-if="!guides.length" class="pro-help__no-guides">{{ t('pro.help.noGuides') }}</div>
+    <!-- Нет инструкции под выбор: предлагаем доступные для того же устройства
+         (или приложения), а если и их нет - поддержку. -->
+    <div v-if="!guides.length" class="pro-help__no-guides">
+      <div>{{ alternatives.length ? t('pro.help.noGuidesFor', {choice: choiceLabel}) : t('pro.help.noGuidesSupport') }}</div>
+      <div v-if="alternatives.length" class="pro-help__alternatives">
+        <a
+          v-for="guide in alternatives"
+          :key="guide.id"
+          :href="guide.url"
+          class="pro-help__alternative"
+          rel="noopener"
+          target="_blank"
+        >
+          {{ t(`pro.help.guides.${guide.id}.os`) }} · {{ guide.app }} → {{ t('pro.help.openGuide') }}
+        </a>
+      </div>
+      <div v-else class="pro-help__alternatives">
+        <a :href="SUPPORT_URL" class="pro-help__alternative" rel="noopener" target="_blank">{{ t('pro.help.support.cta') }}</a>
+      </div>
+    </div>
 
     <div class="pro-help__guides-grid">
       <div v-for="guide in guides" :key="guide.id" class="pro-guide-card">
         <div class="pro-guide-card__head">
           <div class="pro-guide-card__os">{{ t(`pro.help.guides.${guide.id}.os`) }}</div>
-          <div class="pro-guide-card__app">{{ t(`pro.help.guides.${guide.id}.app`) }}</div>
+          <div class="pro-guide-card__app">{{ guide.app }}</div>
         </div>
         <div class="pro-guide-card__steps">
-          <div v-for="n in guide.steps" :key="n" class="pro-guide-card__step">
+          <div v-for="n in 3" :key="n" class="pro-guide-card__step">
             <div class="pro-guide-card__step-num">{{ n }}</div>
             <div class="pro-guide-card__step-text">{{ t(`pro.help.guides.${guide.id}.s${n}`) }}</div>
           </div>
         </div>
         <div class="pro-guide-card__foot">
-          <div class="pro-guide-card__proto">{{ t(`pro.help.guides.${guide.id}.proto`) }}</div>
-          <button class="pro-guide-card__more" type="button" @click="toastStore.show(t('pro.toasts.guideSoon'))">
-            {{ t('pro.help.more') }}
-          </button>
+          <div class="pro-guide-card__proto">
+            {{ t(`pro.help.guides.${guide.id}.proto`) }}<template v-if="guideLang"> · {{ guideLang }}</template>
+          </div>
+          <div class="pro-guide-card__links">
+            <a v-if="guide.download" :href="guide.download" class="pro-guide-card__download" rel="noopener" target="_blank">
+              {{ t('pro.help.download') }}
+            </a>
+            <a :href="guide.url" class="pro-guide-card__more" rel="noopener" target="_blank">
+              {{ t('pro.help.more') }}
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -70,32 +96,56 @@
 <script setup>
 import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
-import {useProToastStore} from '@/store/proToast';
 import {PRO_PROTOCOLS} from '@/assets/constants/proConstants';
 
-const DEVICES = ['Windows', 'macOS', 'iOS', 'Android'];
+const SUPPORT_URL = 'https://t.me/vpngen_support';
 
-// Метаданные гайдов (фильтры); тексты — в i18n pro.help.guides.iN.*
+// Фильтры как в макете: четыре устройства и два способа подключения. Gate 19 и
+// VPN Generator - приложения, они подписаны на карточках, а не в фильтрах.
+// Инструкция для Linux есть в сетке, но чипа устройства у неё нет.
+const DEVICES = ['Windows', 'macOS', 'iOS', 'Android'];
+const ALL_DEVICES = [...DEVICES, 'Linux'];
+
+// Матрица инструкций: устройство × приложение × способ подключения. Ссылки -
+// документы старой ключницы (на русском), проверены 15.09.2026. Тексты шагов -
+// в i18n pro.help.guides.iN.*
 const GUIDES = [
-  {id: 'i1', devs: ['iOS'], proto: 'vless', steps: 3},
-  {id: 'i2', devs: ['Android'], proto: 'vless', steps: 3},
-  {id: 'i3', devs: ['Windows'], proto: 'vless', steps: 3},
-  {id: 'i4', devs: ['iOS', 'Android'], proto: 'outline', steps: 3},
-  {id: 'i5', devs: ['macOS'], proto: 'vless', steps: 3},
-  {id: 'i6', devs: ['iOS'], proto: 'gate19', steps: 3},
+  {id: 'i1', devs: ['iOS'], app: 'RabbitHole', protos: ['vless'], url: 'https://bit.ly/VPNgeniOSH', download: 'https://apps.apple.com/ru/app/rabbithole-vpn-client/id6683309629'},
+  {id: 'i2', devs: ['Android'], app: 'Hiddify', protos: ['vless'], url: 'https://docs.google.com/document/d/186oOAva4L93F8SWY8GZazvYxwDp-M5jvfPR4XzQ4v10/', download: 'https://play.google.com/store/apps/details?id=app.hiddify.com'},
+  {id: 'i3', devs: ['Windows'], app: 'Hiddify', protos: ['vless', 'outline'], url: 'https://bit.ly/VPNgenWindowsH', download: 'https://hiddify.com/'},
+  {id: 'i4', devs: ALL_DEVICES, app: 'Outline', protos: ['outline'], url: 'https://docs.google.com/document/d/1mrXZJo1AqXJeSjdZH5A6SAchmCMUmPzxosIzqZPJ95E/', download: 'https://getoutline.org/ru/get-started/#step-3'},
+  {id: 'i5', devs: ['macOS'], app: 'Hiddify', protos: ['vless', 'outline'], url: 'https://bit.ly/VPNgenMacH', download: 'https://github.com/hiddify/hiddify-app/releases'},
+  {id: 'i6', devs: ['iOS'], app: 'Gate 19', protos: ['vless', 'outline'], url: 'https://docs.google.com/document/d/1qsckChvNrce9G2fyI2NAghvD_beAPe4g5oNtB50KNgY/edit?usp=sharing', download: 'https://apps.apple.com/app/gate-19-guard/id6761811823'},
+  {id: 'i7', devs: ['Android'], app: 'Gate 19', protos: ['vless', 'outline'], url: 'https://docs.google.com/document/d/1G_QQib5KVltfGLQJ5QYshwoSyZ_L4-iPtCAPAXHLUhY/edit?usp=sharing', download: 'https://play.google.com/store/apps/details?id=org.stayconnected.gate19'},
+  {id: 'i8', devs: ['Linux'], app: 'Hiddify', protos: ['vless'], url: 'https://bit.ly/VPNgenLinuxH', download: 'https://github.com/hiddify/hiddify-app/releases'},
+  {id: 'i9', devs: ['Android'], app: 'VPN Generator', protos: [], url: 'https://docs.google.com/document/d/14qRXMj7zqJu3s2aiOglM8dLiQUFav9FOrwfMOyFfiTY/', download: ''},
 ];
 
 const {t} = useI18n();
-const toastStore = useProToastStore();
 
 const deviceFilter = ref(null);
 const protoFilter = ref(null);
 
-const guides = computed(() => GUIDES.filter((g) => {
-  if (deviceFilter.value && !g.devs.includes(deviceFilter.value)) return false;
-  if (protoFilter.value && g.proto !== protoFilter.value) return false;
+const hasFilter = computed(() => Boolean(deviceFilter.value || protoFilter.value));
+
+const matches = (g, {device, proto}) => {
+  if (device && !g.devs.includes(device)) return false;
+  if (proto && !g.protos.includes(proto)) return false;
   return true;
-}));
+};
+
+const guides = computed(() => GUIDES.filter((g) => matches(g, {device: deviceFilter.value, proto: protoFilter.value})));
+
+// Запасной вариант: инструкции для того же устройства (иначе - для того же протокола).
+const alternatives = computed(() => {
+  if (deviceFilter.value) return GUIDES.filter((g) => matches(g, {device: deviceFilter.value}));
+  return GUIDES.filter((g) => matches(g, {proto: protoFilter.value}));
+});
+
+const choiceLabel = computed(() => deviceFilter.value || (protoFilter.value ? t(`pro.protocols.${protoFilter.value}`) : ''));
+
+// В английском интерфейсе помечаем, что инструкции на русском (RU - пусто).
+const guideLang = computed(() => t('pro.help.guideLang'));
 
 const clearFilter = () => {
   deviceFilter.value = null;

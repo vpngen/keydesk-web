@@ -14,6 +14,9 @@
     <div v-if="phase === 'pick'" class="pro-dialog__body">
       <div class="pro-dialog__question">{{ t('pro.dialogs.create.typeQuestion') }}</div>
       <ProTierCards v-model="tier"/>
+      <div v-if="tier !== 'free' && !immediateCharges" class="pro-dialog__info">
+        {{ t('pro.dialogs.create.invoiceNote', {date: nextInvoiceDate}) }}
+      </div>
       <div v-if="busy" class="pro-dialog__foot-note">{{ t('pro.dialogs.create.creatingFree') }}</div>
     </div>
 
@@ -30,7 +33,7 @@
     <!-- 3 · ключ готов: название и комментарий -->
     <div v-else-if="phase === 'name'" class="pro-dialog__body">
       <div class="pro-dialog__headline">{{ t('pro.dialogs.create.readyTitle') }}</div>
-      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.readyLead') }}</div>
+      <div class="pro-dialog__lead">{{ t(tier === 'free' ? 'pro.dialogs.create.readyLeadFree' : 'pro.dialogs.create.readyLead') }}</div>
 
       <div class="pro-dialog__field-label">{{ t('pro.dialogs.create.nameLabel') }}</div>
       <div class="pro-dialog__input-box">
@@ -58,7 +61,11 @@
       <div class="pro-dialog__warning">{{ t('pro.dialogs.create.piiJoke') }}</div>
     </div>
 
-    <!-- 4 · готов к продаже -->
+    <!-- 4 · готово: платный - к продаже, Free - передать или подключить самому -->
+    <div v-else-if="tier === 'free'" class="pro-dialog__body">
+      <div class="pro-dialog__headline">{{ t('pro.dialogs.create.freeReadyTitle', {name: savedName}) }}</div>
+      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.freeReadyLead') }}</div>
+    </div>
     <div v-else class="pro-dialog__body">
       <div class="pro-dialog__headline">{{ t('pro.dialogs.create.soldTitle', {name: savedName}) }}</div>
       <div class="pro-dialog__lead">{{ t('pro.dialogs.create.soldLead') }}</div>
@@ -71,17 +78,22 @@ import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import ProDialog from '@/components/pro/dialogs/ProDialog.vue';
 import ProTierCards from '@/components/pro/dialogs/ProTierCards.vue';
+import {storeToRefs} from 'pinia';
 import {useProKeysStore} from '@/store/proKeys';
+import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
 import {PRO_LIMITS} from '@/assets/constants/proConstants';
 import {tierPrice} from '@/utils/proKeys';
-import {money} from '@/utils/proFormat';
+import {money, formatDate} from '@/utils/proFormat';
 
 const emit = defineEmits(['close', 'goto']);
 
 const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const toastStore = useProToastStore();
+// Цикл 0: платный ключ списывается сразу; дальше - попадает в инвойс.
+const {immediateCharges, nextInvoiceAt} = storeToRefs(useProBillingStore());
+const nextInvoiceDate = computed(() => (nextInvoiceAt.value ? formatDate(new Date(nextInvoiceAt.value)) : ''));
 
 // pick → (confirm, только платные) → name → ready
 const phase = ref('pick');
@@ -101,7 +113,10 @@ const title = computed(() => (phase.value === 'pick'
   : `${t('pro.dialogs.create.title')} · ${tierName.value}`));
 
 const primaryLabel = computed(() => {
-  if (phase.value === 'pick') return tier.value === 'free' ? t('pro.dialogs.create.submitFree') : t('pro.dialogs.common.next');
+  if (phase.value === 'pick') {
+    if (tier.value === 'free') return t('pro.dialogs.create.submitFree');
+    return immediateCharges.value ? t('pro.dialogs.common.next') : t('pro.dialogs.create.submitInvoiced');
+  }
   if (phase.value === 'confirm') return payFailed.value ? t('pro.dialogs.create.retry') : t('pro.dialogs.create.confirmYes');
   if (phase.value === 'name') return t('pro.dialogs.create.saveName');
   return t('pro.dialogs.create.gotoKey');
@@ -122,7 +137,7 @@ const purchase = async () => {
       name: '',
       note: '',
       sold: 0,
-    });
+    }, immediateCharges.value);
     toastStore.show(t('pro.toasts.created'));
     phase.value = 'name';
   } catch (error) {
@@ -154,7 +169,7 @@ const save = async () => {
 const onPrimary = () => {
   if (busy.value) return;
   if (phase.value === 'pick') {
-    if (tier.value === 'free') {
+    if (tier.value === 'free' || !immediateCharges.value) {
       purchase();
     } else {
       phase.value = 'confirm';

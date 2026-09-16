@@ -404,9 +404,9 @@
         "stamp": "paid",
         "l1": "Next invoice",
         "s1": "in {days} d.",
-        "l2": "Forecast amount",
-        "s2": "recalculated when keys change",
-        "l3": "Keys billed",
+        "l2": "Preliminary calculation",
+        "s2": "by days until the invoice date",
+        "l3": "Keys in the calculation",
         "v3": "{paid} of {total}"
       },
       "issued": {
@@ -414,7 +414,7 @@
         "l1": "Amount due",
         "s1": "invoice № {num}",
         "l2": "Pay before",
-        "s2": "2 days left",
+        "s2": "{days} d. left",
         "l3": "Keys in the invoice",
         "cta": "Pay the invoice"
       },
@@ -422,13 +422,14 @@
         "stamp": "overdue",
         "l1": "Amount due",
         "s1": "was due {date}",
-        "l2": "Keys switch off on",
-        "s2": "4 days of grace left",
+        "l2": "What next",
+        "s2": "until the invoice is paid",
         "l3": "Already restricted",
         "v3": "cannot create",
         "s3": "new paid keys",
         "cta": "Pay the invoice",
-        "note": "Free keys work no matter what - only paid keys get switched off."
+        "note": "The invoice was not paid on time. Free keys work regardless.",
+        "v2": "the brigade goes back to Free"
       },
       "suspended": {
         "stamp": "suspended",
@@ -441,11 +442,13 @@
         "s3": "unchanged",
         "cta": "Pay and switch on",
         "note": "Pro Basic and Pro Unlim keys are deactivated: cards are greyed out, copying is closed. The keys are still here - terms, names and comments are kept, everything comes back right after payment. Free keys work as usual."
-      }
+      },
+      "payLink": "Payment and invoices →",
+      "cycle0Note": "Until {end} new paid keys are charged right away. The first invoice comes on {date}."
     },
     "status": {
       "ok": "working",
-      "warn": "expiring",
+      "warn": "renews soon",
       "blocked": "blocked",
       "off": "deactivated",
       "idle": "never used",
@@ -470,8 +473,7 @@
     },
     "protocols": {
       "vless": "VLESS",
-      "outline": "Outline",
-      "gate19": "Gate 19"
+      "outline": "Outline"
     },
     "formats": {
       "link": "link",
@@ -500,7 +502,7 @@
       "termless": "perpetual",
       "validUntil": "Valid until",
       "disabled": "Disabled",
-      "expiresIn": "Expires · {days} d.",
+      "expiresIn": "Next charge in {days} d.",
       "lastVisit": "Last visit",
       "today": "today",
       "yesterday": "yesterday",
@@ -519,17 +521,16 @@
       "delete": "Delete",
       "upgrade": "Upgrade",
       "pay": "Pay",
-      "extend": "Extend",
       "actions": "Key actions",
       "blockedNote": "Switched off because of an unpaid invoice.",
-      "expiredNote": "The key's paid period is over - extend it to switch it back on.",
+      "expiredNote": "Next month's charge didn't go through - the key turns back on after a successful payment.",
       "noStoredKey": "The access string is only stored for keys created under PRO. Reissue the key to get one.",
       "copyValue": "Copy",
       "boughtOn": "Bought {date}",
       "bought": "Bought",
       "createdOn": "created {date}",
-      "copyLink": "Copy link",
-      "copyKey": "Copy key"
+      "copyLink": "Copy key link",
+      "copyKeyProto": "Copy {proto} key"
     },
     "menu": {
       "sectionKey": "key",
@@ -542,7 +543,6 @@
       "addComment": "Add a comment",
       "sold": "Sale amount",
       "setSold": "Set the sale amount",
-      "extend": "Extend / change term",
       "changeTariff": "Change plan",
       "upgradeToPro": "Upgrade to Pro",
       "deactivate": "Deactivate",
@@ -617,7 +617,13 @@
       },
       "emptyFirstMonth": "Your first combined invoice hasn't been generated yet. For now, new paid keys are charged separately when you create them. Your invoice breakdown and next charge amount will appear here.",
       "loadError": "Couldn't load invoices.",
-      "retry": "Try again"
+      "retry": "Try again",
+      "subtitle": "payment and invoices",
+      "estimateTitle": "Preliminary calculation",
+      "estimateNext": "Invoice {date}",
+      "estimateLine": "{tier} · {qty} keys · {days} d.",
+      "estimateEmpty": "Nothing to count yet - no paid keys.",
+      "estimateNote": "The sum grows day by day until the invoice date. Free and deactivated keys are not counted. Payment is due within 7 days of issue."
     },
     "analytics": {
       "title": "Analytics",
@@ -641,12 +647,14 @@
         "mrr": "MRR at month end",
         "paying": "Active paying users",
         "joined": "New this month",
-        "left": "Left",
+        "left": "Stopped paying this month",
         "net": "Net growth",
         "retention": "Retention",
-        "retentionValue": "{kept} of {total}",
+        "retentionValue": "{pct}% · {kept} of {base} renewed",
         "tipMrr": "Normalized monthly revenue from active recurring subscriptions.",
-        "tipRetention": "How many of the users active 30 days ago are still active now."
+        "tipRetention": "Shows how many of last month's paying users renewed their key for the next month.",
+        "retentionNoData": "No data to compare yet",
+        "tipBlock": "How your paying audience changes: how many users pay now, how many came and left this month, and how many renewed after the first month."
       },
       "advice": {
         "inactive": {
@@ -684,7 +692,7 @@
         "faq": "FAQ",
         "support": "Support"
       },
-      "guidesIntro": "Copy the needed format from the key card and send it to the person along with the guide for their system - every protocol comes with both a link and an access key.",
+      "guidesIntro": "Copy the needed format from the key card and send it to the person together with the guide for their device and app.",
       "filterDevices": "Pick by device",
       "filterProtos": "Pick by protocol",
       "shownOf": "showing {shown} of {total}",
@@ -694,51 +702,66 @@
       "guides": {
         "i1": {
           "os": "iOS",
-          "app": "RabbitHole",
-          "proto": "VLESS · link",
+          "proto": "VLESS · key",
           "s1": "Install RabbitHole from the App Store.",
-          "s2": "Copy the link from the key card and send it to the person.",
+          "s2": "Copy the VLESS key on the card and send it to the person.",
           "s3": "In the app: “+” → “Import from clipboard” → switch on."
         },
         "i2": {
           "os": "Android",
-          "app": "Hiddify",
           "proto": "VLESS · key",
           "s1": "Install Hiddify from Google Play.",
-          "s2": "Pass the VLESS key from the card.",
-          "s3": "In the app: “+” on the main screen → “Add from clipboard” → the connect button in the center."
+          "s2": "Send the VLESS key from the card.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → the connect button in the center."
         },
         "i3": {
           "os": "Windows",
-          "app": "Hiddify",
-          "proto": "VLESS · link",
-          "s1": "Download Hiddify from the official site.",
-          "s2": "Copy the key link.",
-          "s3": "“Add profile” → “From clipboard” → “Connect”."
+          "proto": "VLESS or Outline · key",
+          "s1": "Download Hiddify from hiddify.com and install it.",
+          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
+          "s3": "In Hiddify: “Add profile” → “From clipboard” → “Connect”."
         },
         "i4": {
-          "os": "iOS / Android",
-          "app": "Outline",
+          "os": "Any device",
           "proto": "Outline · key",
-          "s1": "Install Outline from the app store.",
-          "s2": "Pass the ss:// key from the card.",
-          "s3": "The app itself offers to add the server - “Connect”."
+          "s1": "Install Outline from the app store or getoutline.org.",
+          "s2": "Send the Outline (ss://) key from the card.",
+          "s3": "The app offers to add the server → “Connect”."
         },
         "i5": {
           "os": "macOS",
-          "app": "Hiddify",
-          "proto": "VLESS · key",
-          "s1": "Download Hiddify for macOS from the official site.",
-          "s2": "Copy the VLESS key on the card.",
-          "s3": "In the app: “+” → “Add from clipboard” → the connect button in the center."
+          "proto": "VLESS or Outline · key",
+          "s1": "Download Hiddify for macOS (dmg) and install it.",
+          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → the connect button in the center."
         },
         "i6": {
           "os": "iOS",
-          "app": "Gate 19",
-          "proto": "Gate 19 · draft",
-          "s1": "Install Gate 19 from the App Store.",
-          "s2": "Copy the key on the card and send it to the person.",
-          "s3": "Add the key in the app and connect."
+          "proto": "VLESS or Outline · key",
+          "s1": "Install Gate 19 guard from the App Store.",
+          "s2": "Send the key from the card.",
+          "s3": "In the app: “Add key” → paste → connect."
+        },
+        "i7": {
+          "os": "Android",
+          "proto": "VLESS or Outline · key",
+          "s1": "Install Gate 19 from Google Play.",
+          "s2": "Send the key from the card.",
+          "s3": "In the app: “Add key” → paste → connect."
+        },
+        "i8": {
+          "os": "Linux",
+          "proto": "VLESS · key · Ubuntu 22.04 example",
+          "s1": "Download the Hiddify AppImage and allow it to run.",
+          "s2": "Copy the VLESS key on the card and send it to the person.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → connect."
+        },
+        "i9": {
+          "os": "Android",
+          "proto": "key link",
+          "s1": "Send the person the key link (the “link” format on the card).",
+          "s2": "On that page they pick Android and install the VPN Generator app.",
+          "s3": "The key is picked up automatically - just tap “Connect”."
         }
       },
       "faq": {
@@ -767,8 +790,8 @@
           "a": "Yes, via “Upgrade” in the card menu: pick a plan and the payment is charged right away. The key stays the same - no need to re-add it to the VPN client."
         },
         "i7": {
-          "q": "Which protocol to choose?",
-          "a": "Better to have access to all three - VLESS, Outline and Gate 19. Under blocking they may behave differently: one protocol may stop connecting while another keeps working. Each comes with a link and an access key; you can switch between them on the key card."
+          "q": "VLESS, Outline or Gate 19 - which one?",
+          "a": "On the card, pick VLESS or Outline. Gate 19 is a connection app: it supports both. Open the guide for your device and the connection method you chose."
         },
         "i8": {
           "q": "Who sees my comments?",
@@ -790,7 +813,12 @@
         "tip1": "Check the key is switched on and its term hasn't expired - switched-off keys don't work.",
         "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
-      }
+      },
+      "noGuidesFor": "No guide for this choice. For “{choice}” there is:",
+      "noGuidesSupport": "No matching guide yet - write to support and we'll help.",
+      "openGuide": "open",
+      "download": "Download the app",
+      "guideLang": "guide in Russian"
     },
     "dialogs": {
       "common": {
@@ -828,7 +856,6 @@
         "termFree": "A Free key is perpetual - no term to set.",
         "termQuestion": "For how long do you need the key?",
         "termUntil": "The key will be valid until",
-        "termNote": "The term can be changed at any moment - both extended and shortened.",
         "nameHint": "Give the key a name so you don't have to guess whose it is later.",
         "namePlaceholder": "e.g. Spare laptop",
         "nameFoot": "It is visible in the list and in the table. Search works by it too.",
@@ -865,7 +892,12 @@
         "saveName": "Save",
         "soldTitle": "{name} is ready for sale.",
         "soldLead": "All that's left is to find a buyer - the rest is up to you.",
-        "gotoKey": "Go to the key"
+        "gotoKey": "Go to the key",
+        "readyLeadFree": "Now give it a name so you don't have to guess whose it is later.",
+        "freeReadyTitle": "{name} is ready.",
+        "freeReadyLead": "Share it with a user or connect your own device. The queue for free internet just got one person shorter.",
+        "invoiceNote": "Paid keys are now billed by the {date} invoice - nothing is charged right away.",
+        "submitInvoiced": "Create key"
       },
       "upgrade": {
         "title": "Upgrade",
@@ -895,18 +927,9 @@
         "successText": "Your {plan} plan is active.",
         "payFailed": "The charge failed - the plan was not changed, nothing was charged. Try again.",
         "priceLine": "{plan}: {amount}/mo",
-        "credit": "Credit for unused {plan} days: −{amount} ({days} of {total} d.)"
-      },
-      "extend": {
-        "title": "Extend",
-        "now": "Now until",
-        "next": "Becomes until",
-        "currentInvoice": "Current invoice",
-        "unchanged": "unchanged",
-        "chargeNow": "Charged now",
-        "notNeeded": "nothing",
-        "note": "Extending needs no separate payment - the difference enters the monthly invoice.",
-        "submit": "Extend until {date}"
+        "credit": "Credit for unused {plan} days: −{amount} ({days} of {total} d.)",
+        "invoiceNote": "The plan change goes on the {date} invoice, counted by days - nothing is charged right away.",
+        "switchButton": "Switch plan"
       },
       "name": {
         "title": "Name",
@@ -954,8 +977,8 @@
       "confirm": {
         "deleteTitle": "Delete the key?",
         "deactivateTitle": "Deactivate the key?",
-        "deleteText": "Key {user} will be deleted forever. The user loses access immediately.",
-        "deactivateText": "Key {user} will stop working but stays in the list - it can be switched on at any moment.",
+        "deleteText": "The key will be deleted for good. The user loses access immediately.",
+        "deactivateText": "The key stops working but stays in the list - you can switch it back on at any time.",
         "deleteNote": "This cannot be undone. If you need a temporary switch-off - use “Deactivate”.",
         "freeNote": "A Free key does not affect the invoice.",
         "paidNote": "Starting from the next invoice this key is no longer billed: {from} → {to}.",
@@ -968,7 +991,7 @@
         "invoiceLabel": "Invoice {num}",
         "period": "period {from} — {to}",
         "due": "pay before {date}",
-        "lineName": "{tier}, full month",
+        "lineName": "{tier} · {days} d.",
         "total": "Total",
         "submit": "Pay",
         "noteSuspended": "After payment all paid keys switch on immediately - with their terms and comments intact.",
@@ -1039,12 +1062,11 @@
       }
     },
     "toasts": {
-      "copiedLink": "The {proto} link for {user} was copied",
+      "copiedLink": "The key link for {user} was copied",
       "copiedKey": "The {proto} key for {user} was copied",
       "keyCopied": "Key copied",
       "copyBlocked": "The key is switched off - pay the invoice to copy",
       "created": "Key created",
-      "extended": "Key extended until {date}",
       "upgraded": "Plan changed to {tier}",
       "nameSaved": "Name saved",
       "nameCleared": "Name cleared",
@@ -1060,10 +1082,10 @@
       "receiptDownloaded": "Receipt downloaded",
       "invoiceDownloaded": "Invoice {num} downloaded",
       "supportChat": "Support chat opened with {bot}",
-      "guideSoon": "The full guide is in the works - it will open here later",
       "noStoredKey": "This key has no stored access string - reissue the key",
       "createFailed": "Couldn't create the key - please try again",
-      "saveFailed": "Couldn't save - please try again"
+      "saveFailed": "Couldn't save - please try again",
+      "keyRef": "“{name}” ({user})"
     }
   }
 }

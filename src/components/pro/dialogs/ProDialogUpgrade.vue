@@ -4,8 +4,8 @@
     :has-cancel="phase !== 'done'"
     :primary-disabled="busy"
     :primary-label="primaryLabel"
-    :primary-variant="phase === 'confirm' ? 'red' : 'ink'"
-    :title="`${t('pro.dialogs.upgrade.title')} · ${keyItem.user}`"
+    :primary-variant="phase === 'confirm' && immediateCharges ? 'red' : 'ink'"
+    :title="`${t('pro.dialogs.upgrade.title')} · ${keyItem.name || keyItem.user}`"
     @back="goBack"
     @close="emit('close')"
     @primary="onPrimary"
@@ -14,6 +14,7 @@
     <ProTierOptions
       v-if="phase === 'pick'"
       v-model="tariff"
+      :key-line="keyLine"
       :question="t('pro.dialogs.upgrade.typeQuestion')"
       :tiers="tiers"
     />
@@ -28,12 +29,14 @@
       </div>
       <div class="pro-dialog__lead">{{ t('pro.dialogs.upgrade.current', {plan: currentName}) }}</div>
       <div class="pro-dialog__question">{{ t('pro.dialogs.upgrade.priceLine', {plan: planName, amount: money(quote.price)}) }}</div>
-      <div v-if="quote.credit > 0" class="pro-dialog__question">
-        {{ t('pro.dialogs.upgrade.credit', {plan: currentName, amount: money(quote.credit), days: quote.daysLeft, total: quote.periodDays}) }}
-      </div>
-      <div class="pro-dialog__headline">{{ t('pro.dialogs.upgrade.dueNow', {amount}) }}</div>
-      <div class="pro-dialog__question">{{ t('pro.dialogs.upgrade.chargeText') }}</div>
-      <div v-if="nextChargeDate" class="pro-dialog__question">{{ t('pro.dialogs.upgrade.nextCharge', {date: nextChargeDate}) }}</div>
+      <template v-if="immediateCharges">
+        <div v-if="quote.credit > 0" class="pro-dialog__question">
+          {{ t('pro.dialogs.upgrade.credit', {plan: currentName, amount: money(quote.credit), days: quote.daysLeft, total: quote.periodDays}) }}
+        </div>
+        <div class="pro-dialog__headline">{{ t('pro.dialogs.upgrade.dueNow', {amount}) }}</div>
+        <div class="pro-dialog__question">{{ t('pro.dialogs.upgrade.chargeText') }}</div>
+      </template>
+      <div v-else class="pro-dialog__info">{{ t('pro.dialogs.upgrade.invoiceNote', {date: nextInvoiceDate}) }}</div>
       <div v-if="payFailed" class="pro-dialog__danger">{{ t('pro.dialogs.upgrade.payFailed') }}</div>
       <div v-if="busy" class="pro-dialog__foot-note">{{ t('pro.dialogs.create.charging', {price: amount}) }}</div>
     </div>
@@ -55,7 +58,6 @@ import ProTierOptions from '@/components/pro/dialogs/ProTierOptions.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProBillingStore} from '@/store/proBilling';
 import {useProToastStore} from '@/store/proToast';
-import {PRO_INVOICES_ENABLED} from '@/assets/constants/proConstants';
 import {upgradeTiers, upgradeQuote} from '@/utils/proKeys';
 import {money, formatDate} from '@/utils/proFormat';
 
@@ -72,7 +74,8 @@ const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const billingStore = useProBillingStore();
 const toastStore = useProToastStore();
-const {currentInvoice} = storeToRefs(billingStore);
+const {immediateCharges, nextInvoiceAt} = storeToRefs(billingStore);
+const nextInvoiceDate = computed(() => (nextInvoiceAt.value ? formatDate(new Date(nextInvoiceAt.value)) : ''));
 
 // pick → confirm → done
 const phase = ref('pick');
@@ -85,19 +88,18 @@ const tariff = ref(tiers.value.includes('unlim') ? 'unlim' : tiers.value[0]);
 
 const planName = computed(() => t(`pro.tiers.${tariff.value}.name`));
 const currentName = computed(() => t(`pro.tiers.${props.keyItem.tier}.name`));
-const keyLabel = computed(() => (props.keyItem.name ? `${props.keyItem.user} · ${props.keyItem.name}` : props.keyItem.user));
+// Название пользователя первым, системный псевдоним - следом.
+const keyLabel = computed(() => (props.keyItem.name ? `${props.keyItem.name} · ${props.keyItem.user}` : props.keyItem.user));
+const keyLine = computed(() => `${keyLabel.value} · ${currentName.value}`);
 // Сумма списания = цена нового тарифа минус зачёт за неиспользованные дни
 // текущего (считается на фронте, временно - до реального биллинга).
 const quote = computed(() => upgradeQuote(props.keyItem, tariff.value));
 const amount = computed(() => money(quote.value.due));
-// Дату следующего списания берём только из биллинга; пока инвойсов нет - не показываем.
-const nextChargeDate = computed(() => (PRO_INVOICES_ENABLED && currentInvoice.value?.dueAt
-  ? formatDate(new Date(currentInvoice.value.dueAt))
-  : null));
 
 const primaryLabel = computed(() => {
   if (phase.value === 'pick') return t('pro.dialogs.common.next');
   if (phase.value === 'confirm') {
+    if (!immediateCharges.value) return t('pro.dialogs.upgrade.switchButton');
     return payFailed.value ? t('pro.dialogs.create.retry') : t('pro.dialogs.upgrade.payButton', {amount: amount.value});
   }
   return t('pro.dialogs.common.done');
@@ -107,7 +109,7 @@ const pay = async () => {
   busy.value = true;
   payFailed.value = false;
   try {
-    await proKeysStore.purchaseTier(props.keyItem.id, tariff.value, quote.value.due);
+    await proKeysStore.purchaseTier(props.keyItem.id, tariff.value, immediateCharges.value ? quote.value.due : null);
     phase.value = 'done';
     emit('upgraded', tariff.value);
   } catch (error) {

@@ -1,15 +1,17 @@
 <template>
-  <div :class="`pro-banner--${displayStatus}`" class="pro-banner" data-tour="banner">
-    <!-- Пока PRO_INVOICES_ENABLED = false: статус всегда «оплачено», баннер
-         не раскрывается (нет шеврона, клика и блока инвойса). -->
-    <div :class="{'pro-banner__header--static': !PRO_INVOICES_ENABLED}" class="pro-banner__header" @click="toggle">
+  <div :class="`pro-banner--${status}`" class="pro-banner" data-tour="banner">
+    <div class="pro-banner__header" @click="isOpen = !isOpen">
       <div class="pro-banner__label">{{ t('pro.banner.statusLabel') }}</div>
       <div class="pro-banner__title">PRO</div>
-      <div class="pro-banner__stamp">{{ t(`pro.banner.${displayStatus}.stamp`) }}</div>
+      <div class="pro-banner__stamp">{{ t(`pro.banner.${status}.stamp`) }}</div>
       <div class="pro-banner__spacer"></div>
-      <div v-if="PRO_INVOICES_ENABLED" class="pro-banner__chevron">{{ isOpen ? '▴' : '▾' }}</div>
+      <!-- Вход в раздел оплаты (пункт меню «Инвойсы» скрыт) -->
+      <RouterLink :to="{path: '/invoices', query: route.query}" class="pro-banner__link" @click.stop>
+        {{ t('pro.banner.payLink') }}
+      </RouterLink>
+      <div class="pro-banner__chevron">{{ isOpen ? '▴' : '▾' }}</div>
     </div>
-    <template v-if="PRO_INVOICES_ENABLED && isOpen">
+    <template v-if="isOpen">
       <div class="pro-banner__cells">
         <div v-for="(cell, i) in cells" :key="i" class="pro-banner__cell">
           <div class="pro-banner__cell-label">{{ cell.label }}</div>
@@ -19,18 +21,16 @@
           <div class="pro-banner__cell-sub">{{ cell.sub }}</div>
         </div>
       </div>
-      <div class="pro-banner__actions">
-        <button v-if="hasPay" class="pro-banner__cta" type="button" @click="emit('pay')">
+      <div v-if="immediateCharges && cycleEndDate" class="pro-banner__note">
+        {{ t('pro.banner.cycle0Note', {end: cycleEndDate, date: nextInvoiceDate}) }}
+      </div>
+      <div v-if="hasPay" class="pro-banner__actions">
+        <button class="pro-banner__cta" type="button" @click="emit('pay')">
           {{ t(`pro.banner.${status}.cta`) }}
         </button>
-        <!-- Временно скрыто вместе с разделом «Инвойсы».
-        <RouterLink :to="{path: '/invoices', query: route.query}" class="pro-banner__link">
-          {{ t('pro.banner.allInvoices') }} →
-        </RouterLink>
-        -->
       </div>
     </template>
-    <div v-if="hasNote" class="pro-banner__note">{{ t(`pro.banner.${displayStatus}.note`) }}</div>
+    <div v-if="hasNote" class="pro-banner__note">{{ t(`pro.banner.${status}.note`) }}</div>
   </div>
 </template>
 
@@ -41,8 +41,7 @@ import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProBillingStore} from '@/store/proBilling';
-import {PRO_INVOICES_ENABLED} from '@/assets/constants/proConstants';
-import {money, formatDate, nextBilling, daysToBilling, shiftDays, invoiceNumber} from '@/utils/proFormat';
+import {money, formatDate, daysUntil, toIso, nextBilling, daysToBilling} from '@/utils/proFormat';
 
 const emit = defineEmits(['pay']);
 
@@ -51,66 +50,49 @@ const route = useRoute();
 const proKeysStore = useProKeysStore();
 const billingStore = useProBillingStore();
 const {keysList, paidList, forecastSum, freeCount} = storeToRefs(proKeysStore);
-const {status, currentInvoice} = storeToRefs(billingStore);
+const {status, currentInvoice, invoices, immediateCharges, cycleEnd, nextInvoiceAt, estimate} = storeToRefs(billingStore);
 
 const isOpen = ref(false);
 
-// Реальный статус биллинга показываем только когда инвойсы включены.
-const displayStatus = computed(() => (PRO_INVOICES_ENABLED ? status.value : 'paid'));
+const hasPay = computed(() => status.value === 'issued' || status.value === 'overdue');
+const hasNote = computed(() => status.value === 'overdue');
 
-const toggle = () => {
-  if (!PRO_INVOICES_ENABLED) return;
-  isOpen.value = !isOpen.value;
-};
+const fmt = (iso) => (iso ? formatDate(new Date(iso)) : '');
+const cycleEndDate = computed(() => fmt(cycleEnd.value));
+const nextInvoiceDate = computed(() => (nextInvoiceAt.value ? fmt(nextInvoiceAt.value) : formatDate(nextBilling())));
+const daysToInvoice = computed(() => (nextInvoiceAt.value ? daysUntil(toIso(new Date(nextInvoiceAt.value))) : daysToBilling()));
 
-const hasPay = computed(() => displayStatus.value !== 'paid');
-const hasNote = computed(() => displayStatus.value === 'overdue' || displayStatus.value === 'suspended');
+// Предварительный расчёт следующего инвойса: с бэкенда (по дням), в моке - прогноз по ключам.
+const estimateSum = computed(() => (estimate.value ? estimate.value.sum : forecastSum.value));
+const estimateKeys = computed(() => (estimate.value ? estimate.value.keys : paidList.value.length));
 
-// Реальный текущий инвойс (keydesk) даёт точные даты и сумму; в мок-режиме
-// значения синтезируются как в макете.
-const invoiceSum = computed(() => money(currentInvoice.value?.sum ?? forecastSum.value));
-const invoiceNum = computed(() => currentInvoice.value?.num || invoiceNumber(0));
-const dueDate = computed(() => (currentInvoice.value?.dueAt
-  ? formatDate(new Date(currentInvoice.value.dueAt))
-  : formatDate(shiftDays(2))));
-const suspendDate = computed(() => (currentInvoice.value?.suspendAt
-  ? formatDate(new Date(currentInvoice.value.suspendAt))
-  : formatDate(shiftDays(4))));
+const invoiceSum = computed(() => money(currentInvoice.value?.sum ?? estimateSum.value));
+const invoiceNum = computed(() => currentInvoice.value?.num || nextInvoiceDate.value);
+const invoiceKeys = computed(() => invoices.value.find((i) => i.num === currentInvoice.value?.num)?.keys ?? estimateKeys.value);
+const dueDate = computed(() => fmt(currentInvoice.value?.dueAt));
+const daysToDue = computed(() => (currentInvoice.value?.dueAt ? Math.max(0, daysUntil(toIso(new Date(currentInvoice.value.dueAt)))) : 0));
 
 const cells = computed(() => {
-  const forecastMoney = money(forecastSum.value);
-  const paidCount = paidList.value.length;
   const free = freeCount.value;
-  const paidOutside = keysList.value.length - free - paidCount;
-  const outsideText = paidOutside > 0
-    ? t('pro.banner.outsideBoth', {free, paid: paidOutside})
-    : t('pro.banner.outsideFree', {free});
 
   if (status.value === 'issued') {
     return [
       {label: t('pro.banner.issued.l1'), value: invoiceSum.value, sub: t('pro.banner.issued.s1', {num: invoiceNum.value}), tone: 'ink'},
-      {label: t('pro.banner.issued.l2'), value: dueDate.value, sub: t('pro.banner.issued.s2'), tone: 'amber'},
-      {label: t('pro.banner.issued.l3'), value: String(paidCount), sub: t('pro.banner.outsideFree', {free}), tone: 'ink'},
+      {label: t('pro.banner.issued.l2'), value: dueDate.value, sub: t('pro.banner.issued.s2', {days: daysToDue.value}), tone: 'amber'},
+      {label: t('pro.banner.issued.l3'), value: String(invoiceKeys.value), sub: t('pro.banner.outsideFree', {free}), tone: 'ink'},
     ];
   }
   if (status.value === 'overdue') {
     return [
       {label: t('pro.banner.overdue.l1'), value: invoiceSum.value, sub: t('pro.banner.overdue.s1', {date: dueDate.value}), tone: 'danger'},
-      {label: t('pro.banner.overdue.l2'), value: suspendDate.value, sub: t('pro.banner.overdue.s2'), tone: 'danger'},
-      {label: t('pro.banner.overdue.l3'), value: t('pro.banner.overdue.v3'), sub: t('pro.banner.overdue.s3'), tone: 'ink'},
-    ];
-  }
-  if (status.value === 'suspended') {
-    return [
-      {label: t('pro.banner.suspended.l1'), value: invoiceSum.value, sub: t('pro.banner.suspended.s1', {num: invoiceNum.value}), tone: 'ink'},
-      {label: t('pro.banner.suspended.l2'), value: suspendDate.value, sub: t('pro.banner.suspended.s2', {count: paidCount}), tone: 'ink'},
-      {label: t('pro.banner.suspended.l3'), value: t('pro.banner.suspended.v3', {free}), sub: t('pro.banner.suspended.s3'), tone: 'ink'},
+      {label: t('pro.banner.overdue.l2'), value: t('pro.banner.overdue.v2'), sub: t('pro.banner.overdue.s2'), tone: 'danger'},
+      {label: t('pro.banner.overdue.l3'), value: String(invoiceKeys.value), sub: t('pro.banner.outsideFree', {free}), tone: 'ink'},
     ];
   }
   return [
-    {label: t('pro.banner.paid.l1'), value: formatDate(nextBilling()), sub: t('pro.banner.paid.s1', {days: daysToBilling()}), tone: 'ink'},
-    {label: t('pro.banner.paid.l2'), value: forecastMoney, sub: t('pro.banner.paid.s2'), tone: 'ink'},
-    {label: t('pro.banner.paid.l3'), value: t('pro.banner.paid.v3', {paid: paidCount, total: keysList.value.length}), sub: outsideText, tone: 'ink'},
+    {label: t('pro.banner.paid.l1'), value: nextInvoiceDate.value, sub: t('pro.banner.paid.s1', {days: daysToInvoice.value}), tone: 'ink'},
+    {label: t('pro.banner.paid.l2'), value: money(estimateSum.value), sub: t('pro.banner.paid.s2'), tone: 'ink'},
+    {label: t('pro.banner.paid.l3'), value: t('pro.banner.paid.v3', {paid: estimateKeys.value, total: keysList.value.length}), sub: t('pro.banner.outsideFree', {free}), tone: 'ink'},
   ];
 });
 </script>
