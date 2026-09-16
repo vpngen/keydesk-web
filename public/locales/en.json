@@ -685,7 +685,7 @@
       },
       "guidesIntro": "Copy the needed format from the key card and send it to the person together with the guide for their device and app.",
       "filterDevices": "Pick by device",
-      "filterProtos": "Pick by connection method",
+      "filterProtos": "Pick by protocol",
       "shownOf": "showing {shown} of {total}",
       "clearFilter": "Reset",
       "noGuides": "No guide for this filter pair yet - drop one of them.",
@@ -805,7 +805,6 @@
         "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
       },
-      "filterApps": "Pick by app",
       "noGuidesFor": "No guide for this choice. For “{choice}” there is:",
       "noGuidesSupport": "No matching guide yet - write to support and we'll help.",
       "openGuide": "open",

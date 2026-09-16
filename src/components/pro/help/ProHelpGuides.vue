@@ -19,21 +19,6 @@
         </div>
       </div>
       <div class="pro-help__filter-group">
-        <div class="pro-help__filter-label">{{ t('pro.help.filterApps') }}</div>
-        <div class="pro-help__chips">
-          <button
-            v-for="app in APPS"
-            :key="app"
-            :class="{'pro-help__chip--active': appFilter === app}"
-            class="pro-help__chip"
-            type="button"
-            @click="appFilter = appFilter === app ? null : app"
-          >
-            {{ app }} <span class="pro-help__chip-arrow">→</span>
-          </button>
-        </div>
-      </div>
-      <div class="pro-help__filter-group">
         <div class="pro-help__filter-label">{{ t('pro.help.filterProtos') }}</div>
         <div class="pro-help__chips">
           <button
@@ -115,10 +100,11 @@ import {PRO_PROTOCOLS} from '@/assets/constants/proConstants';
 
 const SUPPORT_URL = 'https://t.me/vpngen_support';
 
-const DEVICES = ['Windows', 'macOS', 'iOS', 'Android', 'Linux'];
-// Приложения - отдельная ось: Gate 19 принимает и VLESS, и Outline; VPN Generator
-// работает по ссылке на ключ.
-const APPS = ['Hiddify', 'RabbitHole', 'Outline', 'Gate 19', 'VPN Generator'];
+// Фильтры как в макете: четыре устройства и два способа подключения. Gate 19 и
+// VPN Generator - приложения, они подписаны на карточках, а не в фильтрах.
+// Инструкция для Linux есть в сетке, но чипа устройства у неё нет.
+const DEVICES = ['Windows', 'macOS', 'iOS', 'Android'];
+const ALL_DEVICES = [...DEVICES, 'Linux'];
 
 // Матрица инструкций: устройство × приложение × способ подключения. Ссылки -
 // документы старой ключницы (на русском), проверены 15.09.2026. Тексты шагов -
@@ -127,7 +113,7 @@ const GUIDES = [
   {id: 'i1', devs: ['iOS'], app: 'RabbitHole', protos: ['vless'], url: 'https://bit.ly/VPNgeniOSH', download: 'https://apps.apple.com/ru/app/rabbithole-vpn-client/id6683309629'},
   {id: 'i2', devs: ['Android'], app: 'Hiddify', protos: ['vless'], url: 'https://docs.google.com/document/d/186oOAva4L93F8SWY8GZazvYxwDp-M5jvfPR4XzQ4v10/', download: 'https://play.google.com/store/apps/details?id=app.hiddify.com'},
   {id: 'i3', devs: ['Windows'], app: 'Hiddify', protos: ['vless', 'outline'], url: 'https://bit.ly/VPNgenWindowsH', download: 'https://hiddify.com/'},
-  {id: 'i4', devs: DEVICES, app: 'Outline', protos: ['outline'], url: 'https://docs.google.com/document/d/1mrXZJo1AqXJeSjdZH5A6SAchmCMUmPzxosIzqZPJ95E/', download: 'https://getoutline.org/ru/get-started/#step-3'},
+  {id: 'i4', devs: ALL_DEVICES, app: 'Outline', protos: ['outline'], url: 'https://docs.google.com/document/d/1mrXZJo1AqXJeSjdZH5A6SAchmCMUmPzxosIzqZPJ95E/', download: 'https://getoutline.org/ru/get-started/#step-3'},
   {id: 'i5', devs: ['macOS'], app: 'Hiddify', protos: ['vless', 'outline'], url: 'https://bit.ly/VPNgenMacH', download: 'https://github.com/hiddify/hiddify-app/releases'},
   {id: 'i6', devs: ['iOS'], app: 'Gate 19', protos: ['vless', 'outline'], url: 'https://docs.google.com/document/d/1qsckChvNrce9G2fyI2NAghvD_beAPe4g5oNtB50KNgY/edit?usp=sharing', download: 'https://apps.apple.com/app/gate-19-guard/id6761811823'},
   {id: 'i7', devs: ['Android'], app: 'Gate 19', protos: ['vless', 'outline'], url: 'https://docs.google.com/document/d/1G_QQib5KVltfGLQJ5QYshwoSyZ_L4-iPtCAPAXHLUhY/edit?usp=sharing', download: 'https://play.google.com/store/apps/details?id=org.stayconnected.gate19'},
@@ -138,35 +124,31 @@ const GUIDES = [
 const {t} = useI18n();
 
 const deviceFilter = ref(null);
-const appFilter = ref(null);
 const protoFilter = ref(null);
 
-const hasFilter = computed(() => Boolean(deviceFilter.value || appFilter.value || protoFilter.value));
+const hasFilter = computed(() => Boolean(deviceFilter.value || protoFilter.value));
 
-const matches = (g, {device, app, proto}) => {
+const matches = (g, {device, proto}) => {
   if (device && !g.devs.includes(device)) return false;
-  if (app && g.app !== app) return false;
   if (proto && !g.protos.includes(proto)) return false;
   return true;
 };
 
-const guides = computed(() => GUIDES.filter((g) => matches(g, {device: deviceFilter.value, app: appFilter.value, proto: protoFilter.value})));
+const guides = computed(() => GUIDES.filter((g) => matches(g, {device: deviceFilter.value, proto: protoFilter.value})));
 
-// Запасной вариант: то же устройство (в первую очередь), иначе то же приложение.
+// Запасной вариант: инструкции для того же устройства (иначе - для того же протокола).
 const alternatives = computed(() => {
   if (deviceFilter.value) return GUIDES.filter((g) => matches(g, {device: deviceFilter.value}));
-  if (appFilter.value) return GUIDES.filter((g) => matches(g, {app: appFilter.value}));
   return GUIDES.filter((g) => matches(g, {proto: protoFilter.value}));
 });
 
-const choiceLabel = computed(() => deviceFilter.value || appFilter.value || (protoFilter.value ? t(`pro.protocols.${protoFilter.value}`) : ''));
+const choiceLabel = computed(() => deviceFilter.value || (protoFilter.value ? t(`pro.protocols.${protoFilter.value}`) : ''));
 
 // В английском интерфейсе помечаем, что инструкции на русском (RU - пусто).
 const guideLang = computed(() => t('pro.help.guideLang'));
 
 const clearFilter = () => {
   deviceFilter.value = null;
-  appFilter.value = null;
   protoFilter.value = null;
 };
 </script>
