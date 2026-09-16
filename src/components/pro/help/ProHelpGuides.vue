@@ -19,6 +19,21 @@
         </div>
       </div>
       <div class="pro-help__filter-group">
+        <div class="pro-help__filter-label">{{ t('pro.help.filterApps') }}</div>
+        <div class="pro-help__chips">
+          <button
+            v-for="app in APPS"
+            :key="app"
+            :class="{'pro-help__chip--active': appFilter === app}"
+            class="pro-help__chip"
+            type="button"
+            @click="appFilter = appFilter === app ? null : app"
+          >
+            {{ app }} <span class="pro-help__chip-arrow">→</span>
+          </button>
+        </div>
+      </div>
+      <div class="pro-help__filter-group">
         <div class="pro-help__filter-label">{{ t('pro.help.filterProtos') }}</div>
         <div class="pro-help__chips">
           <button
@@ -35,7 +50,7 @@
       </div>
     </div>
 
-    <div v-if="deviceFilter || protoFilter" class="pro-help__filter-state">
+    <div v-if="deviceFilter || appFilter || protoFilter" class="pro-help__filter-state">
       <div>{{ t('pro.help.shownOf', {shown: guides.length, total: GUIDES.length}) }}</div>
       <button class="pro-help__filter-clear" type="button" @click="clearFilter">
         {{ t('pro.help.clearFilter') }}
@@ -74,31 +89,36 @@ import {useProToastStore} from '@/store/proToast';
 import {PRO_PROTOCOLS} from '@/assets/constants/proConstants';
 
 const DEVICES = ['Windows', 'macOS', 'iOS', 'Android'];
+// Приложения - отдельная ось: Gate 19 принимает и VLESS, и Outline.
+const APPS = ['Hiddify', 'RabbitHole', 'Outline', 'Gate 19'];
 
 // Метаданные гайдов (фильтры); тексты — в i18n pro.help.guides.iN.*
 const GUIDES = [
-  {id: 'i1', devs: ['iOS'], proto: 'vless', steps: 3},
-  {id: 'i2', devs: ['Android'], proto: 'vless', steps: 3},
-  {id: 'i3', devs: ['Windows'], proto: 'vless', steps: 3},
-  {id: 'i4', devs: ['iOS', 'Android'], proto: 'outline', steps: 3},
-  {id: 'i5', devs: ['macOS'], proto: 'vless', steps: 3},
-  {id: 'i6', devs: ['iOS'], proto: 'gate19', steps: 3},
+  {id: 'i1', devs: ['iOS'], app: 'RabbitHole', protos: ['vless'], steps: 3},
+  {id: 'i2', devs: ['Android'], app: 'Hiddify', protos: ['vless'], steps: 3},
+  {id: 'i3', devs: ['Windows'], app: 'Hiddify', protos: ['vless'], steps: 3},
+  {id: 'i4', devs: ['iOS', 'Android'], app: 'Outline', protos: ['outline'], steps: 3},
+  {id: 'i5', devs: ['macOS'], app: 'Hiddify', protos: ['vless'], steps: 3},
+  {id: 'i6', devs: ['iOS'], app: 'Gate 19', protos: ['vless', 'outline'], steps: 3},
 ];
 
 const {t} = useI18n();
 const toastStore = useProToastStore();
 
 const deviceFilter = ref(null);
+const appFilter = ref(null);
 const protoFilter = ref(null);
 
 const guides = computed(() => GUIDES.filter((g) => {
   if (deviceFilter.value && !g.devs.includes(deviceFilter.value)) return false;
-  if (protoFilter.value && g.proto !== protoFilter.value) return false;
+  if (appFilter.value && g.app !== appFilter.value) return false;
+  if (protoFilter.value && !g.protos.includes(protoFilter.value)) return false;
   return true;
 }));
 
 const clearFilter = () => {
   deviceFilter.value = null;
+  appFilter.value = null;
   protoFilter.value = null;
 };
 </script>

@@ -59,7 +59,7 @@ export function seedKeys() {
   return base.map((k, i) => ({
     id: `seed-${k.num}`,
     user: `user-0${k.num < 10 ? `0${k.num}` : k.num}`,
-    proto: PRO_PROTOCOLS[i % 3],
+    proto: PRO_PROTOCOLS[i % PRO_PROTOCOLS.length],
     sold: k.tier === 'free' ? 0 : soldSeed[i] || 0,
     off: Boolean(k.off),
     createdAt: seedCreatedAt(k),
@@ -116,7 +116,7 @@ export function enrichUser(user, index) {
     name: user.UserName || '',
     note: '',
     tier,
-    proto: PRO_PROTOCOLS[h % 3],
+    proto: PRO_PROTOCOLS[h % PRO_PROTOCOLS.length],
     until: tier === 'free' ? null : inDays((h % 190) + 10),
     sold: tier === 'free' ? 0 : soldOptions[h % soldOptions.length],
     off: false,

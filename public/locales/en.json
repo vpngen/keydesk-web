@@ -470,8 +470,7 @@
     },
     "protocols": {
       "vless": "VLESS",
-      "outline": "Outline",
-      "gate19": "Gate 19"
+      "outline": "Outline"
     },
     "formats": {
       "link": "link",
@@ -684,7 +683,7 @@
       },
       "guidesIntro": "Copy the needed format from the key card and send it to the person along with the guide for their system - every protocol comes with both a link and an access key.",
       "filterDevices": "Pick by device",
-      "filterProtos": "Pick by protocol",
+      "filterProtos": "Pick by connection method",
       "shownOf": "showing {shown} of {total}",
       "clearFilter": "Reset",
       "noGuides": "No guide for this filter pair yet - drop one of them.",
@@ -733,10 +732,10 @@
         "i6": {
           "os": "iOS",
           "app": "Gate 19",
-          "proto": "Gate 19 · draft",
+          "proto": "VLESS or Outline · key",
           "s1": "Install Gate 19 from the App Store.",
-          "s2": "Copy the key on the card and send it to the person.",
-          "s3": "Add the key in the app and connect."
+          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
+          "s3": "In the app: import the key from the clipboard → connect."
         }
       },
       "faq": {
@@ -765,8 +764,8 @@
           "a": "Yes, via “Upgrade” in the card menu: pick a plan and the payment is charged right away. The key stays the same - no need to re-add it to the VPN client."
         },
         "i7": {
-          "q": "Which protocol to choose?",
-          "a": "Better to have access to all three - VLESS, Outline and Gate 19. Under blocking they may behave differently: one protocol may stop connecting while another keeps working. Each comes with a link and an access key; you can switch between them on the key card."
+          "q": "VLESS, Outline or Gate 19 - which one?",
+          "a": "On the card, pick VLESS or Outline. Gate 19 is a connection app: it supports both. Open the guide for your device and the connection method you chose."
         },
         "i8": {
           "q": "Who sees my comments?",
@@ -788,7 +787,8 @@
         "tip1": "Check the key is switched on and its term hasn't expired - switched-off keys don't work.",
         "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
-      }
+      },
+      "filterApps": "Pick by app"
     },
     "dialogs": {
       "common": {

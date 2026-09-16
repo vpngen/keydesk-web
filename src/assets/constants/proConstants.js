@@ -19,7 +19,8 @@ export const BILLING_STATES = ['paid', 'issued', 'overdue', 'suspended'];
 // с возвратом раздела «Инвойсы».
 export const PRO_INVOICES_ENABLED = false;
 
-export const PRO_PROTOCOLS = ['vless', 'outline', 'gate19'];
+// Способы подключения на карточке. Gate 19 - приложение (поддерживает оба), не протокол.
+export const PRO_PROTOCOLS = ['vless', 'outline'];
 
 export const PRO_FORMATS = ['link', 'key'];
 
