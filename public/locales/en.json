@@ -683,7 +683,7 @@
         "faq": "FAQ",
         "support": "Support"
       },
-      "guidesIntro": "Copy the needed format from the key card and send it to the person along with the guide for their system - every protocol comes with both a link and an access key.",
+      "guidesIntro": "Copy the needed format from the key card and send it to the person together with the guide for their device and app.",
       "filterDevices": "Pick by device",
       "filterProtos": "Pick by connection method",
       "shownOf": "showing {shown} of {total}",
@@ -693,51 +693,66 @@
       "guides": {
         "i1": {
           "os": "iOS",
-          "app": "RabbitHole",
-          "proto": "VLESS · link",
+          "proto": "VLESS · key",
           "s1": "Install RabbitHole from the App Store.",
-          "s2": "Copy the link from the key card and send it to the person.",
+          "s2": "Copy the VLESS key on the card and send it to the person.",
           "s3": "In the app: “+” → “Import from clipboard” → switch on."
         },
         "i2": {
           "os": "Android",
-          "app": "Hiddify",
           "proto": "VLESS · key",
           "s1": "Install Hiddify from Google Play.",
-          "s2": "Pass the VLESS key from the card.",
-          "s3": "In the app: “+” on the main screen → “Add from clipboard” → the connect button in the center."
+          "s2": "Send the VLESS key from the card.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → the connect button in the center."
         },
         "i3": {
           "os": "Windows",
-          "app": "Hiddify",
-          "proto": "VLESS · link",
-          "s1": "Download Hiddify from the official site.",
-          "s2": "Copy the key link.",
-          "s3": "“Add profile” → “From clipboard” → “Connect”."
+          "proto": "VLESS or Outline · key",
+          "s1": "Download Hiddify from hiddify.com and install it.",
+          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
+          "s3": "In Hiddify: “Add profile” → “From clipboard” → “Connect”."
         },
         "i4": {
-          "os": "iOS / Android",
-          "app": "Outline",
+          "os": "Any device",
           "proto": "Outline · key",
-          "s1": "Install Outline from the app store.",
-          "s2": "Pass the ss:// key from the card.",
-          "s3": "The app itself offers to add the server - “Connect”."
+          "s1": "Install Outline from the app store or getoutline.org.",
+          "s2": "Send the Outline (ss://) key from the card.",
+          "s3": "The app offers to add the server → “Connect”."
         },
         "i5": {
           "os": "macOS",
-          "app": "Hiddify",
-          "proto": "VLESS · key",
-          "s1": "Download Hiddify for macOS from the official site.",
-          "s2": "Copy the VLESS key on the card.",
-          "s3": "In the app: “+” → “Add from clipboard” → the connect button in the center."
+          "proto": "VLESS or Outline · key",
+          "s1": "Download Hiddify for macOS (dmg) and install it.",
+          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → the connect button in the center."
         },
         "i6": {
           "os": "iOS",
-          "app": "Gate 19",
           "proto": "VLESS or Outline · key",
-          "s1": "Install Gate 19 from the App Store.",
-          "s2": "Copy the VLESS or Outline key on the card and send it to the person.",
-          "s3": "In the app: import the key from the clipboard → connect."
+          "s1": "Install Gate 19 guard from the App Store.",
+          "s2": "Send the key from the card.",
+          "s3": "In the app: “Add key” → paste → connect."
+        },
+        "i7": {
+          "os": "Android",
+          "proto": "VLESS or Outline · key",
+          "s1": "Install Gate 19 from Google Play.",
+          "s2": "Send the key from the card.",
+          "s3": "In the app: “Add key” → paste → connect."
+        },
+        "i8": {
+          "os": "Linux",
+          "proto": "VLESS · key · Ubuntu 22.04 example",
+          "s1": "Download the Hiddify AppImage and allow it to run.",
+          "s2": "Copy the VLESS key on the card and send it to the person.",
+          "s3": "In Hiddify: “+” → “Add from clipboard” → connect."
+        },
+        "i9": {
+          "os": "Android",
+          "proto": "key link",
+          "s1": "Send the person the key link (the “link” format on the card).",
+          "s2": "On that page they pick Android and install the VPN Generator app.",
+          "s3": "The key is picked up automatically - just tap “Connect”."
         }
       },
       "faq": {
@@ -790,7 +805,12 @@
         "tip2": "Attach the key's system name from the card (e.g. 095 Беспробудный Маршалл) - we'll sort it out faster.",
         "warning": "Don't forward keys to third parties and don't post them in public chats - the key would have to be reissued."
       },
-      "filterApps": "Pick by app"
+      "filterApps": "Pick by app",
+      "noGuidesFor": "No guide for this choice. For “{choice}” there is:",
+      "noGuidesSupport": "No matching guide yet - write to support and we'll help.",
+      "openGuide": "open",
+      "download": "Download the app",
+      "guideLang": "guide in Russian"
     },
     "dialogs": {
       "common": {
@@ -1050,7 +1070,6 @@
       "receiptDownloaded": "Receipt downloaded",
       "invoiceDownloaded": "Invoice {num} downloaded",
       "supportChat": "Support chat opened with {bot}",
-      "guideSoon": "The full guide is in the works - it will open here later",
       "noStoredKey": "This key has no stored access string - reissue the key",
       "createFailed": "Couldn't create the key - please try again",
       "saveFailed": "Couldn't save - please try again",
