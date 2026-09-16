@@ -30,7 +30,7 @@
     <!-- 3 · ключ готов: название и комментарий -->
     <div v-else-if="phase === 'name'" class="pro-dialog__body">
       <div class="pro-dialog__headline">{{ t('pro.dialogs.create.readyTitle') }}</div>
-      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.readyLead') }}</div>
+      <div class="pro-dialog__lead">{{ t(tier === 'free' ? 'pro.dialogs.create.readyLeadFree' : 'pro.dialogs.create.readyLead') }}</div>
 
       <div class="pro-dialog__field-label">{{ t('pro.dialogs.create.nameLabel') }}</div>
       <div class="pro-dialog__input-box">
@@ -58,7 +58,11 @@
       <div class="pro-dialog__warning">{{ t('pro.dialogs.create.piiJoke') }}</div>
     </div>
 
-    <!-- 4 · готов к продаже -->
+    <!-- 4 · готово: платный - к продаже, Free - передать или подключить самому -->
+    <div v-else-if="tier === 'free'" class="pro-dialog__body">
+      <div class="pro-dialog__headline">{{ t('pro.dialogs.create.freeReadyTitle', {name: savedName}) }}</div>
+      <div class="pro-dialog__lead">{{ t('pro.dialogs.create.freeReadyLead') }}</div>
+    </div>
     <div v-else class="pro-dialog__body">
       <div class="pro-dialog__headline">{{ t('pro.dialogs.create.soldTitle', {name: savedName}) }}</div>
       <div class="pro-dialog__lead">{{ t('pro.dialogs.create.soldLead') }}</div>

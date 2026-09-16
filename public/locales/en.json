@@ -862,7 +862,10 @@
         "saveName": "Save",
         "soldTitle": "{name} is ready for sale.",
         "soldLead": "All that's left is to find a buyer - the rest is up to you.",
-        "gotoKey": "Go to the key"
+        "gotoKey": "Go to the key",
+        "readyLeadFree": "Now give it a name so you don't have to guess whose it is later.",
+        "freeReadyTitle": "{name} is ready.",
+        "freeReadyLead": "Share it with a user or connect your own device. The queue for free internet just got one person shorter."
       },
       "upgrade": {
         "title": "Upgrade",
