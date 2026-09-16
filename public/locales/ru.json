@@ -526,8 +526,8 @@
       "boughtOn": "Куплен {date}",
       "bought": "Куплен",
       "createdOn": "создан {date}",
-      "copyLink": "Скопировать ссылку",
-      "copyKey": "Скопировать ключ"
+      "copyLink": "Скопировать ссылку на ключ",
+      "copyKeyProto": "Скопировать ключ {proto}"
     },
     "menu": {
       "sectionKey": "ключ",
@@ -1025,7 +1025,7 @@
       }
     },
     "toasts": {
-      "copiedLink": "Ссылка {proto} {user} скопирована",
+      "copiedLink": "Ссылка на ключ {user} скопирована",
       "copiedKey": "Ключ {proto} {user} скопирован",
       "keyCopied": "Ключ скопирован",
       "copyBlocked": "Ключ отключен - оплати инвойс, чтобы копировать",

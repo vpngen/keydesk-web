@@ -526,8 +526,8 @@
       "boughtOn": "Bought {date}",
       "bought": "Bought",
       "createdOn": "created {date}",
-      "copyLink": "Copy link",
-      "copyKey": "Copy key"
+      "copyLink": "Copy key link",
+      "copyKeyProto": "Copy {proto} key"
     },
     "menu": {
       "sectionKey": "key",
@@ -1025,7 +1025,7 @@
       }
     },
     "toasts": {
-      "copiedLink": "The {proto} link for {user} was copied",
+      "copiedLink": "The key link for {user} was copied",
       "copiedKey": "The {proto} key for {user} was copied",
       "keyCopied": "Key copied",
       "copyBlocked": "The key is switched off - pay the invoice to copy",

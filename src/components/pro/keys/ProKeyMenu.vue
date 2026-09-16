@@ -13,7 +13,7 @@
       <template v-if="variant === 'card'">
         <div class="pro-key-menu__section">{{ t('pro.menu.sectionKey') }}</div>
         <button class="pro-key-menu__item" role="menuitem" type="button" @click="emit('copy')">
-          {{ t('pro.menu.copy') }}
+          {{ copyLabel || t('pro.menu.copy') }}
         </button>
       </template>
       <button class="pro-key-menu__item" role="menuitem" type="button" @click="emit('rename')">
@@ -55,6 +55,11 @@ const props = defineProps({
   hasNote: {type: Boolean},
   hasSold: {type: Boolean},
   isFree: {type: Boolean},
+  // Подпись пункта копирования по выбранному формату/протоколу (карточка).
+  copyLabel: {
+    type: String,
+    default: '',
+  },
   // Выше Pro Unlim тарифа нет - пункт «сменить тариф» ему не показываем.
   canUpgrade: {
     type: Boolean,

@@ -36,9 +36,10 @@
 </template>
 
 <script setup>
-import {computed} from 'vue';
+import {computed, toRef} from 'vue';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
+import {useProCopyLabel} from '@/composables/useProCopyLabel';
 import {useProKeysStore} from '@/store/proKeys';
 import {accessString, availableProtos, defaultFormat} from '@/utils/proKeys';
 import {PRO_PROTOCOLS, PRO_FORMATS} from '@/assets/constants/proConstants';
@@ -62,6 +63,6 @@ const currentProto = computed(() => {
   return protos.value.includes(selected) ? selected : protos.value[0];
 });
 const currentFormat = computed(() => formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem));
-const copyLabel = computed(() => (currentFormat.value === 'link' ? t('pro.card.copyLink') : t('pro.card.copyKey')));
+const {label: copyLabel} = useProCopyLabel(toRef(props, 'keyItem'));
 const value = computed(() => accessString(props.keyItem, currentProto.value, currentFormat.value));
 </script>

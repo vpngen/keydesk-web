@@ -102,6 +102,7 @@
       <ProKeyMenu
         v-if="menuOpen"
         :can-upgrade="keyItem.tier !== 'unlim'"
+        :copy-label="copyLabel"
         :has-name="hasName"
         :has-note="hasNote"
         :has-sold="Boolean(keyItem.sold)"
@@ -122,14 +123,12 @@
 
 <script setup>
 import {computed, nextTick, ref, toRef} from 'vue';
-import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
-import {useProKeysStore} from '@/store/proKeys';
-import {defaultFormat} from '@/utils/proKeys';
+import {useProCopyLabel} from '@/composables/useProCopyLabel';
 
 const props = defineProps({
   keyItem: {
@@ -155,11 +154,8 @@ const {
 
 const canCopy = computed(() => !isDead.value && !isBlocked.value);
 
-// Основное действие называется по выбранному формату: ссылка или ключ.
-const {formatByKey} = storeToRefs(useProKeysStore());
-const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
-  ? t('pro.card.copyLink')
-  : t('pro.card.copyKey')));
+// Подпись копирования - по выбранным протоколу и формату (PRO 09).
+const {label: copyLabel} = useProCopyLabel(toRef(props, 'keyItem'));
 
 const gearRef = ref(null);
 

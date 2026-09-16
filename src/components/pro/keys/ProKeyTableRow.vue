@@ -107,14 +107,12 @@
 
 <script setup>
 import {computed, nextTick, ref, toRef} from 'vue';
-import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
 import ProKeyProtoSwitcher from '@/components/pro/keys/ProKeyProtoSwitcher.vue';
 import ProKeyMenu from '@/components/pro/keys/ProKeyMenu.vue';
 import {useProKeyView} from '@/composables/useProKeyView';
-import {useProKeysStore} from '@/store/proKeys';
-import {defaultFormat} from '@/utils/proKeys';
+import {useProCopyLabel} from '@/composables/useProCopyLabel';
 
 const props = defineProps({
   keyItem: {
@@ -141,11 +139,8 @@ const {
 
 const gearRef = ref(null);
 
-// Подпись копирования по выбранному формату (ссылка / ключ).
-const {formatByKey} = storeToRefs(useProKeysStore());
-const copyLabel = computed(() => ((formatByKey.value[props.keyItem.id] || defaultFormat(props.keyItem)) === 'link'
-  ? t('pro.card.copyLink')
-  : t('pro.card.copyKey')));
+// Подпись копирования - по выбранным протоколу и формату (PRO 09).
+const {label: copyLabel} = useProCopyLabel(toRef(props, 'keyItem'));
 
 // Esc закрывает меню и возвращает фокус на кнопку; клик мимо - просто закрывает.
 const onMenuClose = (reason) => {
