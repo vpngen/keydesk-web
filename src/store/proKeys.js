@@ -102,7 +102,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
   /** Деактивация/включение. */
   const setKeyOff = async (id, off) => {
     await proApi.setProKeyOff(id, off);
-    mergeKey(id, off ? {off: true} : {off: false, lastVisit: new Date().toISOString()});
+    mergeKey(id, {off});
   };
 
   const removeKey = async (id) => {

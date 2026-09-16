@@ -192,7 +192,8 @@ export async function setProKeyOff(id, off) {
     return;
   }
 
-  mockPatch(id, off ? {off: true} : {off: false, lastVisit: new Date().toISOString()});
+  // Включение только разрешает ключ: «последний вход» ставят реальные подключения.
+  mockPatch(id, {off});
 }
 
 /**
