@@ -23,8 +23,6 @@ export const PRO_PROTOCOLS = ['vless', 'outline', 'gate19'];
 
 export const PRO_FORMATS = ['link', 'key'];
 
-export const TERM_MONTHS = [1, 3, 6, 12];
-
 export const PRO_LIMITS = {
   name: 60,
   note: 400,

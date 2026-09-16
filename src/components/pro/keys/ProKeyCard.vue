@@ -88,9 +88,6 @@
       <button v-if="isBlocked && !isExpiredBlocked" class="pro-key-card__pay" type="button" @click="emit('open-pay')">
         {{ t('pro.card.pay') }}
       </button>
-      <button v-if="isWarn || isExpiredBlocked" class="pro-key-card__extend" type="button" @click="emit('open-extend', keyItem)">
-        {{ t('pro.card.extend') }}
-      </button>
       <button
         v-if="!isDead"
         ref="gearRef"
@@ -114,7 +111,6 @@
         @copy="emit('copy', keyItem)"
         @deactivate="emit('open-confirm', keyItem, 'off')"
         @delete="emit('open-confirm', keyItem, 'del')"
-        @extend="emit('open-extend', keyItem)"
         @note="emit('open-note', keyItem)"
         @rename="emit('open-name', keyItem)"
         @sold="emit('open-sold', keyItem)"
@@ -145,7 +141,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'copy', 'restore', 'toggle-menu', 'close-menu',
-  'open-sold', 'open-name', 'open-note', 'open-extend',
+  'open-sold', 'open-name', 'open-note',
   'open-upgrade', 'open-confirm', 'open-pay',
 ]);
 

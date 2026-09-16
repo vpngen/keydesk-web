@@ -184,18 +184,6 @@ export async function setProKeyTier(id, tier, months) {
   return until;
 }
 
-/** Продление платного ключа. Возвращает новую дату окончания. */
-export async function extendProKey(id, months, currentUntil) {
-  if (isRealPro()) {
-    const r = await withAuthRetry(() => axios.post(`${apiLink}/user/${id}/extend`, {Months: months}));
-    return r.data?.PaidUntil ? String(r.data.PaidUntil).slice(0, 10) : null;
-  }
-
-  const {addMonths} = await import('@/utils/proFormat');
-  const until = addMonths(currentUntil, months);
-  mockPatch(id, {until});
-  return until;
-}
 
 /** Деактивация/включение ключа — штатные block/unblock keydesk. */
 export async function setProKeyOff(id, off) {

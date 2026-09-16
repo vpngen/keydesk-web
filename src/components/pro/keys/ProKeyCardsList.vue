@@ -8,7 +8,6 @@
       @close-menu="closeMenu"
       @copy="(k) => emit('copy', k)"
       @open-confirm="(k, kind) => emit('open-confirm', k, kind)"
-      @open-extend="(k) => emit('open-extend', k)"
       @open-name="(k) => emit('open-name', k)"
       @open-note="(k) => emit('open-note', k)"
       @open-pay="emit('open-pay')"
@@ -36,7 +35,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'copy', 'restore', 'toggle-menu',
-  'open-sold', 'open-name', 'open-note', 'open-extend',
+  'open-sold', 'open-name', 'open-note',
   'open-upgrade', 'open-confirm', 'open-pay',
 ]);
 

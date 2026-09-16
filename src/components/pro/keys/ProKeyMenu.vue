@@ -27,9 +27,6 @@
         {{ hasSold ? t('pro.menu.sold') : t('pro.menu.setSold') }}
       </button>
       <div v-if="variant === 'card'" class="pro-key-menu__section pro-key-menu__section--bordered">{{ t('pro.menu.sectionTerm') }}</div>
-      <button v-if="!isFree" class="pro-key-menu__item" role="menuitem" type="button" @click="emit('extend')">
-        {{ t('pro.menu.extend') }}
-      </button>
       <button v-if="canUpgrade" class="pro-key-menu__item" role="menuitem" type="button" @click="emit('upgrade')">
         {{ isFree ? t('pro.menu.upgradeToPro') : t('pro.menu.changeTariff') }}
       </button>
@@ -72,7 +69,7 @@ const props = defineProps({
 });
 
 // close получает причину: 'escape' - вернуть фокус на кнопку.
-const emit = defineEmits(['copy', 'rename', 'note', 'sold', 'extend', 'upgrade', 'deactivate', 'delete', 'close']);
+const emit = defineEmits(['copy', 'rename', 'note', 'sold', 'upgrade', 'deactivate', 'delete', 'close']);
 
 const {t} = useI18n();
 

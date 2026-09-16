@@ -98,15 +98,6 @@ export const useProKeysStore = defineStore('proKeys', () => {
     return until;
   };
 
-  /** Продление платного ключа; возвращает новую дату окончания. */
-  const extendKey = async (id, months) => {
-    const current = keysList.value.find((k) => k.id === id);
-    const revive = reviveFields(id);
-    const until = await proApi.extendProKey(id, months, current?.until || null);
-    const fresh = await proApi.fetchProKey(id);
-    mergeKey(id, fresh || {until, ...(until ? revive : {})});
-    return until;
-  };
 
   /** Деактивация/включение. */
   const setKeyOff = async (id, off) => {
@@ -143,7 +134,6 @@ export const useProKeysStore = defineStore('proKeys', () => {
     purchaseTier,
     patchKeyMeta,
     setKeyTier,
-    extendKey,
     setKeyOff,
     removeKey,
     setKeyProto,

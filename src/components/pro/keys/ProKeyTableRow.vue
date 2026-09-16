@@ -87,7 +87,6 @@
         @close="onMenuClose"
         @deactivate="emit('open-confirm', keyItem, 'off')"
         @delete="emit('open-confirm', keyItem, 'del')"
-        @extend="emit('open-extend', keyItem)"
         @note="emit('open-note', keyItem)"
         @rename="emit('open-name', keyItem)"
         @sold="emit('open-sold', keyItem)"
@@ -128,7 +127,7 @@ const props = defineProps({
 
 const emit = defineEmits([
   'copy', 'toggle-menu', 'close-menu', 'toggle-expand',
-  'open-sold', 'open-name', 'open-note', 'open-extend',
+  'open-sold', 'open-name', 'open-note',
   'open-upgrade', 'open-confirm',
 ]);
 
