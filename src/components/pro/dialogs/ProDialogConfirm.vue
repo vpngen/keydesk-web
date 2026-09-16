@@ -9,6 +9,9 @@
     @primary="emit('confirm')"
   >
     <div class="pro-dialog__body">
+      <!-- Сначала название, которое дал пользователь; ниже системный псевдоним и тариф. -->
+      <div class="pro-dialog__headline">{{ displayName }}</div>
+      <div class="pro-dialog__lead">{{ keyItem.name ? `${keyItem.user} · ${tierName}` : tierName }}</div>
       <div class="pro-dialog__question">{{ text }}</div>
       <div class="pro-dialog__confirm-note">{{ note }}</div>
     </div>
@@ -41,9 +44,12 @@ const emit = defineEmits(['close', 'confirm']);
 
 const {t} = useI18n();
 
+const displayName = computed(() => props.keyItem.name || props.keyItem.user);
+const tierName = computed(() => t(`pro.tiers.${props.keyItem.tier}.name`));
+
 const text = computed(() => (props.kind === 'del'
-  ? t('pro.dialogs.confirm.deleteText', {user: props.keyItem.user})
-  : t('pro.dialogs.confirm.deactivateText', {user: props.keyItem.user})));
+  ? t('pro.dialogs.confirm.deleteText', {user: displayName.value})
+  : t('pro.dialogs.confirm.deactivateText', {user: displayName.value})));
 
 const note = computed(() => {
   if (props.kind === 'del') return t('pro.dialogs.confirm.deleteNote');

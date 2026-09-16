@@ -5,7 +5,7 @@
     :primary-disabled="busy"
     :primary-label="primaryLabel"
     :primary-variant="phase === 'confirm' ? 'red' : 'ink'"
-    :title="`${t('pro.dialogs.upgrade.title')} · ${keyItem.user}`"
+    :title="`${t('pro.dialogs.upgrade.title')} · ${keyItem.name || keyItem.user}`"
     @back="goBack"
     @close="emit('close')"
     @primary="onPrimary"
@@ -14,6 +14,7 @@
     <ProTierOptions
       v-if="phase === 'pick'"
       v-model="tariff"
+      :key-line="keyLine"
       :question="t('pro.dialogs.upgrade.typeQuestion')"
       :tiers="tiers"
     />
@@ -85,7 +86,9 @@ const tariff = ref(tiers.value.includes('unlim') ? 'unlim' : tiers.value[0]);
 
 const planName = computed(() => t(`pro.tiers.${tariff.value}.name`));
 const currentName = computed(() => t(`pro.tiers.${props.keyItem.tier}.name`));
-const keyLabel = computed(() => (props.keyItem.name ? `${props.keyItem.user} · ${props.keyItem.name}` : props.keyItem.user));
+// Название пользователя первым, системный псевдоним - следом.
+const keyLabel = computed(() => (props.keyItem.name ? `${props.keyItem.name} · ${props.keyItem.user}` : props.keyItem.user));
+const keyLine = computed(() => `${keyLabel.value} · ${currentName.value}`);
 // Сумма списания = цена нового тарифа минус зачёт за неиспользованные дни
 // текущего (считается на фронте, временно - до реального биллинга).
 const quote = computed(() => upgradeQuote(props.keyItem, tariff.value));
