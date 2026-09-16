@@ -203,14 +203,14 @@ export async function setProKeyOff(id, off) {
  * Создание ключа. В реальном режиме: POST /user, затем тариф и атрибуты.
  * Возвращает созданный ключ.
  */
-export async function createProKey(payload, localKey) {
+export async function createProKey(payload, localKey, charged = true) {
   if (isRealPro()) {
     const r = await withAuthRetry(() => axios.post(`${apiLink}/user`, null, {headers: {accept: 'application/json'}}));
     const created = typeof r.data === 'string' ? JSON.parse(r.data) : r.data;
     const id = String(created.UserID);
 
     if (payload.tier !== 'free') {
-      await setProKeyTier(id, payload.tier, payload.months, Math.round((TIER_PRICE[payload.tier] || 0) * 100));
+      await setProKeyTier(id, payload.tier, payload.months, charged ? Math.round((TIER_PRICE[payload.tier] || 0) * 100) : null);
     }
     if (payload.name || payload.note || payload.sold) {
       await patchProKeyMeta(id, {name: payload.name, note: payload.note, sold: payload.sold});
@@ -264,26 +264,53 @@ function mockPatch(id, fields) {
 // ——— Биллинг: реальные локальные инвойсы keydesk либо мок. ———
 
 /** GET /pro/billing (реальный режим) либо мок-состояние. */
+const mapInvoiceLine = (l) => ({
+  tier: l.Tier,
+  qty: l.Qty || 0,
+  days: l.Days || 0,
+  price: (l.PriceCents || 0) / 100,
+  sum: (l.AmountCents || 0) / 100,
+});
+
+/**
+ * GET /pro/billing: состояние, скользящий цикл бригады (якорь - дата
+ * подключения PRO), предварительный расчёт следующего инвойса. В цикле 0
+ * платные ключи списываются сразу (immediateCharges), дальше - по инвойсу.
+ */
 export async function fetchProBilling() {
   if (isRealPro()) {
     const r = await withAuthRetry(() => axios.get(`${apiLink}/pro/billing`));
-    const current = r.data?.InvoiceID
+    const b = r.data || {};
+    const current = b.InvoiceID
       ? {
-        num: r.data.InvoiceID,
-        issuedAt: r.data.IssuedAt || null,
-        dueAt: r.data.DueAt || null,
-        suspendAt: r.data.SuspendAt || null,
-        sum: (r.data.TotalCents || 0) / 100,
+        num: b.InvoiceID,
+        issuedAt: b.IssuedAt || null,
+        dueAt: b.DueAt || null,
+        sum: (b.TotalCents || 0) / 100,
       }
       : null;
-    return {status: r.data?.State || 'paid', current, real: true};
+    return {
+      status: b.State || 'paid',
+      current,
+      real: true,
+      since: b.ProSince || null,
+      cycleIndex: b.CycleIndex || 0,
+      cycleStart: b.CycleStart || null,
+      cycleEnd: b.CycleEnd || null,
+      // Бэкенд опускает false (omitempty): при известном цикле отсутствие поля = false.
+      immediateCharges: b.ProSince ? b.ImmediateCharges === true : true,
+      nextInvoiceAt: b.NextInvoiceAt || null,
+      estimate: {
+        sum: (b.EstimateCents || 0) / 100,
+        keys: b.EstimateKeys || 0,
+        lines: (b.EstimateLines || []).map(mapInvoiceLine),
+      },
+    };
   }
 
   const forced = devQuery('proBilling');
-  if (forced && ['paid', 'issued', 'overdue', 'suspended'].includes(forced)) {
-    return {status: forced};
-  }
-  return {status: readOverrides().billing || 'paid'};
+  const status = forced && ['paid', 'issued', 'overdue'].includes(forced) ? forced : (readOverrides().billing || 'paid');
+  return {status, immediateCharges: true, estimate: null, nextInvoiceAt: null};
 }
 
 /** GET /pro/invoices (реальный режим) либо посевные инвойсы макета. */
@@ -294,10 +321,14 @@ export async function fetchProInvoices() {
     return list.map((i) => ({
       num: i.ID,
       periodId: i.ID,
+      periodFrom: i.PeriodFrom || null,
+      periodTo: i.PeriodTo || null,
       createdAt: i.CreatedAt || null,
+      dueAt: i.DueAt || null,
       paidAtIso: i.PaidAt || null,
       keys: i.KeysCount || 0,
       sum: (i.TotalCents || 0) / 100,
+      lines: (i.Lines || []).map(mapInvoiceLine),
       status: i.Status === 'issued' ? 'awaiting' : i.Status,
       real: true,
     }));

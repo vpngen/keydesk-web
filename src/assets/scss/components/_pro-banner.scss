@@ -58,6 +58,17 @@
 		flex: 1;
 	}
 
+	// «Оплата и инвойсы →» в шапке баннера
+	&__link {
+		flex: none;
+		border-bottom: 1px solid v.$pro-color-blue;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-decoration: none;
+		text-transform: uppercase;
+		color: v.$pro-color-blue;
+	}
+
 	&__chevron {
 		flex: none;
 		font: 400 14px/1 v.$pro-font-mono;

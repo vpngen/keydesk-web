@@ -32,13 +32,70 @@
 		}
 	}
 
+	// Предварительный расчёт следующего инвойса
 	&__state {
+		margin-bottom: 20px;
 		border: 1px dashed v.$pro-color-hairline;
-		padding: 22px 24px;
+		padding: 18px 24px 16px;
 		max-width: 680px;
-		font: 400 15px/1.5 v.$pro-font-sans;
+		font: 400 14px/1.5 v.$pro-font-sans;
 		color: v.$pro-color-ink-soft;
 		background: v.$pro-color-card;
+	}
+
+	&__state-head {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 12px;
+	}
+
+	&__state-title {
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink;
+	}
+
+	&__state-sum {
+		font: 700 24px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+	}
+
+	&__state-next {
+		margin-top: 6px;
+		font: 400 12px/1.4 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+	}
+
+	&__state-lines {
+		margin-top: 12px;
+		border-top: 1px dotted v.$pro-color-hairline;
+	}
+
+	&__state-line {
+		display: flex;
+		justify-content: space-between;
+		border-bottom: 1px dotted v.$pro-color-hairline;
+		padding: 7px 0;
+		gap: 12px;
+	}
+
+	&__state-line-sum {
+		font: 700 13px/1 v.$pro-font-mono;
+		color: v.$pro-color-ink;
+	}
+
+	&__state-empty {
+		margin-top: 10px;
+		font: italic 400 13px/1.4 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__state-note {
+		margin-top: 12px;
+		font: 400 12px/1.45 v.$pro-font-sans;
+		color: v.$pro-color-faded;
 	}
 
 	&__grid {

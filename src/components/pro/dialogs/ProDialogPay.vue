@@ -27,9 +27,7 @@
           <div class="pro-pay__total-sum">{{ sumText }}</div>
         </div>
       </div>
-      <div class="pro-dialog__info">
-        {{ status === 'suspended' ? t('pro.dialogs.pay.noteSuspended') : t('pro.dialogs.pay.noteDefault') }}
-      </div>
+      <div class="pro-dialog__info">{{ t('pro.dialogs.pay.noteDefault') }}</div>
     </div>
   </ProDialog>
 </template>
@@ -50,21 +48,35 @@ const {t} = useI18n();
 const proKeysStore = useProKeysStore();
 const billingStore = useProBillingStore();
 const {paidList, forecastSum} = storeToRefs(proKeysStore);
-const {status} = storeToRefs(billingStore);
+const {currentInvoice, invoices} = storeToRefs(billingStore);
 
-const invoiceNum = invoiceNumber(0);
-const sumText = computed(() => money(forecastSum.value));
-const periodFrom = formatShort(monthShift(0));
-const periodTo = formatDate(new Date(today().getFullYear(), today().getMonth() + 1, 0));
-const dueDate = formatDate(shiftDays(2));
+// Реальный инвойс текущего цикла (с составом по дням); мок - прогноз по ключам.
+const invoice = computed(() => invoices.value.find((i) => i.num === currentInvoice.value?.num) || null);
+const fmt = (iso) => (iso ? formatDate(new Date(iso)) : '—');
 
-const payLines = computed(() => ['basic', 'unlim'].map((tier) => {
-  const count = paidList.value.filter((k) => k.tier === tier).length;
-  return {
-    name: t('pro.dialogs.pay.lineName', {tier: t(`pro.tiers.${tier}.name`)}),
-    qty: String(count),
-    price: money(tierPrice(tier)),
-    sum: money(count * tierPrice(tier)),
-  };
-}));
+const invoiceNum = computed(() => currentInvoice.value?.num || invoiceNumber(0));
+const sumText = computed(() => money(currentInvoice.value?.sum ?? forecastSum.value));
+const periodFrom = computed(() => (invoice.value?.periodFrom ? fmt(invoice.value.periodFrom) : formatShort(monthShift(0))));
+const periodTo = computed(() => (invoice.value?.periodTo ? fmt(invoice.value.periodTo) : formatDate(new Date(today().getFullYear(), today().getMonth() + 1, 0))));
+const dueDate = computed(() => (currentInvoice.value?.dueAt ? fmt(currentInvoice.value.dueAt) : formatDate(shiftDays(7))));
+
+const payLines = computed(() => {
+  if (invoice.value?.lines?.length) {
+    return invoice.value.lines.map((l) => ({
+      name: t('pro.dialogs.pay.lineName', {tier: t(`pro.tiers.${l.tier}.name`), days: l.days}),
+      qty: String(l.qty),
+      price: money(l.price),
+      sum: money(l.sum),
+    }));
+  }
+  return ['basic', 'unlim'].map((tier) => {
+    const count = paidList.value.filter((k) => k.tier === tier).length;
+    return {
+      name: t('pro.dialogs.pay.lineName', {tier: t(`pro.tiers.${tier}.name`), days: 30}),
+      qty: String(count),
+      price: money(tierPrice(tier)),
+      sum: money(count * tierPrice(tier)),
+    };
+  });
+});
 </script>

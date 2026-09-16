@@ -32,7 +32,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
     nextNum = keysList.value.reduce((m, k) => Math.max(m, k.num + 1), nextNum);
   };
 
-  const createKey = async (payload) => {
+  const createKey = async (payload, charged = true) => {
     const num = nextNum;
     nextNum += 1;
     const localKey = {
@@ -49,7 +49,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
       gb: 0,
       until: payload.tier === 'free' ? null : addMonths(null, payload.months),
     };
-    const key = await proApi.createProKey(payload, localKey) || localKey;
+    const key = await proApi.createProKey(payload, localKey, charged) || localKey;
     keysList.value = keysList.value.concat([key]);
     return key;
   };
@@ -58,19 +58,22 @@ export const useProKeysStore = defineStore('proKeys', () => {
    * Покупка ключа: для платных тарифов сначала списание с привязанной карты,
    * при отказе (error.code === 'payment_failed') ключ не создаётся.
    */
-  const purchaseKey = async (payload) => {
-    if (payload.tier !== 'free') {
+  const purchaseKey = async (payload, charge = true) => {
+    if (charge && payload.tier !== 'free') {
       await proApi.chargeProKey({tier: payload.tier});
     }
-    return createKey(payload);
+    return createKey(payload, charge);
   };
 
   /**
    * Смена тарифа с немедленным списанием: сначала оплата с привязанной карты,
    * тариф активируется только после успешной оплаты (новый месяц с сегодня).
    */
+  // amount = null: цикл инвойсов, ничего не списываем - смена тарифа попадёт в счёт.
   const purchaseTier = async (id, tier, amount = null) => {
-    await proApi.chargeProKey({tier, amount});
+    if (amount !== null) {
+      await proApi.chargeProKey({tier, amount});
+    }
     return setKeyTier(id, tier, 1, amount === null ? null : Math.round(amount * 100));
   };
 
