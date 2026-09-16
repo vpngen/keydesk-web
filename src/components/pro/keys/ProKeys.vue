@@ -245,6 +245,9 @@ const clearFilters = () => {
   filterStore.reset();
 };
 
+// Ключ в тостах: «Название» (системный псевдоним), без названия - только псевдоним.
+const keyRefOf = (key) => (key.name ? t('pro.toasts.keyRef', {name: key.name, user: key.user}) : key.user);
+
 const copyKey = async (key) => {
   const status = statusOf(key, billingStatus.value);
   if (status === 'blocked') {
@@ -267,13 +270,13 @@ const copyKey = async (key) => {
   }
   const protoName = t(`pro.protocols.${proto}`);
   toastStore.show(format === 'key'
-    ? t('pro.toasts.copiedKey', {proto: protoName, user: key.user})
-    : t('pro.toasts.copiedLink', {proto: protoName, user: key.user}));
+    ? t('pro.toasts.copiedKey', {proto: protoName, user: keyRefOf(key)})
+    : t('pro.toasts.copiedLink', {proto: protoName, user: keyRefOf(key)}));
 };
 
 const restoreKey = async (key) => {
   await proKeysStore.setKeyOff(key.id, false);
-  toastStore.show(t('pro.toasts.restored', {user: key.user}));
+  toastStore.show(t('pro.toasts.restored', {user: keyRefOf(key)}));
 };
 
 // Списание и смена тарифа идут внутри диалога; здесь только тост.

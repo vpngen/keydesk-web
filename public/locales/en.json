@@ -1051,7 +1051,8 @@
       "guideSoon": "The full guide is in the works - it will open here later",
       "noStoredKey": "This key has no stored access string - reissue the key",
       "createFailed": "Couldn't create the key - please try again",
-      "saveFailed": "Couldn't save - please try again"
+      "saveFailed": "Couldn't save - please try again",
+      "keyRef": "“{name}” ({user})"
     }
   }
 }
