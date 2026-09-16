@@ -188,6 +188,23 @@
 		color: v.$pro-color-ink-soft;
 	}
 
+	// «?» с подсказкой у заголовка блока и строк.
+	&__hint {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		vertical-align: middle;
+		margin-left: 6px;
+		border: 1px solid v.$pro-color-muted;
+		width: 14px;
+		height: 14px;
+		font: 700 9px/1 v.$pro-font-narrow;
+		letter-spacing: 0;
+		text-transform: none;
+		color: v.$pro-color-muted;
+		cursor: help;
+	}
+
 	&__growth-value {
 		font: 700 15px/1 v.$pro-font-mono;
 		white-space: nowrap;
@@ -202,6 +219,10 @@
 
 		&--red {
 			color: v.$pro-color-red;
+		}
+
+		&--muted {
+			color: v.$pro-color-muted;
 		}
 	}
 

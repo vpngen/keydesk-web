@@ -71,7 +71,7 @@ export const useProKeysStore = defineStore('proKeys', () => {
    */
   const purchaseTier = async (id, tier, amount = null) => {
     await proApi.chargeProKey({tier, amount});
-    return setKeyTier(id, tier, 1);
+    return setKeyTier(id, tier, 1, amount === null ? null : Math.round(amount * 100));
   };
 
   /** Название / комментарий / «продал за». */
@@ -88,9 +88,9 @@ export const useProKeysStore = defineStore('proKeys', () => {
   };
 
   /** Смена тарифа; возвращает новую дату окончания. */
-  const setKeyTier = async (id, tier, months) => {
+  const setKeyTier = async (id, tier, months, chargedCents = null) => {
     const revive = reviveFields(id);
-    const until = await proApi.setProKeyTier(id, tier, months);
+    const until = await proApi.setProKeyTier(id, tier, months, chargedCents);
     // Лимит, срок и стоимость - из актуального состояния ключа, без reload
     // (unlim получает безлимитную квоту на бэкенде).
     const fresh = await proApi.fetchProKey(id);

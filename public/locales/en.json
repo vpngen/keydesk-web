@@ -638,12 +638,14 @@
         "mrr": "MRR at month end",
         "paying": "Active paying users",
         "joined": "New this month",
-        "left": "Left",
+        "left": "Stopped paying this month",
         "net": "Net growth",
         "retention": "Retention",
-        "retentionValue": "{kept} of {total}",
+        "retentionValue": "{pct}% · {kept} of {base} renewed",
         "tipMrr": "Normalized monthly revenue from active recurring subscriptions.",
-        "tipRetention": "How many of the users active 30 days ago are still active now."
+        "tipRetention": "Shows how many of last month's paying users renewed their key for the next month.",
+        "retentionNoData": "No data to compare yet",
+        "tipBlock": "How your paying audience changes: how many users pay now, how many came and left this month, and how many renewed after the first month."
       },
       "advice": {
         "inactive": {

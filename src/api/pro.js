@@ -172,9 +172,12 @@ export async function patchProKeyMeta(id, {name, note, sold}) {
 }
 
 /** Смена тарифа (апгрейд/даунгрейд). Возвращает новую дату окончания (ISO|null). */
-export async function setProKeyTier(id, tier, months) {
+export async function setProKeyTier(id, tier, months, chargedCents = null) {
   if (isRealPro()) {
-    const r = await withAuthRetry(() => axios.post(`${apiLink}/user/${id}/tier`, {Tier: tier, Months: months}));
+    // ChargedCents - что списал платёжный шаг; бэкенд пишет это в PRO-леджер.
+    const body = {Tier: tier, Months: months};
+    if (chargedCents !== null) body.ChargedCents = chargedCents;
+    const r = await withAuthRetry(() => axios.post(`${apiLink}/user/${id}/tier`, body));
     return r.data?.PaidUntil ? String(r.data.PaidUntil).slice(0, 10) : null;
   }
 
@@ -207,7 +210,7 @@ export async function createProKey(payload, localKey) {
     const id = String(created.UserID);
 
     if (payload.tier !== 'free') {
-      await setProKeyTier(id, payload.tier, payload.months);
+      await setProKeyTier(id, payload.tier, payload.months, Math.round((TIER_PRICE[payload.tier] || 0) * 100));
     }
     if (payload.name || payload.note || payload.sold) {
       await patchProKeyMeta(id, {name: payload.name, note: payload.note, sold: payload.sold});
@@ -306,14 +309,11 @@ export async function fetchProInvoices() {
 /** Будущий эндпоинт: GET /pro/analytics. Пользовательские счетчики можно
  *  подпитать из реального GET /users/stats; денежная история — мок. */
 export async function fetchProAnalytics() {
-  let stats = null;
-  try {
-    const r = await withAuthRetry(() => axios.get(`${apiLink}/users/stats`));
-    stats = r.data;
-  } catch {
-    stats = null;
-  }
-  return {revenueHistory: REVENUE_HISTORY, allTimeExtra: ALL_TIME_EXTRA, stats};
+  // Реальный режим: числа платящей аудитории свёрнуты бэкендом из PRO-леджера.
+  // Мок-стенд: null - страница считает приближение по ключам.
+  if (!isRealPro()) return null;
+  const r = await withAuthRetry(() => axios.get(`${apiLink}/pro/analytics`));
+  return r.data || null;
 }
 
 /** POST /pro/invoices/current/pay (реальный режим, стаб-оплата) либо мок. */
