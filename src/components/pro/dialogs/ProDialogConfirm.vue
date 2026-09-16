@@ -47,9 +47,10 @@ const {t} = useI18n();
 const displayName = computed(() => props.keyItem.name || props.keyItem.user);
 const tierName = computed(() => t(`pro.tiers.${props.keyItem.tier}.name`));
 
+// Имя ключа уже в заголовке блока - в тексте его не повторяем.
 const text = computed(() => (props.kind === 'del'
-  ? t('pro.dialogs.confirm.deleteText', {user: displayName.value})
-  : t('pro.dialogs.confirm.deactivateText', {user: displayName.value})));
+  ? t('pro.dialogs.confirm.deleteText')
+  : t('pro.dialogs.confirm.deactivateText')));
 
 const note = computed(() => {
   if (props.kind === 'del') return t('pro.dialogs.confirm.deleteNote');

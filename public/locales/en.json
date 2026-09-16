@@ -943,8 +943,8 @@
       "confirm": {
         "deleteTitle": "Delete the key?",
         "deactivateTitle": "Deactivate the key?",
-        "deleteText": "Key {user} will be deleted forever. The user loses access immediately.",
-        "deactivateText": "Key {user} will stop working but stays in the list - it can be switched on at any moment.",
+        "deleteText": "The key will be deleted for good. The user loses access immediately.",
+        "deactivateText": "The key stops working but stays in the list - you can switch it back on at any time.",
         "deleteNote": "This cannot be undone. If you need a temporary switch-off - use “Deactivate”.",
         "freeNote": "A Free key does not affect the invoice.",
         "paidNote": "Starting from the next invoice this key is no longer billed: {from} → {to}.",
