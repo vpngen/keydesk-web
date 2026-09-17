@@ -2,11 +2,14 @@
   <div class="pro-analytics__stats">
     <div
       v-for="stat in stats"
-      :key="stat.label"
-      :class="{'pro-analytics__stat--raised': stat.raised}"
+      :key="stat.id"
+      :class="{'pro-analytics__stat--main': stat.main}"
       class="pro-analytics__stat"
     >
-      <div class="pro-analytics__stat-label">{{ stat.label }}</div>
+      <div class="pro-analytics__stat-label">
+        {{ stat.label }}
+        <ProHint v-if="stat.tip" :text="stat.tip"/>
+      </div>
       <div :class="`pro-analytics__stat-value--${stat.tone}`" class="pro-analytics__stat-value">{{ stat.value }}</div>
       <div class="pro-analytics__stat-hint">{{ stat.hint }}</div>
     </div>
@@ -14,6 +17,9 @@
 </template>
 
 <script setup>
+import ProHint from '@/components/pro/analytics/ProHint.vue';
+
+// Три карточки экономики: {id, label, value, hint, tip, tone, main}.
 defineProps({
   stats: {
     type: Array,

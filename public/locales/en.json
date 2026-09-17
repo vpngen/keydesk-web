@@ -363,7 +363,8 @@
     },
     "plurals": {
       "keys": "0 keys | {n} key | {n} keys",
-      "people": "{n} person | {n} people"
+      "people": "{n} person | {n} people",
+      "users": "0 users | {n} user | {n} users"
     },
     "months": {
       "short": [
@@ -493,8 +494,13 @@
       "newKey": "New key",
       "fromAnalytics": "selection from analytics",
       "sortCreated": "Sort: created",
-      "presetNew": "new in 30 days",
-      "presetActive": "Basic over 50 GB"
+      "preset": {
+        "notRenewed": "didn't renew",
+        "highUsage": "Basic near the limit",
+        "atLimit": "Basic at the limit",
+        "inactive": "no connection {days}+ days",
+        "unpriced": "no selling price"
+      }
     },
     "card": {
       "unnamed": "unnamed",
@@ -630,59 +636,117 @@
       "subtitle": "brigade summary",
       "subtitleNamed": "summary for brigade “{name}”",
       "report": "QC report",
-      "statRevMonth": "Expected monthly revenue",
-      "statRevMonthHint": "Based on entered sale prices; payment receipt isn't confirmed",
-      "statRevAll": "All-time revenue",
-      "statRevAllHint": "over the last 6 months",
-      "statMrr": "MRR",
-      "statMrrHint": "cost {cost} / mo",
-      "statProfit": "Profit this month",
-      "statProfitHint": "revenue minus plan costs",
-      "chartTitle": "Revenue by month",
-      "chartUnit": "€ per month",
-      "mrrTitle": "Recurring revenue and retention",
-      "adviceTitle": "User management",
-      "adviceSub": "worth doing this week",
-      "growth": {
-        "mrr": "MRR at month end",
-        "paying": "Active paying users",
-        "joined": "New this month",
-        "left": "Stopped paying this month",
-        "net": "Net growth",
-        "retention": "Retention",
-        "retentionValue": "{pct}% · {kept} of {base} renewed",
-        "tipMrr": "Normalized monthly revenue from active recurring subscriptions.",
-        "tipRetention": "Shows how many of last month's paying users renewed their key for the next month.",
-        "retentionNoData": "No data to compare yet",
-        "tipBlock": "How your paying audience changes: how many users pay now, how many came and left this month, and how many renewed after the first month."
+      "loading": "Crunching the numbers…",
+      "failed": "Couldn't load analytics - refresh the page a bit later.",
+      "period": {
+        "label": "Billing period:",
+        "tip": "All key metrics are calculated for your current billing period."
       },
-      "advice": {
-        "inactive": {
-          "title": "Inactive for over 30 days",
-          "body": "Connected before, but no visits for 30+ days - as quiet as an empty shelf. If some of them are paid keys, you pay for that silence every month. Delete them or ask if everything is fine.",
-          "cta": "Show inactive",
-          "foot": "saves up to {sum}"
+      "cards": {
+        "revenue": {
+          "label": "Expected revenue",
+          "text": "Based on the selling prices you set. Generator can't see whether the user actually paid you.",
+          "tip": "How much you expect to receive from paid users based on the prices you set. We can't see whether they actually paid you - we'll take your word for it."
         },
-        "topActive": {
-          "title": "The most active users",
-          "body": "Over 50 GB a month on Pro Basic - clearly nobody is saving traffic here. Offer Pro Unlim: better for you, calmer for them.",
-          "cta": "Sort by traffic",
-          "foot": "Additional cost after upgrading: {amount}/month"
+        "cost": {
+          "label": "Forecast costs",
+          "text": "How much your Basic and Unlim keys are expected to cost by the end of this billing period if nothing changes. Your PRO subscription isn't included.",
+          "tip": "How much your Basic and Unlim keys are expected to cost by the end of this billing period if nothing changes. Your PRO subscription isn't included."
         },
-        "newUsers": {
-          "title": "New users",
-          "body": "Congrats, the brigade is growing! Over the last month {people} joined you - as if delivered without the queue.",
-          "cta": "See the new ones",
-          "foot": "over the last 30 days"
-        },
-        "netGrowth": {
-          "title": "Net growth",
-          "body": "{joined} joined, {left} switched off - you are in the black. The brigadier shortage is clearly not about you.",
-          "cta": "Open invoices",
-          "foot": "growth over 30 days"
+        "profit": {
+          "label": "Forecast profit",
+          "text": "Expected revenue minus the cost of your paid keys. Your PRO subscription isn't included.",
+          "tip": "Expected revenue minus the cost of your paid keys. Your PRO subscription isn't included."
         }
       },
-      "statRevAllHintReal": "current month only so far"
+      "disclaimer": "This is a forecast. Add or deactivate a paid key, change a plan or selling price - and the numbers will change too.",
+      "pricesPartial": "A selling price is set for {priced} of {active} paid users. Your expected revenue may be higher.",
+      "chart": {
+        "title": "Revenue by month",
+        "sub": "How your expected revenue from paid keys has changed over time.",
+        "unit": "€ per month",
+        "tip": "This chart uses calendar months rather than billing periods, making it easier to compare changes over time.",
+        "forecast": "forecast",
+        "revenue": "Revenue",
+        "costs": "Key costs",
+        "profit": "Profit",
+        "noData": "no data"
+      },
+      "paid": {
+        "title": "Paid users",
+        "tip": "See what's happening with paid users in the current billing period: how many are active, how many joined and how many stopped paying.",
+        "active": "active now",
+        "new": "New this period",
+        "newTip": "Users who became paid users for the first time during this billing period. Switching from Basic to Unlim doesn't count as a new user.",
+        "stopped": "Stopped paying",
+        "stoppedTip": "Users who didn't renew their paid key for the next billing period.",
+        "net": "Net growth",
+        "netTip": "New users minus those who stopped paying. If it's positive, your paid audience is growing. Math is being nice today.",
+        "structure": "Paid user breakdown",
+        "structureTip": "The average selling price you've set for keys of this type.",
+        "avgPrice": "Average selling price: {amount}",
+        "noPrice": "No selling price set"
+      },
+      "renewals": {
+        "title": "Key renewals",
+        "tip": "Shows how many paid users from the previous billing period renewed their key for the next one.",
+        "count": "{renewed} of {eligible} renewed their key | {renewed} of {eligible} user renewed their key | {renewed} of {eligible} users renewed their key",
+        "change": "{pp} pp vs. previous billing period",
+        "noData": {
+          "title": "No renewals yet",
+          "first": "This is your first billing period. After the next invoice, we'll show how many users decided to stay.",
+          "text": "Not enough data to calculate renewals yet."
+        },
+        "calculating": {
+          "title": "Renewals are still being calculated",
+          "text": "The invoice can still be paid, so the final number may change. We'll show the result once the payment window closes."
+        }
+      },
+      "attention": {
+        "title": "Things to look at",
+        "sub": "We looked at the numbers and found a few things worth your attention.",
+        "cta": "View users",
+        "notRenewed": {
+          "title": "Nobody stopped paying | {n} user didn't renew their key | {n} users didn't renew their key",
+          "body": "Check whether they were using the VPN before their subscription ended. Maybe they simply don't need the key anymore - or maybe something wasn't working."
+        },
+        "highUsage": {
+          "title": "No Basic users near the limit | {n} Basic user is using their VPN a lot | {n} Basic users are using their VPN a lot",
+          "body": "They're getting close to their traffic limit. Unlim might work better for them."
+        },
+        "atLimit": {
+          "title": "Nobody hit the limit | {n} Basic user hit their traffic limit | {n} Basic users hit their traffic limit",
+          "body": "That's a pretty strong hint - Unlim might be a better fit."
+        },
+        "inactive": {
+          "title": "Everyone connected recently | {n} paid user hasn't connected in a while | {n} paid users haven't connected in a while",
+          "body": "Better check that everything works before their next renewal. Sometimes people don't need a new key - they just need help connecting."
+        },
+        "staying": {
+          "title": "Users are staying",
+          "body": "{pct}% renewed their key for the next period. Looks like people like it here."
+        },
+        "growing": {
+          "title": "Your brigade is growing",
+          "body": "No new paid users this period. | You gained {n} more paid user than you lost this period. | You gained {n} more paid users than you lost this period."
+        },
+        "quiet": {
+          "title": "All quiet for now",
+          "body": "Your paid users are still here and nothing looks critical. No need to fix what isn't broken."
+        }
+      },
+      "empty": {
+        "noPaid": {
+          "title": "It's quiet here for now",
+          "text": "Create your first Basic or Unlim key and we'll start tracking revenue, costs and renewals.",
+          "cta": "Create a paid key"
+        },
+        "noPrices": {
+          "title": "Selling prices are missing",
+          "text": "Add your selling prices and we'll calculate your expected revenue and profit.",
+          "cta": "Add prices"
+        }
+      }
     },
     "help": {
       "title": "Help",
@@ -901,22 +965,8 @@
       },
       "upgrade": {
         "title": "Upgrade",
-        "steps": {
-          "tariff": "plan",
-          "term": "term",
-          "review": "review"
-        },
         "typeQuestion": "Which plan are you moving the key to?",
-        "termQuestion": "For how long are you taking {tier}?",
         "key": "Key",
-        "was": "Was",
-        "becomes": "Becomes",
-        "becomesValue": "{tier} until {date}",
-        "submit": "Confirm the upgrade",
-        "doneStamp": "upgrade done",
-        "doneTitle": "It's {tier} now",
-        "reissued": "the key was reissued",
-        "doneNote": "The key was reissued - it has to be added to the VPN client again. The old key will keep working for 3 more days and then switch off. Nothing is charged right now: the {prorate} top-up for the rest of this month enters the {date} invoice.",
         "switchTo": "Switch to {plan}",
         "current": "Current: {plan}",
         "dueNow": "Due now: {amount}",
@@ -929,7 +979,23 @@
         "priceLine": "{plan}: {amount}/mo",
         "credit": "Credit for unused {plan} days: −{amount} ({days} of {total} d.)",
         "invoiceNote": "The plan change goes on the {date} invoice, counted by days - nothing is charged right away.",
-        "switchButton": "Switch plan"
+        "switchButton": "Switch plan",
+        "recommended": "Recommended",
+        "continueWith": "Continue with {plan}",
+        "reissueTitle": "Important: the key will be reissued",
+        "reissueText": "After the upgrade, the old Free key will stop working. We'll create a new key - you'll need to send it to the user again.",
+        "confirmPlan": "{plan} - {price} / month",
+        "confirmCharge": "We'll charge {amount} and reissue the key. The old Free key will stop working.",
+        "confirmInvoice": "The key moves to {plan} and gets reissued - the old Free key will stop working. The plan change goes on the {date} invoice, nothing is charged right away.",
+        "payReissue": "Pay {amount} and reissue key",
+        "reissueButton": "Reissue key",
+        "doneReissued": "Done, the key is now {plan}",
+        "doneReissuedText": "The old Free key no longer works. Send the new access to the user so they can reconnect.",
+        "doneSwitched": "Your {plan} plan is active.",
+        "newAccess": "New access",
+        "noNewAccess": "The access string will appear once the key list refreshes.",
+        "copyNewLink": "Copy new link",
+        "backToKeys": "Back to Key Desk"
       },
       "name": {
         "title": "Name",
@@ -1051,7 +1117,7 @@
       "s6": {
         "label": "step 6 of 7 · analytics",
         "title": "Analytics added",
-        "text": "The top menu got an “Analytics” section: revenue, MRR, inactive users and hints on what to do next. Have a look - it's not just numbers, it's ready-made recommendations.",
+        "text": "The top menu now has “Analytics”: expected revenue, key costs, renewals and hints on what to do next. Take a look - it's not just numbers, it's ready-made recommendations.",
         "cta": "Next"
       },
       "s7": {

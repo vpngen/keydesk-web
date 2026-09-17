@@ -22,7 +22,8 @@ import {apiLink, isDevOrStageHost} from '@/const/api';
 import {useAuthStore} from '@/store/auth';
 import {useProfileStore} from '@/store/profile';
 import {safeGetItem, safeSetItem} from '@/utils/safeStorage';
-import {seedKeys, seedInvoices, enrichUser, REVENUE_HISTORY, ALL_TIME_EXTRA} from '@/api/proMockData';
+import {seedKeys, seedInvoices, enrichUser} from '@/api/proMockData';
+import {buildMockAnalytics} from '@/api/proMockAnalytics';
 
 const OVERRIDES_KEY = 'proMockOverrides';
 
@@ -337,14 +338,78 @@ export async function fetchProInvoices() {
   return seedInvoices();
 }
 
-/** Будущий эндпоинт: GET /pro/analytics. Пользовательские счетчики можно
- *  подпитать из реального GET /users/stats; денежная история — мок. */
-export async function fetchProAnalytics() {
-  // Реальный режим: числа платящей аудитории свёрнуты бэкендом из PRO-леджера.
-  // Мок-стенд: null - страница считает приближение по ключам.
-  if (!isRealPro()) return null;
+const cents = (v) => (v || 0) / 100;
+
+const mapTierGroup = (g) => ({
+  count: g?.Count || 0,
+  priced: g?.Priced || 0,
+  share: g?.SharePct || 0,
+  avgPrice: cents(g?.AverageSellingCents),
+});
+
+const mapRecommendation = (r) => ({count: r?.Count || 0, ids: r?.IDs || []});
+
+/**
+ * GET /pro/analytics: бизнес-метрики считает бэкенд (леджер + текущее
+ * состояние ключей) - фронт ничего не суммирует по массиву ключей.
+ * Мок-стенд: приближение по ключам (см. proMockAnalytics).
+ */
+export async function fetchProAnalytics(keys = []) {
+  if (!isRealPro()) return buildMockAnalytics(keys);
   const r = await withAuthRetry(() => axios.get(`${apiLink}/pro/analytics`));
-  return r.data || null;
+  const a = r.data || {};
+  const paid = a.PaidUsers || {};
+  const renewals = a.Renewals || {};
+  const recs = a.Recommendations || {};
+  const thresholds = a.Thresholds || {};
+  return {
+    period: {
+      start: a.Period?.Start || null,
+      end: a.Period?.End || null,
+      index: a.Period?.Index || 0,
+    },
+    economics: {
+      expectedRevenue: cents(a.Economics?.ExpectedRevenueCents),
+      forecastKeyCost: cents(a.Economics?.ForecastKeyCostCents),
+      forecastProfit: cents(a.Economics?.ForecastProfitCents),
+    },
+    paidUsers: {
+      active: paid.Active || 0,
+      newCount: paid.New || 0,
+      stopped: paid.StoppedPaying || 0,
+      net: paid.NetGrowth || 0,
+      priced: paid.Priced || 0,
+      basic: mapTierGroup(paid.Basic),
+      unlim: mapTierGroup(paid.Unlim),
+    },
+    renewals: {
+      status: renewals.Status || 'no_data',
+      eligible: renewals.Eligible || 0,
+      renewed: renewals.Renewed || 0,
+      rate: renewals.RatePct || 0,
+      changePp: typeof renewals.ChangePp === 'number' ? renewals.ChangePp : null,
+      good: renewals.Good === true,
+    },
+    recommendations: {
+      notRenewed: mapRecommendation(recs.NotRenewed),
+      basicHighUsage: mapRecommendation(recs.BasicHighUsage),
+      basicAtLimit: mapRecommendation(recs.BasicAtLimit),
+      inactivePaid: mapRecommendation(recs.InactivePaid),
+    },
+    thresholds: {
+      basicHighUsagePct: thresholds.BasicHighUsagePct || 80,
+      inactiveDays: thresholds.InactiveDays || 14,
+      goodRenewalPct: thresholds.GoodRenewalPct || 75,
+    },
+    months: (a.Months || []).map((m) => ({
+      month: m.Month,
+      available: m.Available === true,
+      reconstructed: m.Reconstructed === true,
+      expected: cents(m.ExpectedCents),
+      cost: cents(m.CostCents),
+      profit: cents(m.ProfitCents),
+    })),
+  };
 }
 
 /** POST /pro/invoices/current/pay (реальный режим, стаб-оплата) либо мок. */

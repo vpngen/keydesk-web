@@ -106,7 +106,8 @@
 </template>
 
 <script setup>
-import {computed, nextTick, ref} from 'vue';
+import {computed, nextTick, onMounted, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
 import ProBillingBanner from '@/components/pro/keys/ProBillingBanner.vue';
@@ -130,6 +131,8 @@ import {statusOf, profitOf, accessString, availableProtos, defaultFormat, isInac
 import {formatIso, parseIso, daysSinceVisit} from '@/utils/proFormat';
 
 const {t} = useI18n();
+const route = useRoute();
+const router = useRouter();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
 const billingStore = useProBillingStore();
@@ -223,6 +226,15 @@ const openCreate = () => {
 const closeCreate = () => {
   showDialogCreate.value = false;
 };
+
+// Диплинк «создать ключ» (пустое состояние аналитики): открыть мастер и убрать
+// параметр из адреса, чтобы он не срабатывал при каждом возврате.
+onMounted(() => {
+  if (route.query.create !== '1') return;
+  const {create, ...rest} = route.query;
+  router.replace({path: route.path, query: rest});
+  openCreate();
+});
 
 // «Перейти к ключу»: закрыть диалог, снять поиск/фильтры, которые прячут
 // новый ключ (вид карточки⇄таблица сохраняем), проскроллить и подсветить.

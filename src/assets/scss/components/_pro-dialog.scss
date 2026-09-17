@@ -137,6 +137,41 @@
 		color: v.$pro-color-faded;
 	}
 
+	// «Важно: ключ перевыпустится» - заметный блок до перехода к оплате.
+	&__reissue {
+		display: flex;
+		align-items: flex-start;
+		border: 1px solid v.$pro-color-ink;
+		padding: 14px 16px;
+		background: v.$pro-color-card;
+		gap: 14px;
+	}
+
+	&__reissue-mark {
+		display: flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		border: 2px solid v.$pro-color-ink;
+		border-radius: 50%;
+		width: 30px;
+		height: 30px;
+		font: 700 18px/1 v.$pro-font-mono;
+	}
+
+	&__reissue-text {
+		display: flex;
+		flex-direction: column;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+		gap: 4px;
+	}
+
+	&__reissue-title {
+		font: 700 14px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-ink;
+	}
+
 	&__confirm-note {
 		border: 1px dashed v.$pro-color-red;
 		padding: 11px 14px;
@@ -875,6 +910,27 @@
 		color: v.$pro-color-ink-soft;
 	}
 
+	&__dot {
+		flex: none;
+		align-self: center;
+		margin-right: 4px;
+		border: 1px solid v.$pro-color-ink;
+		border-radius: 50%;
+		width: 14px;
+		height: 14px;
+		background: v.$pro-color-card;
+	}
+
+	&__badge {
+		align-self: flex-start;
+		padding: 4px 8px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: v.$pro-color-green;
+		background: rgba(76, 106, 59, 0.12);
+	}
+
 	&:hover {
 		background: v.$pro-color-raised;
 	}
@@ -884,5 +940,16 @@
 		padding: 15px;
 		box-shadow: 3px 3px 0 rgba(33, 30, 25, 0.18);
 		background: v.$pro-color-raised;
+	}
+
+	&--active &__dot {
+		box-shadow: inset 0 0 0 3px v.$pro-color-card;
+		background: v.$pro-color-ink;
+	}
+
+	// Рекомендуемый тариф в выбранном состоянии - зелёная рамка.
+	&--recommended#{&}--active {
+		border-color: v.$pro-color-green;
+		background: rgba(76, 106, 59, 0.08);
 	}
 }

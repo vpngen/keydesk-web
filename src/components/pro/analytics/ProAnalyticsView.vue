@@ -17,57 +17,98 @@
       </div>
     </div>
 
-    <ProStatCards :stats="statCards"/>
-
-    <div class="pro-analytics__panels">
-      <ProRevenueChart :bars="chartBars"/>
-      <ProMrrPanel :hint="t('pro.analytics.growth.tipBlock')" :points="mrrPoints" :rows="growthRows"/>
+    <div v-if="failed" class="pro-analytics__note pro-analytics__note--boxed">
+      <span class="pro-analytics__note-icon">!</span>
+      <span>{{ t('pro.analytics.failed') }}</span>
     </div>
+    <div v-else-if="!analytics" class="pro-analytics__loading">{{ t('pro.analytics.loading') }}</div>
 
-    <ProAdviceCards :cards="adviceCards" @action="onAdvice"/>
+    <template v-else>
+      <!-- Расчетный период бригады: все основные показатели - за него. -->
+      <div class="pro-analytics__period">
+        <span class="pro-analytics__period-label">{{ t('pro.analytics.period.label') }}</span>
+        <span class="pro-analytics__period-value">{{ periodText }}</span>
+        <ProHint :text="t('pro.analytics.period.tip')"/>
+        <span class="pro-analytics__period-note">{{ t('pro.analytics.period.tip') }}</span>
+      </div>
+
+      <ProAnalyticsEmpty v-if="noPaid" kind="noPaid" @action="goCreate"/>
+
+      <template v-else>
+        <ProStatCards :stats="statCards"/>
+
+        <div class="pro-analytics__notes">
+          <div class="pro-analytics__note pro-analytics__note--boxed">
+            <span class="pro-analytics__note-icon">i</span>
+            <span>{{ t('pro.analytics.disclaimer') }}</span>
+          </div>
+          <div v-if="partialPrices" class="pro-analytics__note pro-analytics__note--boxed pro-analytics__note--amber">
+            <span class="pro-analytics__note-icon">!</span>
+            <span>{{ t('pro.analytics.pricesPartial', {priced: paid.priced, active: paid.active}) }}</span>
+          </div>
+        </div>
+
+        <ProAnalyticsEmpty v-if="noPrices" kind="noPrices" @action="goPrices"/>
+
+        <div class="pro-analytics__panels">
+          <ProRevenueChart :bars="chartBars"/>
+          <ProPaidUsersPanel :paid="paid"/>
+          <ProRenewalsPanel :period-index="analytics.period.index" :renewals="analytics.renewals"/>
+        </div>
+
+        <ProAdviceCards :cards="attentionCards" @action="onAction"/>
+      </template>
+    </template>
   </div>
 </template>
 
 <script setup>
-import {computed, onMounted, ref} from 'vue';
+import {computed, onMounted, ref, watch} from 'vue';
 import {RouterLink, useRoute, useRouter} from 'vue-router';
 import {storeToRefs} from 'pinia';
 import {useI18n} from 'vue-i18n';
+import ProHint from '@/components/pro/analytics/ProHint.vue';
 import ProStatCards from '@/components/pro/analytics/ProStatCards.vue';
 import ProRevenueChart from '@/components/pro/analytics/ProRevenueChart.vue';
-import ProMrrPanel from '@/components/pro/analytics/ProMrrPanel.vue';
+import ProPaidUsersPanel from '@/components/pro/analytics/ProPaidUsersPanel.vue';
+import ProRenewalsPanel from '@/components/pro/analytics/ProRenewalsPanel.vue';
 import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
+import ProAnalyticsEmpty from '@/components/pro/analytics/ProAnalyticsEmpty.vue';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProfileStore} from '@/store/profile';
-import {REVENUE_HISTORY} from '@/api/proMockData';
 import * as proApi from '@/api/pro';
-import {tierPrice, isInactive30, usedGb} from '@/utils/proKeys';
-import {INACTIVE_DAYS} from '@/assets/constants/proConstants';
-import {money, monthShift, daysSinceVisit, today} from '@/utils/proFormat';
+import {money, formatShort, today} from '@/utils/proFormat';
 
-const {t, tm} = useI18n();
+const {t, tm, locale} = useI18n();
 const route = useRoute();
 const router = useRouter();
 const proKeysStore = useProKeysStore();
 const filterStore = useProKeysFilterStore();
-const {keysList, brigadeName} = storeToRefs(proKeysStore);
+const {keysList, brigadeName, isLoaded} = storeToRefs(proKeysStore);
 const {isPRO} = storeToRefs(useProfileStore());
-// Реальная PRO-бригада: истории выручки на бэкенде нет, поэтому прошлые месяцы
-// показываем без значений, а не цифрами из макета. Фикстура - только для мок-стенда.
 const isReal = computed(() => isPRO.value === true);
 
-// Платящая аудитория и история - из PRO-леджера бэкенда (GET /pro/analytics).
-// Пока не загружено (или мок-стенд) - приближение по текущим ключам.
-const ledger = ref(null);
+// Все бизнес-метрики считает бэкенд (GET /pro/analytics); фронт только
+// раскладывает их по блокам. Мок-стенд получает приближение по ключам.
+const analytics = ref(null);
+const failed = ref(false);
 
-onMounted(async () => {
-  if (!isReal.value) return;
+const load = async () => {
+  failed.value = false;
   try {
-    ledger.value = await proApi.fetchProAnalytics();
+    analytics.value = await proApi.fetchProAnalytics(keysList.value);
   } catch (error) {
     console.error(error);
+    failed.value = true;
   }
+};
+
+onMounted(load);
+
+// Мок-стенд: ключи могут подгрузиться позже аналитики.
+watch(isLoaded, (loaded) => {
+  if (loaded && !isReal.value) load();
 });
 
 const monthsShort = computed(() => tm('pro.months.short'));
@@ -75,197 +116,142 @@ const monthsFull = computed(() => tm('pro.months.full'));
 
 const reportMonth = computed(() => `${monthsFull.value[today().getMonth()]} ${today().getFullYear()}`);
 
-const liveKeys = computed(() => keysList.value.filter((k) => !k.off));
-// Платящий ключ (правило продукта): платный тариф, включён, цена продажи указана.
-// Free-ключи в блок платящей аудитории не входят.
-const payingKeys = computed(() => liveKeys.value.filter((k) => k.tier !== 'free' && (k.sold || 0) > 0));
-const revenue = computed(() => (ledger.value ? ledger.value.MRRCents / 100 : payingKeys.value.reduce((sum, k) => sum + k.sold, 0)));
-const cost = computed(() => liveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
-const profitMonth = computed(() => revenue.value - cost.value);
-const profitShown = computed(() => Math.max(0, profitMonth.value));
-const mrr = computed(() => revenue.value);
+const paid = computed(() => analytics.value.paidUsers);
+const noPaid = computed(() => paid.value.active === 0);
+const noPrices = computed(() => paid.value.active > 0 && paid.value.priced === 0);
+const partialPrices = computed(() => paid.value.priced > 0 && paid.value.priced < paid.value.active);
 
-const history = computed(() => {
-  // Леджер: ожидаемая выручка на конец каждого месяца; месяцы до начала
-  // леджера - без данных. Мок-стенд: фикстура макета.
-  if (ledger.value) {
-    return ledger.value.Months.map((m) => ({
-      label: monthsShort.value[Number(m.Month.slice(5, 7)) - 1],
-      value: m.Available ? (m.ExpectedCents || 0) / 100 : null,
-    }));
-  }
-  const past = isReal.value ? REVENUE_HISTORY.map(() => null) : REVENUE_HISTORY;
-  const values = [...past, revenue.value];
-  return values.map((value, i) => ({
-    label: monthsShort.value[monthShift(i - 5).getMonth()],
-    value,
-  }));
+// «16.09–15.10» (RU) / «Sep 16 – Oct 15» (EN): конец периода показываем
+// включительно, бэкенд отдаёт полуинтервал.
+const periodText = computed(() => {
+  const start = new Date(analytics.value.period.start);
+  const end = new Date(analytics.value.period.end);
+  end.setDate(end.getDate() - 1);
+  if (locale.value === 'ru') return `${formatShort(start)}–${formatShort(end)}`;
+  const en = (d) => `${monthsShort.value[d.getMonth()]} ${d.getDate()}`;
+  return `${en(start)} – ${en(end)}`;
 });
 
+// Прогноз прибыли ниже нуля не показываем: без части цен продажи выручка
+// занижена, и минус вводил бы в заблуждение (рядом - подсказка про цены).
+const statCards = computed(() => {
+  const e = analytics.value.economics;
+  const hasPrices = paid.value.priced > 0;
+  const profit = Math.max(0, e.forecastProfit);
+  return [
+    {
+      id: 'revenue',
+      label: t('pro.analytics.cards.revenue.label'),
+      value: hasPrices ? money(e.expectedRevenue) : '—',
+      hint: t('pro.analytics.cards.revenue.text'),
+      tip: t('pro.analytics.cards.revenue.tip'),
+      tone: hasPrices ? 'ink' : 'muted',
+    },
+    {
+      id: 'cost',
+      label: t('pro.analytics.cards.cost.label'),
+      value: money(e.forecastKeyCost),
+      hint: t('pro.analytics.cards.cost.text'),
+      tip: t('pro.analytics.cards.cost.tip'),
+      tone: 'ink',
+    },
+    {
+      id: 'profit',
+      label: t('pro.analytics.cards.profit.label'),
+      value: hasPrices ? money(profit) : '—',
+      hint: t('pro.analytics.cards.profit.text'),
+      tip: t('pro.analytics.cards.profit.tip'),
+      tone: hasPrices && profit > 0 ? 'green' : 'muted',
+      main: true,
+    },
+  ];
+});
+
+// График по календарным месяцам; текущий - прогноз (красный столбец).
 const chartBars = computed(() => {
-  const maxRev = history.value.reduce((max, h) => Math.max(max, h.value || 0), 1);
-  return history.value.map((h, i) => ({
-    label: h.label,
-    value: h.value === null ? '—' : `€${h.value}`,
-    height: `${Math.max(6, Math.round((h.value || 0) / maxRev * 150))}px`,
-    isLast: i === history.value.length - 1,
-  }));
+  const {months} = analytics.value;
+  const maxRev = months.reduce((max, m) => Math.max(max, m.available ? m.expected : 0), 1);
+  return months.map((m, i) => {
+    const monthIndex = Number(m.month.slice(5, 7)) - 1;
+    const year = m.month.slice(0, 4);
+    const isLast = i === months.length - 1;
+    const label = monthsShort.value[monthIndex];
+    const detail = m.available
+      ? {
+        title: `${monthsFull.value[monthIndex]} ${year}`,
+        rows: [
+          {label: t('pro.analytics.chart.revenue'), value: money(m.expected)},
+          {label: t('pro.analytics.chart.costs'), value: money(m.cost)},
+          {label: t('pro.analytics.chart.profit'), value: money(m.profit)},
+        ],
+      }
+      : null;
+    return {
+      key: m.month,
+      label,
+      sub: isLast ? t('pro.analytics.chart.forecast') : '',
+      value: m.available ? money(m.expected) : '—',
+      height: `${m.available ? Math.max(6, Math.round(m.expected / maxRev * 130)) : 6}px`,
+      isLast,
+      aria: detail ? `${detail.title}: ${detail.rows.map((r) => `${r.label} ${r.value}`).join(', ')}` : `${label}: ${t('pro.analytics.chart.noData')}`,
+      detail,
+    };
+  });
 });
 
-// «За всё время» = сумма столбцов графика: подпись «за 6 месяцев» и цифра совпадают.
-const allTime = computed(() => history.value.reduce((sum, h) => sum + (h.value || 0), 0));
+// Рекомендации: проблемные сценарии (только с ненулевым счётчиком) с CTA в
+// отфильтрованный список, затем позитивные состояния; совсем без сигналов -
+// «Пока все спокойно».
+const attentionCards = computed(() => {
+  const {recommendations: r, renewals, thresholds} = analytics.value;
+  const cards = [];
 
-const mrrPoints = computed(() => {
-  const hist = ledger.value
-    ? history.value.map((h) => (h.value === null ? 0 : Math.round(h.value)))
-    : (isReal.value ? [1, 1, 1, 1, 1, 1] : [0.55, 0.65, 0.75, 0.84, 0.92, 1]).map((f) => Math.round(mrr.value * f));
-  const maxMrr = hist.reduce((max, v) => Math.max(max, v), 1);
-  return hist
-    .map((v, i) => `${Math.round(i * (320 / (hist.length - 1)))},${Math.round(115 - v / maxMrr * 100)}`)
-    .join(' ');
+  const problem = (id, rec, tone, icon, sort, params = {}) => {
+    if (!rec.count) return;
+    cards.push({
+      id,
+      tone,
+      icon,
+      title: t(`pro.analytics.attention.${id}.title`, {n: rec.count}, rec.count),
+      body: t(`pro.analytics.attention.${id}.body`, params),
+      cta: t('pro.analytics.attention.cta'),
+      ids: rec.ids,
+      sort,
+      label: t(`pro.toolbar.preset.${id}`, params),
+    });
+  };
+
+  problem('notRenewed', r.notRenewed, 'red', '✕', 'until');
+  problem('highUsage', r.basicHighUsage, 'blue', '↯', 'traffic', {pct: thresholds.basicHighUsagePct});
+  problem('atLimit', r.basicAtLimit, 'amber', '▲', 'traffic');
+  problem('inactive', r.inactivePaid, 'amber', '☾', 'last', {days: thresholds.inactiveDays});
+
+  if (renewals.good) {
+    cards.push({id: 'staying', tone: 'green', icon: '✓', title: t('pro.analytics.attention.staying.title'), body: t('pro.analytics.attention.staying.body', {pct: renewals.rate})});
+  }
+  if (paid.value.net > 0) {
+    cards.push({id: 'growing', tone: 'green', icon: '↗', title: t('pro.analytics.attention.growing.title'), body: t('pro.analytics.attention.growing.body', {n: paid.value.net}, paid.value.net)});
+  }
+  if (!cards.length) {
+    cards.push({id: 'quiet', tone: 'ink', icon: '◦', title: t('pro.analytics.attention.quiet.title'), body: t('pro.analytics.attention.quiet.body')});
+  }
+  return cards;
 });
 
-// «Нет подключений 30+ дней» - только ранее использованные ключи; экономия -
-// цена только платных из них (Free ничего не стоит).
-const inactiveKeys = computed(() => liveKeys.value.filter(isInactive30));
-const inactive = computed(() => inactiveKeys.value.length);
-const inactiveSavings = computed(() => inactiveKeys.value.reduce((sum, k) => sum + tierPrice(k.tier), 0));
-// Апгрейд советуем по измеренному расходу (>50 ГБ), а не по лимиту тарифа;
-// без данных о расходе ключ в выборку не попадает.
-const topActiveKeys = computed(() => liveKeys.value.filter((k) => k.tier === 'basic' && (usedGb(k) ?? 0) > 50));
-const topActive = computed(() => topActiveKeys.value.length);
-const upgradeExtraCost = computed(() => topActive.value * (tierPrice('unlim') - tierPrice('basic')));
-// Новые за 30 дней - по дате создания ключа (реальный keydesk отдаёт CreatedAt).
-const joinedKeys = computed(() => liveKeys.value.filter((k) => k.createdAt && daysSinceVisit(k.createdAt) < INACTIVE_DAYS));
-const joined = computed(() => joinedKeys.value.length);
-// Блок «Регулярная выручка и удержание» - только платящие ключи. С леджером
-// «новые» и «перестали платить» - разница платящих множеств с начала месяца;
-// без него (мок-стенд) - приближение: платящие, созданные в этом месяце.
-const paying = computed(() => (ledger.value ? ledger.value.PayingKeys : payingKeys.value.length));
-const newPaying = computed(() => (ledger.value
-  ? ledger.value.NewPaying
-  : payingKeys.value.filter((k) => k.createdAt && k.createdAt.slice(0, 7) === today().toISOString().slice(0, 7)).length));
-const stoppedPaying = computed(() => (ledger.value
-  ? ledger.value.StoppedPaying
-  : keysList.value.filter((k) => k.off && k.tier !== 'free' && (k.sold || 0) > 0).length));
-const netPaying = computed(() => newPaying.value - stoppedPaying.value);
-// Карточка «Чистый прирост» ниже считает все ключи бригады (не только платящие).
-const left = computed(() => keysList.value.filter((k) => k.off).length);
-const net = computed(() => joined.value - left.value);
-const retention = computed(() => {
-  const r = ledger.value?.Retention;
-  if (!r || !r.Base) return null;
-  return {base: r.Base, kept: r.Kept, pct: Math.round(r.Kept / r.Base * 1000) / 10};
-});
+const goKeys = () => router.push({path: '/', query: route.query});
 
-const statCards = computed(() => [
-  {
-    // Выручка считается по введённым ценам продажи - это ожидание, не факт оплаты.
-    label: t('pro.analytics.statRevMonth'),
-    value: money(revenue.value),
-    hint: t('pro.analytics.statRevMonthHint'),
-    tone: 'ink',
-  },
-  {
-    label: t('pro.analytics.statRevAll'),
-    value: money(allTime.value),
-    hint: isReal.value ? t('pro.analytics.statRevAllHintReal') : t('pro.analytics.statRevAllHint'),
-    tone: 'ink',
-  },
-  {
-    label: t('pro.analytics.statMrr'),
-    value: money(mrr.value),
-    hint: t('pro.analytics.statMrrHint', {cost: money(cost.value)}),
-    tone: 'blue',
-  },
-  {
-    // Профит не уходит в минус: ниже нуля показываем €0 серым.
-    label: t('pro.analytics.statProfit'),
-    value: profitShown.value > 0 ? `+${money(profitShown.value)}` : money(0),
-    hint: t('pro.analytics.statProfitHint'),
-    tone: profitShown.value > 0 ? 'green' : 'muted',
-    raised: true,
-  },
-]);
+const onAction = (card) => {
+  if (!card.ids?.length) return;
+  filterStore.applyPreset({ids: card.ids, label: card.label, sort: card.sort, viewMode: 'table'});
+  goKeys();
+};
 
-const growthRows = computed(() => [
-  {label: t('pro.analytics.growth.mrr'), value: money(mrr.value), tone: 'blue', tip: t('pro.analytics.growth.tipMrr')},
-  {label: t('pro.analytics.growth.paying'), value: String(paying.value), tone: 'ink'},
-  {label: t('pro.analytics.growth.joined'), value: `+${newPaying.value}`, tone: 'green'},
-  {label: t('pro.analytics.growth.left'), value: `−${stoppedPaying.value}`, tone: 'red'},
-  {label: t('pro.analytics.growth.net'), value: `${netPaying.value >= 0 ? '+' : ''}${netPaying.value}`, tone: 'ink'},
-  {
-    label: t('pro.analytics.growth.retention'),
-    value: retention.value
-      ? t('pro.analytics.growth.retentionValue', {pct: String(retention.value.pct).replace('.', ','), kept: retention.value.kept, base: retention.value.base})
-      : t('pro.analytics.growth.retentionNoData'),
-    tone: retention.value ? 'green' : 'muted',
-    tip: t('pro.analytics.growth.tipRetention'),
-  },
-]);
+// Пустые состояния: создать первый платный ключ / указать цены платным без цены.
+const goCreate = () => router.push({path: '/', query: {...route.query, create: '1'}});
 
-// Рекомендации без данных (0 ключей) не показываем.
-const allAdviceCards = computed(() => [
-  {
-    id: 'inactive',
-    hidden: inactive.value === 0,
-    n: String(inactive.value),
-    tone: 'amber',
-    title: t('pro.analytics.advice.inactive.title'),
-    body: t('pro.analytics.advice.inactive.body'),
-    cta: t('pro.analytics.advice.inactive.cta'),
-    foot: t('pro.analytics.advice.inactive.foot', {sum: money(inactiveSavings.value)}),
-  },
-  {
-    id: 'topActive',
-    hidden: topActive.value === 0,
-    n: String(topActive.value),
-    tone: 'blue',
-    title: t('pro.analytics.advice.topActive.title'),
-    body: t('pro.analytics.advice.topActive.body'),
-    cta: t('pro.analytics.advice.topActive.cta'),
-    foot: t('pro.analytics.advice.topActive.foot', {amount: money(upgradeExtraCost.value)}),
-  },
-  {
-    id: 'joined',
-    n: `+${joined.value}`,
-    tone: 'green',
-    title: t('pro.analytics.advice.newUsers.title'),
-    body: t('pro.analytics.advice.newUsers.body', {people: t('pro.plurals.people', joined.value)}),
-    cta: t('pro.analytics.advice.newUsers.cta'),
-    foot: t('pro.analytics.advice.newUsers.foot'),
-  },
-  {
-    id: 'net',
-    n: `${net.value >= 0 ? '+' : ''}${net.value}`,
-    tone: 'ink',
-    title: t('pro.analytics.advice.netGrowth.title'),
-    body: t('pro.analytics.advice.netGrowth.body', {joined: joined.value, left: left.value}),
-    cta: t('pro.analytics.advice.netGrowth.cta'),
-    foot: t('pro.analytics.advice.netGrowth.foot'),
-  },
-]);
-
-const adviceCards = computed(() => allAdviceCards.value.filter((card) => card.hidden !== true));
-
-const onAdvice = (id) => {
-  if (id === 'inactive') {
-    filterStore.applyPreset({status: 'inactive', viewMode: 'table'});
-    router.push({path: '/', query: route.query});
-    return;
-  }
-  if (id === 'topActive') {
-    // Та же выборка, что в рекомендации, - не просто «Basic по трафику».
-    filterStore.applyPreset({tier: 'basic', sort: 'traffic', viewMode: 'table', ids: topActiveKeys.value.map((k) => k.id), label: t('pro.toolbar.presetActive')});
-    router.push({path: '/', query: route.query});
-    return;
-  }
-  if (id === 'joined') {
-    // Та же выборка, что в показателе: созданные за 30 дней, новые сверху.
-    filterStore.applyPreset({sort: 'created', viewMode: 'cards', ids: joinedKeys.value.map((k) => k.id), label: t('pro.toolbar.presetNew')});
-    router.push({path: '/', query: route.query});
-    return;
-  }
-  router.push({path: '/invoices', query: route.query});
+const goPrices = () => {
+  const ids = keysList.value.filter((k) => k.tier !== 'free' && !k.off && !(k.sold > 0)).map((k) => k.id);
+  filterStore.applyPreset({ids: ids.length ? ids : null, label: t('pro.toolbar.preset.unpriced'), viewMode: 'table'});
+  goKeys();
 };
 </script>

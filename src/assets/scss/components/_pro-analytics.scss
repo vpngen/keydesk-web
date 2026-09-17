@@ -16,9 +16,35 @@
 		letter-spacing: 0.1em;
 	}
 
+	&__loading {
+		font: 400 13px/1.5 v.$pro-font-mono;
+		color: v.$pro-color-muted;
+	}
+
+	// «Расчетный период: 16.09–15.10 ? Все основные показатели считаем…»
+	&__period {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__period-label {
+		font: 700 13px/1 v.$pro-font-sans;
+	}
+
+	&__period-value {
+		font: 700 14px/1 v.$pro-font-mono;
+	}
+
+	&__period-note {
+		font: 400 12px/1.4 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
 	&__stats {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 		border: 1px solid v.$pro-color-ink;
 		background: v.$pro-color-card;
 	}
@@ -28,15 +54,19 @@
 		flex-direction: column;
 		border-top: 1px solid v.$pro-color-line;
 		border-left: 1px solid v.$pro-color-line;
-		padding: 13px 14px;
-		gap: 6px;
+		padding: 14px 16px 16px;
+		gap: 8px;
 
-		&--raised {
+		// Главная финансовая метрика - прогноз прибыли.
+		&--main {
+			box-shadow: inset 0 0 0 1px v.$pro-color-ink;
 			background: v.$pro-color-raised;
 		}
 	}
 
 	&__stat-label {
+		display: flex;
+		align-items: center;
 		font: 400 10px/1 v.$pro-font-narrow;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
@@ -44,7 +74,7 @@
 	}
 
 	&__stat-value {
-		font: 700 24px/1 v.$pro-font-mono;
+		font: 700 28px/1 v.$pro-font-mono;
 
 		&--blue {
 			color: v.$pro-color-blue;
@@ -64,13 +94,53 @@
 	}
 
 	&__stat-hint {
-		font: 400 12px/1.35 v.$pro-font-sans;
+		font: 400 12px/1.4 v.$pro-font-sans;
 		color: v.$pro-color-faded;
+	}
+
+	&__notes {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	// Дисклеймер / подсказки в рамке с кружком «i».
+	&__note {
+		display: flex;
+		align-items: flex-start;
+		font: 400 12px/1.45 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+		gap: 10px;
+
+		&--boxed {
+			border: 1px solid v.$pro-color-hairline;
+			padding: 9px 12px;
+			background: v.$pro-color-card;
+		}
+
+		&--amber {
+			border-color: v.$pro-color-amber;
+			color: v.$pro-color-amber-dark;
+			background: v.$pro-color-tint-amber;
+		}
+	}
+
+	&__note-icon {
+		display: inline-flex;
+		flex: none;
+		align-items: center;
+		justify-content: center;
+		margin-top: 1px;
+		border: 1px solid currentcolor;
+		border-radius: 50%;
+		width: 14px;
+		height: 14px;
+		font: 700 9px/1 v.$pro-font-mono;
 	}
 
 	&__panels {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		gap: 16px;
 	}
 
@@ -88,16 +158,28 @@
 		border-bottom: 1px solid v.$pro-color-ink;
 		padding: 11px 16px;
 		background: v.$pro-color-shade;
+		gap: 10px;
 	}
 
 	&__panel-title {
+		display: flex;
+		align-items: center;
 		font: 700 11px/1 v.$pro-font-narrow;
 		letter-spacing: 0.2em;
 		text-transform: uppercase;
 	}
 
 	&__panel-unit {
+		display: flex;
+		align-items: center;
 		font: 400 11px/1 v.$pro-font-mono;
+		white-space: nowrap;
+		color: v.$pro-color-faded;
+	}
+
+	&__panel-sub {
+		padding: 10px 16px 0;
+		font: 400 12px/1.4 v.$pro-font-sans;
 		color: v.$pro-color-faded;
 	}
 
@@ -105,11 +187,15 @@
 		display: flex;
 		align-items: flex-end;
 		padding: 16px 12px 10px;
-		height: 170px;
+		height: 180px;
 		gap: 7px;
 	}
 
+	// Столбец - кнопка: hover/фокус/клик показывают детализацию месяца.
 	&__bar-col {
+		@include pro.pro-control-reset;
+
+		position: relative;
 		display: flex;
 		flex: 1;
 		flex-direction: column;
@@ -117,6 +203,44 @@
 		justify-content: flex-end;
 		height: 100%;
 		gap: 8px;
+
+		&--active .pro-analytics__bar {
+			filter: brightness(1.08);
+		}
+	}
+
+	&__tooltip {
+		position: absolute;
+		left: 50%;
+		bottom: calc(100% + 6px);
+		z-index: 3;
+		display: flex;
+		flex-direction: column;
+		border: 1px solid v.$pro-color-ink;
+		padding: 8px 10px;
+		min-width: 170px;
+		box-shadow: 3px 3px 0 rgba(33, 30, 25, 0.25);
+		text-align: left;
+		color: v.$pro-color-on-dark;
+		background: v.$pro-color-ink;
+		transform: translateX(-50%);
+		pointer-events: none;
+		gap: 4px;
+	}
+
+	&__tooltip-title {
+		margin-bottom: 2px;
+		font: 700 11px/1 v.$pro-font-narrow;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+
+	&__tooltip-row {
+		display: flex;
+		justify-content: space-between;
+		font: 400 11px/1.3 v.$pro-font-mono;
+		white-space: nowrap;
+		gap: 12px;
 	}
 
 	&__bar-value {
@@ -137,6 +261,11 @@
 		&--last {
 			background-color: v.$pro-color-red;
 		}
+
+		&--empty {
+			border-style: dashed;
+			background: transparent;
+		}
 	}
 
 	&__bar-labels {
@@ -147,48 +276,29 @@
 	}
 
 	&__bar-label {
+		display: flex;
 		flex: 1;
+		flex-direction: column;
+		align-items: center;
 		font: 400 10px/1 v.$pro-font-narrow;
 		letter-spacing: 0.14em;
 		text-align: center;
 		text-transform: uppercase;
 		color: v.$pro-color-faded;
+		gap: 3px;
+
+		&--last {
+			color: v.$pro-color-red;
+		}
 	}
 
-	&__mrr {
-		display: flex;
-		flex: 1;
-		flex-direction: column;
-		padding: 18px 16px;
-		gap: 16px;
+	&__bar-sublabel {
+		font: 400 9px/1 v.$pro-font-mono;
+		letter-spacing: 0.04em;
+		text-transform: none;
 	}
 
-	&__mrr-chart {
-		width: 100%;
-		height: 120px;
-	}
-
-	&__growth {
-		display: flex;
-		flex-direction: column;
-		gap: 9px;
-	}
-
-	&__growth-row {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		border-bottom: 1px dotted v.$pro-color-hairline;
-		padding-bottom: 8px;
-		gap: 12px;
-	}
-
-	&__growth-label {
-		font: 400 13px/1.35 v.$pro-font-sans;
-		color: v.$pro-color-ink-soft;
-	}
-
-	// «?» с подсказкой у заголовка блока и строк.
+	// «?» с подсказкой у заголовков блоков, карточек и строк.
 	&__hint {
 		display: inline-flex;
 		align-items: center;
@@ -205,13 +315,53 @@
 		cursor: help;
 	}
 
-	&__growth-value {
-		font: 700 15px/1 v.$pro-font-mono;
-		white-space: nowrap;
+	// Платные пользователи.
+	&__paid {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		padding: 16px;
+		gap: 4px;
+	}
 
-		&--blue {
-			color: v.$pro-color-blue;
+	&__paid-big {
+		font: 700 40px/1 v.$pro-font-mono;
+	}
+
+	&__paid-caption {
+		font: 400 13px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__paid-split {
+		font: 400 12px/1.3 v.$pro-font-mono;
+		color: v.$pro-color-faded;
+	}
+
+	&__paid-cells {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		margin-top: 12px;
+		border-top: 1px dotted v.$pro-color-hairline;
+		border-bottom: 1px dotted v.$pro-color-hairline;
+		padding: 12px 0;
+	}
+
+	&__paid-cell {
+		display: flex;
+		flex-direction: column;
+		border-left: 1px dotted v.$pro-color-hairline;
+		padding: 0 10px;
+		gap: 4px;
+
+		&:first-child {
+			border-left: 0;
+			padding-left: 0;
 		}
+	}
+
+	&__paid-cell-value {
+		font: 700 20px/1 v.$pro-font-mono;
 
 		&--green {
 			color: v.$pro-color-green;
@@ -224,6 +374,181 @@
 		&--muted {
 			color: v.$pro-color-muted;
 		}
+	}
+
+	&__paid-cell-label {
+		font: 400 11px/1.3 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__paid-structure {
+		display: flex;
+		align-items: center;
+		margin-top: 12px;
+		font: 700 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: v.$pro-color-ink-soft;
+	}
+
+	&__paid-group {
+		display: grid;
+		align-items: start;
+		grid-template-columns: 12px 64px 1fr;
+		margin-top: 8px;
+		gap: 10px;
+	}
+
+	&__paid-dot {
+		margin-top: 3px;
+		border: 1px solid v.$pro-color-ink;
+		border-radius: 50%;
+		width: 12px;
+		height: 12px;
+
+		&--basic {
+			background: v.$pro-color-blue;
+		}
+
+		&--unlim {
+			background: v.$pro-color-ink;
+		}
+	}
+
+	&__paid-group-name {
+		font: 700 13px/1.3 v.$pro-font-sans;
+	}
+
+	&__paid-group-lines {
+		display: flex;
+		flex-direction: column;
+		font: 400 12px/1.4 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+		gap: 1px;
+	}
+
+	&__paid-group-price {
+		color: v.$pro-color-faded;
+	}
+
+	// Продления ключей.
+	&__renewals {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 16px;
+		gap: 16px;
+	}
+
+	&__renewals-main {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 18px;
+	}
+
+	&__donut-wrap {
+		position: relative;
+		flex: none;
+		width: 120px;
+		height: 120px;
+	}
+
+	&__donut {
+		width: 100%;
+		height: 100%;
+	}
+
+	&__donut-track {
+		stroke: v.$pro-color-line;
+	}
+
+	&__donut-arc {
+		stroke: v.$pro-color-green;
+	}
+
+	&__donut-value {
+		position: absolute;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font: 700 26px/1 v.$pro-font-mono;
+		inset: 0;
+	}
+
+	&__renewals-text {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		min-width: 140px;
+		gap: 8px;
+	}
+
+	&__renewals-count {
+		font: 700 15px/1.35 v.$pro-font-sans;
+	}
+
+	&__renewals-change {
+		font: 700 13px/1.4 v.$pro-font-sans;
+
+		&--green {
+			color: v.$pro-color-green;
+		}
+
+		&--red {
+			color: v.$pro-color-red;
+		}
+
+		&--muted {
+			color: v.$pro-color-muted;
+		}
+	}
+
+	&__renewals-empty {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	&__renewals-empty-title {
+		font: 700 18px/1.2 v.$pro-font-narrow;
+		letter-spacing: 0.04em;
+	}
+
+	&__renewals-empty-text {
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	// Пустые состояния (нет платных ключей / нет цен продажи).
+	&__empty {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		border: 1px dashed v.$pro-color-muted;
+		padding: 22px 20px;
+		background: v.$pro-color-card;
+		gap: 8px;
+	}
+
+	&__empty-title {
+		font: 700 22px/1.15 v.$pro-font-narrow;
+		letter-spacing: 0.04em;
+	}
+
+	&__empty-text {
+		max-width: 560px;
+		font: 400 14px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&__empty-cta {
+		@include pro.pro-control-reset;
+		@include pro.pro-cta(v.$pro-color-ink);
+
+		margin-top: 6px;
+		padding: 10px 18px;
 	}
 
 	&__advice {
@@ -248,43 +573,51 @@
 	&__advice-rule {
 		flex: 1;
 		height: 1px;
+		min-width: 40px;
 		background: v.$pro-color-hairline;
 	}
 
 	&__advice-sub {
-		font: 400 11px/1 v.$pro-font-mono;
-		color: v.$pro-color-muted;
+		font: 400 12px/1.4 v.$pro-font-sans;
+		color: v.$pro-color-faded;
 	}
 
 	&__advice-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 		gap: 14px;
 	}
 }
 
+// Карточки «На что обратить внимание».
 .pro-advice-card {
 	$a: &;
 
 	display: flex;
 	flex-direction: column;
 	border: 1px solid v.$pro-color-ink;
-	border-left: 6px solid v.$pro-color-ink;
 	box-shadow: 4px 4px 0 rgba(33, 30, 25, 0.12);
 	background: v.$pro-color-card;
 
 	&__main {
 		display: flex;
 		align-items: flex-start;
-		padding: 14px 18px;
-		gap: 16px;
+		padding: 16px 18px 12px;
+		gap: 14px;
 	}
 
-	&__number {
+	&__icon {
+		display: flex;
 		flex: none;
-		min-width: 40px;
-		font: 700 27px/1 v.$pro-font-mono;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid v.$pro-color-ink;
+		border-radius: 50%;
+		width: 36px;
+		height: 36px;
+		font: 700 16px/1 v.$pro-font-mono;
 		color: v.$pro-color-ink;
+		background: v.$pro-color-raised;
 	}
 
 	&__content {
@@ -295,9 +628,7 @@
 	}
 
 	&__title {
-		font: 700 15px/1.2 v.$pro-font-narrow;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
+		font: 700 15px/1.3 v.$pro-font-sans;
 	}
 
 	&__body {
@@ -308,50 +639,48 @@
 	&__foot {
 		display: flex;
 		align-items: center;
-		justify-content: space-between;
 		margin-top: auto;
-		border-top: 1px dotted v.$pro-color-hairline;
-		padding: 10px 18px;
-		gap: 12px;
+		padding: 4px 18px 16px;
 	}
 
 	&__cta {
 		@include pro.pro-control-reset;
 
-		border-bottom: 1px solid v.$pro-color-blue;
-		padding-bottom: 2px;
+		border: 1px solid v.$pro-color-ink;
+		padding: 8px 14px;
+		box-shadow: 2px 2px 0 rgba(33, 30, 25, 0.18);
 		font: 700 11px/1 v.$pro-font-narrow;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
+		color: v.$pro-color-ink;
+		background: v.$pro-color-paper;
+
+		&:hover {
+			background: v.$pro-color-raised;
+		}
+	}
+
+	&--red #{$a}__icon {
+		border-color: v.$pro-color-red;
+		color: v.$pro-color-red;
+		background: v.$pro-color-tint-red;
+	}
+
+	&--blue #{$a}__icon {
+		border-color: v.$pro-color-blue;
 		color: v.$pro-color-blue;
+		background: v.$pro-color-tint-blue;
 	}
 
-	&__note {
-		font: 400 11px/1 v.$pro-font-mono;
-		color: v.$pro-color-disabled;
+	&--amber #{$a}__icon {
+		border-color: v.$pro-color-amber-dark;
+		color: v.$pro-color-amber-dark;
+		background: v.$pro-color-tint-amber;
 	}
 
-	&--amber {
-		border-left-color: v.$pro-color-amber-dark;
-
-		#{$a}__number {
-			color: v.$pro-color-amber-dark;
-		}
-	}
-
-	&--blue {
-		border-left-color: v.$pro-color-blue;
-
-		#{$a}__number {
-			color: v.$pro-color-blue;
-		}
-	}
-
-	&--green {
-		border-left-color: v.$pro-color-green;
-
-		#{$a}__number {
-			color: v.$pro-color-green;
-		}
+	&--green #{$a}__icon {
+		border-color: v.$pro-color-green;
+		color: v.$pro-color-green;
+		background: v.$pro-color-card;
 	}
 }
