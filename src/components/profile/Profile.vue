@@ -245,7 +245,7 @@ const requestVipUsers = async () => {
       return await axios.post(`${apiLink}/vip/users`);
     } catch (error) {
       const status = error.response?.status;
-      if (status !== 404 && status !== 405) throw error;
+      if (!(status === 404 || status === 405 || status >= 500)) throw error;
       vipDirect = true;
     }
   }
