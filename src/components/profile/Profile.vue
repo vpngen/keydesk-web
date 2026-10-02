@@ -438,7 +438,7 @@ const openDialogQrCodeHandler = (type) => {
 const handleConfigSelect = async (configType) => {
   closeDialogSelectConfig();
   if (configType === 'vip') {
-    return window.open(`https://t.me/vpngeneratorbot?start=${uuid.value}`, '_blank');
+    return window.open(`https://t.me/vipgenbot?start=${uuid.value}`, '_blank');
   }
   await addUser();
   openDialogQrCodeHandler('linux');
