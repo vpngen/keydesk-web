@@ -99,7 +99,7 @@ import {computed, nextTick, onMounted, onUnmounted, ref, watch} from 'vue';
 import {useI18n} from 'vue-i18n';
 import {mockedDataProfile, sortingMap, statusMap} from '@/assets/constants/profileConstants.js';
 import {generateHighlightedElementProperties} from '@/assets/helpers/profileHelpers';
-import {apiLink} from '@/const/api';
+import {apiLink, isDevOrStageHost} from '@/const/api';
 import {useAuthStore} from '@/store/auth';
 import {useLoadingStore} from '@/store/loading';
 import {useProfileStore} from '@/store/profile';
@@ -228,21 +228,49 @@ watch(isVIP, (vip) => {
   }
   if (!vip && vipInterval.value) {
     clearInterval(vipInterval.value);
+    clearTimeout(vipRetryTimer);
     vipInterval.value = null;
   }
 }, {immediate: true});
 
-const getVipUsers = async () => {
-  await axios.post('https://' + urlVIP.value)
-    .then((r) => {
-      if (r.data?.data) {
-        vipUsersList.value = r.data.data;
-      }
-    })
-    .catch((error) => {
-      if (isConstructionError(error)) return;
-      console.error(error);
-    });
+let vipDirect = isDevOrStageHost && new URLSearchParams(window.location.search).get('vipDirect') === 'true';
+let vipRetryTimer = null;
+const VIP_RETRY_DELAYS = [1500, 4000];
+
+const vipDirectUrl = () => (urlVIP.value.includes('://') ? urlVIP.value : `https://${urlVIP.value}`);
+
+const requestVipUsers = async () => {
+  if (!vipDirect) {
+    try {
+      return await axios.post(`${apiLink}/vip/users`);
+    } catch (error) {
+      const status = error.response?.status;
+      if (status !== 404 && status !== 405) throw error;
+      vipDirect = true;
+    }
+  }
+  return axios.post(vipDirectUrl());
+};
+
+const getVipUsers = async (attempt = 0) => {
+  clearTimeout(vipRetryTimer);
+  try {
+    const r = await requestVipUsers();
+    if (r.data?.data) {
+      vipUsersList.value = r.data.data;
+    }
+  } catch (error) {
+    if (isConstructionError(error)) return;
+    if (error.response?.status === 401 && attempt === 0) {
+      await authStore.fetchToken({force: true});
+      return getVipUsers(1);
+    }
+    console.error(error);
+    if (attempt < VIP_RETRY_DELAYS.length) {
+      vipRetryTimer = setTimeout(() => getVipUsers(attempt + 1), VIP_RETRY_DELAYS[attempt]);
+    }
+  }
+  return undefined;
 };
 
 const getUsers = async () => {
@@ -438,7 +466,7 @@ const openDialogQrCodeHandler = (type) => {
 const handleConfigSelect = async (configType) => {
   closeDialogSelectConfig();
   if (configType === 'vip') {
-    return window.open(`https://t.me/vpngeneratorbot?start=${uuid.value}`, '_blank');
+    return window.open(`https://t.me/vipgenbot?start=${uuid.value}`, '_blank');
   }
   await addUser();
   openDialogQrCodeHandler('linux');
@@ -482,6 +510,7 @@ onMounted(() => {
 });
 
 onUnmounted(() => {
+  clearTimeout(vipRetryTimer);
   if (vipInterval.value) {
     clearInterval(vipInterval.value);
   }
