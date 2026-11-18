@@ -55,7 +55,7 @@
 
 <script setup>
 import {sortingMap, statusMap} from '@/assets/constants/profileConstants.js'
-import {computed, ref} from 'vue';
+import {computed, ref, watch} from 'vue';
 import useClickOutside from '@/assets/hooks/useClickOutside.js';
 import SvgIcon from "@/components/SvgIcon.vue";
 import {useI18n} from 'vue-i18n';
@@ -105,9 +105,15 @@ const currentStatus = ref(
   statusMap.all
 );
 
+// Локальное состояние стартует с переданной сортировки и следует за ней,
+// иначе внешняя смена (например, стартовая сортировка темы) не отражается в подписи.
 const currentSorting = ref(
-  sortingMap.dateAsc
+  props.selectedFilterSort || sortingMap.dateAsc
 );
+
+watch(() => props.selectedFilterSort, (value) => {
+  if (value) currentSorting.value = value;
+});
 
 const showStatusMenu = ref(false);
 const showSortMenu = ref(false);

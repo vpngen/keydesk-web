@@ -1,0 +1,4 @@
+// Partner skins. Each one is scoped under its own #app.theme-<name> class and
+// is only ever activated by App.vue, so loading them here costs nothing for the
+// regular, VIP and PRO layouts.
+@use "themes/kg";

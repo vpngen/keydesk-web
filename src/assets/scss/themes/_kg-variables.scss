@@ -1,0 +1,36 @@
+// Kyrgyzstan partner skin tokens, sampled from the Figma frames
+// "VPN Gen Кыргызстан - Ключница" (2026-11-18). Design width 1440.
+// Scoped to #app.theme-kg only; never import from the regular, VIP or PRO files.
+
+// Lines and accents
+$kg-blue: #7ccbeb;          // card, tab, table, dialog borders; chart line
+$kg-blue-text: #74d4fb;     // "VPN GENERATOR" kicker
+$kg-title-blue: #bde6ff;    // "Сбор данных"
+$kg-gold: #e8c27a;          // VIP frame, VIP texts, active tab text, chart points
+$kg-yellow: #fff293;        // links inside dialogs
+$kg-danger: #f17c7c;        // "Удалить" outline button
+$kg-red: #c82828;           // delete confirm button
+$kg-mint: #2fd59b;          // status badge and dot
+$kg-plus: #73b7d4;          // "+" disc on the add card
+$kg-select: #59889f;        // "Выбрать" buttons
+
+// Text
+$kg-text: #fff;
+$kg-text-soft: #e9f3fa;
+$kg-text-muted: #c9d3dc;
+$kg-ink: #1d2a36;
+
+// Surfaces (all translucent over the mountain photo)
+$kg-surface: rgba(28, 32, 44, 0.6);
+$kg-surface-strong: rgba(28, 32, 44, 0.78);
+$kg-surface-vip: rgba(20, 22, 30, 0.86);
+$kg-tab: rgba(40, 45, 54, 0.9);
+$kg-tab-active: #171d25;
+$kg-search: rgba(36, 42, 50, 0.88);
+$kg-dialog: rgba(38, 38, 52, 0.94);
+$kg-panel: rgba(20, 30, 40, 0.72);   // dark panel behind the header lockup
+$kg-line-soft: rgba(255, 255, 255, 0.16);
+$kg-line-gold: rgba(232, 194, 122, 0.22);
+
+// Type
+$kg-font-display: "Playfair Display", georgia, "Times New Roman", serif;

@@ -25,6 +25,7 @@ export const useAuthStore = defineStore('auth', () => {
         profileStore.isVIP = decoded.vip;
         profileStore.urlVIP = decoded.vip_url;
         profileStore.uuid = decoded.sub;
+        profileStore.country = typeof decoded.country === 'string' ? decoded.country.toLowerCase() : '';
 
         return token.value;
       })

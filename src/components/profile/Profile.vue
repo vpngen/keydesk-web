@@ -102,6 +102,7 @@ import {generateHighlightedElementProperties} from '@/assets/helpers/profileHelp
 import {apiLink} from '@/const/api';
 import {useAuthStore} from '@/store/auth';
 import {useLoadingStore} from '@/store/loading';
+import {useTheme} from '@/composables/useTheme';
 import {useProfileStore} from '@/store/profile';
 import {useUsersStore} from '@/store/users';
 import {useUsersFilterStore} from '@/store/usersFilter';
@@ -233,7 +234,7 @@ watch(isVIP, (vip) => {
 }, {immediate: true});
 
 const getVipUsers = async () => {
-  await axios.post('https://' + urlVIP.value)
+  await axios.post(/^https?:\/\//i.test(urlVIP.value) ? urlVIP.value : 'https://' + urlVIP.value)
     .then((r) => {
       if (r.data?.data) {
         vipUsersList.value = r.data.data;
@@ -287,6 +288,15 @@ const getChart = async () => {
       loadingStore.hide();
     });
 };
+
+const {themeConfig} = useTheme();
+
+// Страновое оформление может задать стартовую сортировку (в макете - по алфавиту).
+watch(themeConfig, (config) => {
+  if (config?.defaultSort && sortingMap[config.defaultSort]) {
+    filterStore.selectedSort = sortingMap[config.defaultSort];
+  }
+}, {immediate: true});
 
 const bootstrap = async () => {
   loadingStore.show();

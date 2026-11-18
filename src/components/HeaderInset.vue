@@ -2,9 +2,14 @@
   <header class="header header--inset">
     <div class="header__container">
       <RouterLink class="header__logo" :to="{ path: '/', query: route.query }">
-        <SvgIcon name="logo-vpn"/>
+        <span v-if="isThemeTextReady" class="header__brand">
+          <span class="header__brand-kicker">{{ t('cabinet.theme.kicker') }}</span>
+          <span class="header__brand-title">{{ t('cabinet.theme.title') }}</span>
+        </span>
+        <SvgIcon v-else name="logo-vpn"/>
       </RouterLink>
       <div class="header__right">
+        <SvgIcon v-if="isThemeTextReady" class="header__brand-logo" name="logo-vpn"/>
         <RouterLink :class="`header__notifications ${message.length ? 'header__notifications--message' : ''}`"
                     :data-total="message.length" :to="{ path: '/notifications', query: route.query }">
           <SvgIcon name="icon-ring"/>
@@ -53,6 +58,7 @@ import HeaderMessage from "@/components/HeaderMessage.vue";
 import {useAuthStore} from "@/store/auth";
 import {useUsersStore} from "@/store/users";
 import {useProfileStore} from "@/store/profile";
+import {useTheme} from '@/composables/useTheme';
 import {storeToRefs} from 'pinia';
 import {apiLink} from "@/const/api";
 import {useI18n} from 'vue-i18n'
@@ -67,6 +73,7 @@ const profileStore = useProfileStore();
 const {token} = storeToRefs(authStore);
 const {usersList} = storeToRefs(usersStore);
 const {isVIP, uuid} = storeToRefs(profileStore);
+const {isThemeTextReady} = useTheme();
 
 const message = ref([]);
 const showMessage = ref(false);

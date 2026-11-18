@@ -1,7 +1,8 @@
 <template>
   <div class="profile__cards">
     <ProfileCardSkeleton v-if="isLoading"/>
-    <ProfileCard
+    <component
+      :is="CardComponent"
       v-else
       ref="firstUserProfileCard"
       :class="`${highlightedElementProperties.firstUserProfileCard?.highlight ?? ''}`"
@@ -17,7 +18,8 @@
 
     <template v-if="isVip && vipUsersList">
       <template v-for="(vipUser, index) in vipUsersList" :key="vipUser.user_id">
-        <ProfileCard
+        <component
+          :is="CardComponent"
           :highlighted-element-properties="highlightedElementProperties"
           :index="index + 1"
           :is_vip="true"
@@ -36,7 +38,8 @@
     </template>
     <template v-else-if="users.length">
       <template v-for="(user, index) in users" :key="user.UserID">
-        <ProfileCard
+        <component
+          :is="CardComponent"
           :ref="(el) => { if (currentPage === 1 && index === 0) secondUserProfileCard = el }"
           :class="`${index === 0 ? highlightedElementProperties.secondUserProfileCard?.highlight ?? '' : ''}`"
           :highlighted-element-properties="highlightedElementProperties"
@@ -64,9 +67,11 @@
 </template>
 
 <script setup>
-import {ref} from 'vue';
+import {computed, ref} from 'vue';
 import {useI18n} from 'vue-i18n';
 import SvgIcon from '@/components/SvgIcon.vue';
+import KgProfileCard from '@/components/theme/KgProfileCard.vue';
+import {useTheme} from '@/composables/useTheme';
 import ProfileCard from './ProfileCard.vue';
 import ProfileCardSkeleton from './ProfileCardSkeleton.vue';
 
@@ -108,6 +113,10 @@ defineProps({
 defineEmits(['addUser', 'openDialogUser', 'openViewKey']);
 
 const {t} = useI18n();
+const {isThemed} = useTheme();
+
+// Страновое оформление рисует свою карточку; базовая ProfileCard не меняется.
+const CardComponent = computed(() => (isThemed.value ? KgProfileCard : ProfileCard));
 
 const firstUserProfileCard = ref(null);
 const secondUserProfileCard = ref(null);
