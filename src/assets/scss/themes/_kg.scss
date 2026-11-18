@@ -307,11 +307,13 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	// ------------------------------------------------------------------
-	// Cards: 6 per row, 181 x 207, VIP first.
+	// Cards: 4 per row like the regular keydesk (282 x 212 at 1440), VIP
+	// first. Flow layout inside, so long names push the rows down instead
+	// of overlapping them.
 	// ------------------------------------------------------------------
 	.profile__cards {
 		display: grid;
-		grid-template-columns: repeat(6, minmax(0, 1fr));
+		grid-template-columns: repeat(4, minmax(0, 1fr));
 		margin: responsive.vc(29) 0 0;
 		gap: responsive.vc(24);
 	}
@@ -321,7 +323,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		margin: 0;
 		border-radius: responsive.vc(10);
 		width: auto;
-		height: responsive.vc(207);
+		height: auto;
+		min-height: responsive.vc(212);
 	}
 
 	.profile__card--vip {
@@ -330,9 +333,10 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 	.kg-card {
 		position: relative;
-		display: block;
+		display: flex;
+		flex-direction: column;
 		border: responsive.vc(1.5) solid kg.$kg-blue;
-		padding: 0;
+		padding: responsive.vc(22) responsive.vc(20) responsive.vc(16) responsive.vc(24);
 		color: kg.$kg-text;
 		background-color: kg.$kg-surface;
 		transition: background-color variables.$duration-normal;
@@ -392,16 +396,22 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		}
 	}
 
-	.kg-card__paw {
-		position: absolute;
-		left: responsive.vc(25);
-		top: responsive.vc(29);
+	.kg-card__head {
 		display: flex;
+		align-items: center;
+		padding-right: responsive.vc(10);
+		min-height: responsive.vc(40);
+		gap: responsive.vc(16);
+	}
+
+	.kg-card__paw {
+		display: flex;
+		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
 		border-radius: 50%;
-		width: responsive.vc(36);
-		height: responsive.vc(36);
+		width: responsive.vc(40);
+		height: responsive.vc(40);
 		color: kg.$kg-ink;
 		background-color: kg.$kg-text;
 
@@ -412,16 +422,14 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	.kg-card__name {
-		position: absolute;
-		left: responsive.vc(78);
-		right: responsive.vc(12);
-		top: responsive.vc(27);
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+		overflow-wrap: anywhere;
+		min-width: 0;
 		font-weight: 800;
-		font-size: responsive.vc(19);
-		line-height: 1;
+		font-size: responsive.vc(20);
+		line-height: 1.05;
 		text-decoration: none;
 		text-transform: uppercase;
 		color: kg.$kg-text;
@@ -440,18 +448,16 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	.kg-card--vip {
+		.kg-card__head {
+			gap: responsive.vc(12);
+		}
+
 		.kg-card__paw {
-			left: responsive.vc(20);
-			top: responsive.vc(26);
-			width: responsive.vc(33);
-			height: responsive.vc(33);
 			background-color: kg.$kg-gold;
 		}
 
 		.kg-card__name {
-			left: responsive.vc(58);
-			right: responsive.vc(8);
-			top: responsive.vc(10);
+			flex: 1;
 			align-items: center;
 			color: kg.$kg-gold;
 		}
@@ -463,7 +469,7 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 		.kg-card__name-line2 {
 			margin-top: responsive.vc(4);
-			font-size: responsive.vc(17.5);
+			font-size: responsive.vc(18);
 			line-height: 1;
 			text-align: center;
 			color: kg.$kg-gold;
@@ -471,20 +477,16 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	.kg-card__rows {
-		position: absolute;
-		left: responsive.vc(26);
-		right: responsive.vc(10);
-		top: responsive.vc(75);
 		list-style: none;
-		margin: 0;
+		margin: responsive.vc(16) 0 0;
 		padding: 0;
 	}
 
 	.kg-card__row {
 		display: flex;
 		align-items: flex-start;
-		margin: 0 0 responsive.vc(3);
-		height: responsive.vc(23);
+		margin: 0 0 responsive.vc(5);
+		height: responsive.vc(25);
 	}
 
 	.kg-card__row-icon {
@@ -492,8 +494,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		flex-shrink: 0;
 		align-items: center;
 		justify-content: center;
-		width: responsive.vc(14);
-		height: responsive.vc(14);
+		width: responsive.vc(15);
+		height: responsive.vc(15);
 		color: kg.$kg-text;
 
 		svg {
@@ -517,15 +519,15 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 		b {
 			font-weight: 700;
-			font-size: responsive.vc(11);
-			line-height: responsive.vc(12);
+			font-size: responsive.vc(12);
+			line-height: responsive.vc(13);
 			white-space: nowrap;
 		}
 
 		> span {
 			font-weight: 400;
-			font-size: responsive.vc(9.5);
-			line-height: responsive.vc(11);
+			font-size: responsive.vc(10.5);
+			line-height: responsive.vc(12);
 			color: kg.$kg-text-soft;
 		}
 	}
@@ -537,8 +539,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 		b {
 			font-weight: 700;
-			font-size: responsive.vc(9.5);
-			line-height: responsive.vc(11);
+			font-size: responsive.vc(10.5);
+			line-height: responsive.vc(12);
 			color: kg.$kg-text;
 		}
 	}
@@ -568,27 +570,21 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	.kg-card__actions {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: responsive.vc(162);
 		display: flex;
 		justify-content: center;
-	}
-
-	.kg-card--vip .kg-card__actions {
-		top: responsive.vc(158);
+		margin: auto 0 0;
+		padding-top: responsive.vc(12);
 	}
 
 	.kg-card__button {
 		border: 1px solid kg.$kg-danger;
 		border-radius: responsive.vc(5);
 		padding: 0;
-		width: responsive.vc(70);
-		height: responsive.vc(22);
+		width: responsive.vc(82);
+		height: responsive.vc(25);
 		font-family: variables.$font-raleway;
 		font-weight: 500;
-		font-size: responsive.vc(11);
+		font-size: responsive.vc(12);
 		line-height: 1;
 		color: kg.$kg-danger;
 		background-color: rgba(241, 124, 124, 0.08);
@@ -603,8 +599,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		&--gold {
 			border: responsive.vc(1.5) solid kg.$kg-gold;
 			border-radius: responsive.vc(6);
-			width: responsive.vc(116);
-			height: responsive.vc(26);
+			width: responsive.vc(132);
+			height: responsive.vc(29);
 			color: kg.$kg-text;
 			background-color: rgba(0, 0, 0, 0.35);
 
@@ -616,9 +612,9 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	.profile__add {
-		justify-content: flex-start;
+		justify-content: center;
 		border: responsive.vc(1.5) solid kg.$kg-blue;
-		padding: responsive.vc(50) responsive.vc(8) 0;
+		padding: responsive.vc(16) responsive.vc(8);
 		color: kg.$kg-text;
 		background-color: rgba(28, 32, 44, 0.45);
 		backdrop-filter: blur(3px);
@@ -633,8 +629,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		position: relative;
 		margin: 0 0 responsive.vc(10);
 		border-radius: 50%;
-		width: responsive.vc(43);
-		height: responsive.vc(43);
+		width: responsive.vc(48);
+		height: responsive.vc(48);
 		background-color: kg.$kg-plus;
 
 		&::before,
@@ -695,7 +691,9 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	}
 
 	// ------------------------------------------------------------------
-	// "Сбор данных": title at y 462, four boxed tabs 186 x 30.
+	// "Сбор данных": full width like the regular keydesk. Four boxed tabs in
+	// the card columns (282 x 40); chart row = flexible plot (250 px high)
+	// plus 440 px of figures, as in _profile.scss.
 	// ------------------------------------------------------------------
 	.profile__data .profile__title {
 		margin: responsive.vc(40) 0 responsive.vc(21);
@@ -707,9 +705,9 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 	.profile__select {
 		display: grid;
-		grid-template-columns: repeat(4, responsive.vc(186));
-		margin: 0 0 responsive.vc(25);
-		gap: responsive.vc(15);
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		margin: 0 0 responsive.vc(28);
+		gap: responsive.vc(24);
 	}
 
 	.profile__option {
@@ -719,16 +717,16 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		&:not(:last-child) {
 			margin: 0;
 			width: auto;
-			height: responsive.vc(30);
+			height: responsive.vc(40);
 		}
 	}
 
 	.button--option1,
 	.button--option2,
 	.button--option3 {
-		border-radius: responsive.vc(5);
+		border-radius: responsive.vc(6);
 		font-family: variables.$font-raleway;
-		font-size: responsive.vc(12);
+		font-size: responsive.vc(14);
 
 		&:not(.is-select) {
 			border: 1px solid kg.$kg-blue;
@@ -758,20 +756,22 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	// Statistics tab.
 	.profile__chart {
 		display: flex;
-		justify-content: flex-start;
-		margin: 0;
+		justify-content: space-between;
+		margin: 0 0 responsive.vc(16);
+		width: 100%;
 		color: kg.$kg-text;
-		gap: responsive.vc(95);
+		gap: responsive.vc(24);
 	}
 
 	.profile__chart-graph {
-		flex-shrink: 0;
+		flex: 1 1 auto;
 		margin: 0;
-		width: responsive.vc(624);
+		width: auto;
+		min-width: 0;
 	}
 
 	.profile__chart-title {
-		margin: responsive.vc(5) 0 responsive.vc(21);
+		margin: responsive.vc(5) 0 responsive.vc(18);
 		font-weight: 700;
 		font-size: responsive.vc(22);
 		line-height: responsive.vc(26);
@@ -794,21 +794,22 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 	.profile__chart-line {
 		border: 1px solid kg.$kg-blue;
-		border-radius: responsive.vc(4);
-		padding: responsive.vc(12) responsive.vc(12) responsive.vc(6);
-		height: responsive.vc(162);
+		border-radius: responsive.vc(6);
+		padding: responsive.vc(20) responsive.vc(16) responsive.vc(10);
+		width: 100%;
+		height: responsive.vc(250);
 		background-color: kg.$kg-surface;
 	}
 
 	.profile__chart-data {
 		flex-shrink: 0;
-		width: responsive.vc(303);
+		width: responsive.vc(440);
 	}
 
 	.profile__chart-buttons {
 		display: flex;
 		flex-wrap: wrap;
-		gap: responsive.vc(21);
+		gap: responsive.vc(20);
 	}
 
 	.profile__chart-button {
@@ -816,10 +817,10 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		justify-content: center;
 		margin: 0;
 		border: 1px solid kg.$kg-blue;
-		border-radius: responsive.vc(6);
-		padding: responsive.vc(10) responsive.vc(8) responsive.vc(8);
-		width: responsive.vc(141);
-		height: responsive.vc(71);
+		border-radius: responsive.vc(8);
+		padding: responsive.vc(14) responsive.vc(10) responsive.vc(10);
+		width: responsive.vc(210);
+		height: responsive.vc(100);
 		color: kg.$kg-text;
 		background-color: kg.$kg-surface-strong;
 
@@ -832,20 +833,20 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 
 	.profile__chart-num {
 		font-weight: 700;
-		font-size: responsive.vc(22);
+		font-size: responsive.vc(32);
 		line-height: 1.1;
 		color: kg.$kg-text;
 	}
 
 	.profile__chart-text {
-		font-size: responsive.vc(9);
+		font-size: responsive.vc(13);
 		line-height: 1.2;
 		color: kg.$kg-text-muted;
 	}
 
 	.profile__chart-note {
 		margin-top: responsive.vc(12);
-		font-size: responsive.vc(11);
+		font-size: responsive.vc(12);
 		color: kg.$kg-text-muted;
 	}
 
@@ -882,8 +883,8 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 		border: 1px solid kg.$kg-blue;
 		border-radius: responsive.vc(6);
 		padding: responsive.vc(12) 0 responsive.vc(9);
-		width: responsive.vc(153) !important;
-		height: responsive.vc(70);
+		width: calc((100% - #{responsive.vc(44)}) / 5) !important;
+		height: responsive.vc(84);
 		color: kg.$kg-text-soft;
 		background-color: kg.$kg-surface-strong;
 
@@ -895,15 +896,15 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 	.profile__directions-image {
 		margin: 0 0 auto;
 		border-radius: 0;
-		width: responsive.vc(26);
-		height: responsive.vc(26);
+		width: responsive.vc(32);
+		height: responsive.vc(32);
 		background-color: transparent !important;
 		filter: brightness(0) invert(1);
 	}
 
 	.profile__directions-label {
 		font-weight: 600;
-		font-size: responsive.vc(11);
+		font-size: responsive.vc(12);
 		line-height: 1;
 		color: kg.$kg-text-soft;
 	}
@@ -1318,8 +1319,27 @@ $icon-chevron: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/s
 			padding-left: responsive.vc(40);
 		}
 
+		// The base tablet rules stack the search block vertically; give the
+		// headline room instead of the fixed 40 px desktop band.
+		.profile__headline {
+			flex-wrap: wrap;
+			height: auto;
+			gap: responsive.vc(16);
+		}
+
+		.profile__headline .profile__title {
+			width: 100%;
+		}
+
+		.profile__search {
+			flex-flow: row wrap;
+			justify-content: space-between;
+			width: 100%;
+			gap: responsive.vc(16);
+		}
+
 		.profile__cards {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
+			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 
 		.profile__select {

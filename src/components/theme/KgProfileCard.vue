@@ -12,31 +12,33 @@
       </svg>
     </span>
 
-    <span class="kg-card__paw">
-      <svg viewBox="0 0 24 24" fill="currentColor">
-        <ellipse cx="6.3" cy="9.4" rx="2" ry="2.7" transform="rotate(-20 6.3 9.4)"/>
-        <ellipse cx="10.1" cy="5.7" rx="2" ry="2.8"/>
-        <ellipse cx="14.5" cy="5.9" rx="2" ry="2.8"/>
-        <ellipse cx="18.3" cy="9.7" rx="2" ry="2.7" transform="rotate(20 18.3 9.7)"/>
-        <path d="M12.2 10.6c3 0 4.5 2.2 5.6 4.1 1.2 1.9.6 4.4-1.8 4.7-1.6.2-2.5-.9-3.8-.9s-2.2 1.1-3.8.9c-2.4-.3-3-2.8-1.8-4.7 1.1-1.9 2.6-4.1 5.6-4.1z"/>
-      </svg>
-    </span>
+    <div class="kg-card__head">
+      <span class="kg-card__paw">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <ellipse cx="6.3" cy="9.4" rx="2" ry="2.7" transform="rotate(-20 6.3 9.4)"/>
+          <ellipse cx="10.1" cy="5.7" rx="2" ry="2.8"/>
+          <ellipse cx="14.5" cy="5.9" rx="2" ry="2.8"/>
+          <ellipse cx="18.3" cy="9.7" rx="2" ry="2.7" transform="rotate(20 18.3 9.7)"/>
+          <path d="M12.2 10.6c3 0 4.5 2.2 5.6 4.1 1.2 1.9.6 4.4-1.8 4.7-1.6.2-2.5-.9-3.8-.9s-2.2 1.1-3.8.9c-2.4-.3-3-2.8-1.8-4.7 1.1-1.9 2.6-4.1 5.6-4.1z"/>
+        </svg>
+      </span>
 
-    <a
-      :href="personDescLink || undefined"
-      :target="personDescLink ? '_blank' : undefined"
-      class="kg-card__name"
-      rel="noopener"
-    >
-      <template v-if="is_vip">
-        <span class="kg-card__name-vip">VIP</span>
-        <span class="kg-card__name-line2">{{ vipName }}</span>
-      </template>
-      <template v-else>
-        <span class="kg-card__name-line1">{{ nameParts[0] }}</span>
-        <span v-if="nameParts[1]" class="kg-card__name-line2">{{ nameParts[1] }}</span>
-      </template>
-    </a>
+      <a
+        :href="personDescLink || undefined"
+        :target="personDescLink ? '_blank' : undefined"
+        class="kg-card__name"
+        rel="noopener"
+      >
+        <template v-if="is_vip">
+          <span class="kg-card__name-vip">VIP</span>
+          <span class="kg-card__name-line2">{{ vipName }}</span>
+        </template>
+        <template v-else>
+          <span class="kg-card__name-line1">{{ nameParts[0] }}</span>
+          <span v-if="nameParts[1]" class="kg-card__name-line2">{{ nameParts[1] }}</span>
+        </template>
+      </a>
+    </div>
 
     <ul class="kg-card__rows">
       <li v-if="lastVisitHour || is_vip" class="kg-card__row">
