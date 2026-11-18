@@ -1,0 +1,66 @@
+{
+  "cabinet": {
+    "profile": {
+      "hello": "Salam, ",
+      "vipKey": "Ak Ilbirs #{n}"
+    },
+    "card": {
+      "lastVisit": "Last login:",
+      "lastVisitVip": "Recently",
+      "trafficLimit": "Traffic limit:",
+      "statusLabel": "Status:",
+      "remove": "Delete",
+      "viewKey": "View key"
+    },
+    "userStatus": {
+      "green": {"name": "Active"},
+      "grey": {"name": "Inactive"},
+      "black": {"name": "Inactive"},
+      "yellow": {"name": "Limited"},
+      "red": {"name": "Blocked"}
+    },
+    "filters": {
+      "sort": "Sort:",
+      "status": "Status:"
+    },
+    "sort": {
+      "nameAscShort": "A - Z",
+      "nameDescShort": "Z - A"
+    },
+    "tabs": {
+      "stats": "Statistics",
+      "instructions": "Guides",
+      "data": "What data we collect",
+      "faq": "FAQ"
+    },
+    "directions": {
+      "byDevice": "By device",
+      "byProtocol": "By protocol"
+    },
+    "dataTable": {
+      "type": "Data type",
+      "user": "Pack",
+      "brigadier": "Ak Ilbirs"
+    },
+    "chart": {
+      "activeUsersShort": "Active users",
+      "totalUsersShort": "Total users",
+      "trafficShort": "Traffic",
+      "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    },
+    "dialogSelectConfig": {
+      "title": "Choose a configuration",
+      "basicTitle": "Regular VPN",
+      "free": "Free",
+      "vipTitle": "VIP\nConfiguration",
+      "vipF1": "Maximum speed",
+      "vipF2": "Unlimited traffic",
+      "vipF3": "",
+      "choose": "Choose"
+    },
+    "theme": {
+      "kicker": "VPN Generator",
+      "title": "Kyrgyzstan"
+    }
+  }
+}

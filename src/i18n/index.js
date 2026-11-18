@@ -36,6 +36,11 @@ function localeJsonUrl(filename) {
   return `${base}locales/${filename}`
 }
 
+/** Оверлей переводов странового оформления: `public/locales/themes/<name>.<locale>.json`. */
+export function themeLocaleJsonUrl(name, locale) {
+  return localeJsonUrl(`themes/${name}.${locale}.json`)
+}
+
 /**
  * Загружает переводы по HTTP из `public/locales/*.json` (после сборки — из корня деплоя).
  * Файлы можно править на сервере без пересборки фронта.
