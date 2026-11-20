@@ -27,6 +27,7 @@ export const useAuthStore = defineStore('auth', () => {
         profileStore.isPRO = decoded.pro;
         profileStore.urlPRO = decoded.pro_url;
         profileStore.uuid = decoded.sub;
+        profileStore.country = typeof decoded.country === 'string' ? decoded.country.toLowerCase() : '';
 
         return token.value;
       })

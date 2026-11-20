@@ -9,7 +9,7 @@
     <HeaderInset/>
     <RouterView/>
     <Footer/>
-    <template v-if="isVipLayout">
+    <template v-if="isVipSkin">
       <picture>
         <source media="(max-width: 767px)" srcset="./assets/images/vip/scepter-mob-vip.png"/>
         <source media="(min-width: 768px)" srcset="./assets/images/vip/scepter-vip.png"/>
@@ -41,6 +41,8 @@ import {useAuthStore} from "@/store/auth";
 import {useConstructionStore} from '@/store/construction';
 import {useProfileStore} from "@/store/profile";
 import {useProLayout} from "@/composables/useProLayout";
+import {useTheme} from "@/composables/useTheme";
+import {COUNTRY_THEMES} from "@/const/themes";
 import {isDevOrStageHost} from "@/const/api";
 import {isConstructionError} from '@/utils/apiErrors';
 
@@ -51,6 +53,7 @@ const constructionStore = useConstructionStore();
 const profileStore = useProfileStore();
 const {isVIP} = storeToRefs(profileStore);
 const {isProLayout} = useProLayout();
+const {themeName, isThemed} = useTheme();
 const {
   isShown: isConstructionShown,
   till: constructionTill,
@@ -60,8 +63,10 @@ const {
 const isHomePage = computed(() => route.name === 'Home');
 const isVipRequested = computed(() => isDevOrStageHost && route.query.vip === 'true');
 const isVipLayout = computed(() => (isVIP.value || isVipRequested.value) && isHomePage.value && !isProLayout.value);
+// Страновое оформление вытесняет VIP-оформление (класс vip и скипетр), сами VIP-ключи остаются.
+const isVipSkin = computed(() => isVipLayout.value && !isThemed.value);
 
-watch(isVipLayout, (vipLayout) => {
+watch(isVipSkin, (vipLayout) => {
   const elApp = document.getElementById('app');
   if (!elApp) return;
 
@@ -80,6 +85,19 @@ watch(isProLayout, (proLayout) => {
     elApp.classList.add('pro');
   } else {
     elApp.classList.remove('pro');
+  }
+}, {immediate: true});
+
+// Страновое оформление (claim country): класс theme-<code> на #app, см. assets/scss/themes.
+watch(themeName, (name, previous) => {
+  const elApp = document.getElementById('app');
+  if (!elApp) return;
+
+  if (previous && COUNTRY_THEMES[previous]) {
+    elApp.classList.remove(COUNTRY_THEMES[previous].className);
+  }
+  if (name && COUNTRY_THEMES[name]) {
+    elApp.classList.add(COUNTRY_THEMES[name].className);
   }
 }, {immediate: true});
 

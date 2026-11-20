@@ -1,0 +1,66 @@
+{
+  "cabinet": {
+    "profile": {
+      "hello": "Салам, ",
+      "vipKey": "Ак Илбирс #{n}"
+    },
+    "card": {
+      "lastVisit": "Последний вход:",
+      "lastVisitVip": "Недавно",
+      "trafficLimit": "Лимит трафика:",
+      "statusLabel": "Статус:",
+      "remove": "Удалить",
+      "viewKey": "Посмотреть ключ"
+    },
+    "userStatus": {
+      "green": {"name": "Активен"},
+      "grey": {"name": "Не активен"},
+      "black": {"name": "Не активен"},
+      "yellow": {"name": "Ограничен"},
+      "red": {"name": "Заблокирован"}
+    },
+    "filters": {
+      "sort": "Сортировка:",
+      "status": "Статус:"
+    },
+    "sort": {
+      "nameAscShort": "А - Я",
+      "nameDescShort": "Я - А"
+    },
+    "tabs": {
+      "stats": "Статистика",
+      "instructions": "Инструкции",
+      "data": "Какие данные мы собираем",
+      "faq": "FAQ"
+    },
+    "directions": {
+      "byDevice": "Выбор по устройству",
+      "byProtocol": "Выбор по протоколу"
+    },
+    "dataTable": {
+      "type": "Тип данных",
+      "user": "Стая",
+      "brigadier": "Ак Илбирс"
+    },
+    "chart": {
+      "activeUsersShort": "Активные пользователи",
+      "totalUsersShort": "Всего пользователей",
+      "trafficShort": "Объём трафика",
+      "monthNames": ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"]
+    },
+    "dialogSelectConfig": {
+      "title": "Выбирайте конфигурацию",
+      "basicTitle": "Обычный VPN",
+      "free": "Бесплатно",
+      "vipTitle": "VIP\nКонфигурация",
+      "vipF1": "Максимальная скорость",
+      "vipF2": "Безграничный трафик",
+      "vipF3": "",
+      "choose": "Выбрать"
+    },
+    "theme": {
+      "kicker": "VPN Generator",
+      "title": "Кыргызстан"
+    }
+  }
+}

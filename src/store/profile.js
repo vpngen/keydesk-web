@@ -7,6 +7,7 @@ export const useProfileStore = defineStore('profile', () => {
   const isPRO = ref(undefined);
   const urlPRO = ref('');
   const uuid = ref('');
+  const country = ref('');
 
   return {
     isVIP,
@@ -14,5 +15,6 @@ export const useProfileStore = defineStore('profile', () => {
     isPRO,
     urlPRO,
     uuid,
+    country,
   };
 });

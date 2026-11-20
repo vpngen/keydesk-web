@@ -4,9 +4,10 @@
 
 <script setup>
 import {computed} from "vue";
-import {CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
+import {CategoryScale, Chart as ChartJS, Filler, Legend, LinearScale, LineElement, PointElement, Title, Tooltip} from 'chart.js'
 import {Line} from 'vue-chartjs';
 import {useProfileStore} from "@/store/profile";
+import {useTheme} from '@/composables/useTheme';
 import {storeToRefs} from "pinia";
 import {useI18n} from 'vue-i18n';
 
@@ -17,7 +18,8 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 )
 
 const FALLBACK_MONTH_NAMES = [
@@ -32,6 +34,25 @@ const props = defineProps({
 
 const profileStore = useProfileStore();
 const {isVIP} = storeToRefs(profileStore);
+const {themeConfig} = useTheme();
+
+// Цвета странового оформления; без темы каждое поле даёт прежнее значение.
+const palette = computed(() => {
+  const chart = themeConfig.value?.chart;
+  return {
+    line: chart?.line ?? (isVIP.value ? '#FFF293' : '#000000'),
+    lineWidth: chart?.lineWidth ?? 1,
+    point: chart?.point ?? null,
+    pointBackground: chart?.pointBackground ?? null,
+    area: chart?.area ?? null,
+    grid: chart?.grid ?? '#cacaca',
+    axis: chart?.grid ?? '#ffffff',
+    tick: chart?.tick ?? (isVIP.value ? '#FFF293' : '#8f8f8f'),
+    tooltipBackground: chart?.tooltipBackground ?? (isVIP.value ? '#3A3A3A' : '#eff7f8'),
+    tooltipText: chart?.tooltipText ?? (isVIP.value ? '#FFF293' : '#000000'),
+    tooltipBorder: chart?.line ?? (isVIP.value ? '#FFF293' : '#4cbfa6'),
+  };
+});
 
 const {tm} = useI18n();
 
@@ -60,13 +81,15 @@ const statsTotalTrafficValue = computed(() => ({
 
 const chartStyle = computed(() => ({
   tension: 0.4,
-  borderWidth: 1,
-  borderColor: isVIP.value ? '#FFF293' : '#000000',
-  backgroundColor: isVIP.value ? '#FFF293' : '#000000',
+  borderWidth: palette.value.lineWidth,
+  borderColor: palette.value.line,
+  backgroundColor: palette.value.area ?? palette.value.line,
+  fill: palette.value.area ? 'origin' : false,
   pointHitRadius: 8,
   pointRadius: 4,
   pointHoverRadius: 5,
-  pointBorderColor: isVIP.value ? '#FFF293' : '#000',
+  pointBorderColor: palette.value.point ?? palette.value.line,
+  pointBackgroundColor: palette.value.pointBackground ?? palette.value.point ?? palette.value.line,
   segment: {
     borderDash: (ctx) => ctx.p1DataIndex === 11 ? [6, 6] : undefined,
   },
@@ -114,8 +137,8 @@ const chartOptions = computed(() => ({
       display: false,
     },
     tooltip: {
-      backgroundColor: isVIP.value ? '#3A3A3A' : '#eff7f8',
-      bodyColor: isVIP.value ? '#FFF293' : '#000000',
+      backgroundColor: palette.value.tooltipBackground,
+      bodyColor: palette.value.tooltipText,
       bodyFont: {
         weight: 700,
         family: '"Raleway", sans-serif',
@@ -132,7 +155,7 @@ const chartOptions = computed(() => ({
       caretSize: 7,
       cornerRadius: 3,
       borderWidth: 1,
-      borderColor: isVIP.value ? '#FFF293' : '#4cbfa6',
+      borderColor: palette.value.tooltipBorder,
       displayColors: false,
       callbacks: {
         title: function () {
@@ -147,10 +170,10 @@ const chartOptions = computed(() => ({
         drawTicks: true,
         tickLength: 6,
         tickWidth: 0,
-        color: '#cacaca',
+        color: palette.value.grid,
       },
       border: {
-        color: '#ffffff',
+        color: palette.value.axis,
       },
       ticks: {
         font: {
@@ -158,14 +181,14 @@ const chartOptions = computed(() => ({
           size: 10,
           lineHeight: 1.2,
         },
-        color: isVIP.value ? '#FFF293' : '#8f8f8f',
+        color: palette.value.tick,
       },
     },
     y: {
       beginAtZero: true,
       grid: {
         drawTicks: false,
-        color: '#cacaca',
+        color: palette.value.grid,
       },
       ticks: {
         crossAlign: 'near',
@@ -180,7 +203,7 @@ const chartOptions = computed(() => ({
           size: 10,
           lineHeight: 1.2,
         },
-        color: isVIP.value ? '#FFF293' : '#8f8f8f',
+        color: palette.value.tick,
       },
     },
   },
