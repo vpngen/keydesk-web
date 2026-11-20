@@ -1,0 +1,86 @@
+@use "../pro-variables" as v;
+
+// Ачивки PRO: карточка в диалоге и реакция кабанчика в аналитике.
+.pro-achievement {
+	align-items: center;
+	text-align: center;
+
+	&__sticker {
+		display: block;
+		margin: 4px auto 0;
+		width: 220px;
+		height: auto;
+		max-width: 70%;
+	}
+
+	&__title {
+		font: 700 26px/1.15 v.$pro-font-narrow;
+		letter-spacing: 0.03em;
+	}
+
+	&__text {
+		margin: 0;
+		font: 400 15px/1.55 v.$pro-font-sans;
+		color: v.$pro-color-ink-soft;
+	}
+}
+
+.pro-reaction {
+	display: flex;
+	align-items: center;
+	margin: 0 0 20px;
+	border: 1px solid v.$pro-color-ink;
+	border-left-width: 4px;
+	padding: 16px 20px;
+	box-shadow: 4px 4px 0 rgba(33, 30, 25, 0.12);
+	background: v.$pro-color-card;
+	gap: 20px;
+
+	&__sticker {
+		flex: none;
+		width: 128px;
+		height: auto;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		gap: 6px;
+	}
+
+	&__label {
+		font: 400 10px/1 v.$pro-font-narrow;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: v.$pro-color-muted;
+	}
+
+	&__title {
+		font: 700 20px/1.2 v.$pro-font-narrow;
+		letter-spacing: 0.03em;
+	}
+
+	&__text {
+		margin: 0;
+		font: 400 13px/1.5 v.$pro-font-sans;
+		color: v.$pro-color-faded;
+	}
+
+	&--trend-down {
+		border-left-color: v.$pro-color-red;
+	}
+
+	&--trend-up {
+		border-left-color: v.$pro-color-green;
+	}
+
+	&--not-paid-off {
+		border-left-color: v.$pro-color-amber;
+	}
+
+	@media (width <= 640px) {
+		flex-direction: column;
+		text-align: center;
+	}
+}

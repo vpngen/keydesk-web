@@ -37,6 +37,8 @@
       <template v-else>
         <ProStatCards :stats="statCards"/>
 
+        <ProBoarReaction v-if="reactionId" :id="reactionId"/>
+
         <div class="pro-analytics__notes">
           <div class="pro-analytics__note pro-analytics__note--boxed">
             <span class="pro-analytics__note-icon">i</span>
@@ -74,6 +76,8 @@ import ProPaidUsersPanel from '@/components/pro/analytics/ProPaidUsersPanel.vue'
 import ProRenewalsPanel from '@/components/pro/analytics/ProRenewalsPanel.vue';
 import ProAdviceCards from '@/components/pro/analytics/ProAdviceCards.vue';
 import ProAnalyticsEmpty from '@/components/pro/analytics/ProAnalyticsEmpty.vue';
+import ProBoarReaction from '@/components/pro/analytics/ProBoarReaction.vue';
+import {REACTION_IDS, devKnob, reactionFor} from '@/utils/proAchievements';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProKeysFilterStore} from '@/store/proKeysFilter';
 import {useProfileStore} from '@/store/profile';
@@ -117,6 +121,12 @@ const monthsFull = computed(() => tm('pro.months.full'));
 const reportMonth = computed(() => `${monthsFull.value[today().getMonth()]} ${today().getFullYear()}`);
 
 const paid = computed(() => analytics.value.paidUsers);
+
+// Реакция кабанчика на цифры цикла; дев-ручка ?proReaction=<id> для превью.
+const reactionId = computed(() => {
+  const forced = devKnob('proReaction');
+  return REACTION_IDS.includes(forced) ? forced : reactionFor(analytics.value);
+});
 const noPaid = computed(() => paid.value.active === 0);
 const noPrices = computed(() => paid.value.active > 0 && paid.value.priced === 0);
 const partialPrices = computed(() => paid.value.priced > 0 && paid.value.priced < paid.value.active);

@@ -7,6 +7,7 @@
   </div>
   <teleport to="#app">
     <ProTour v-if="isTourOpen" @close="closeTour"/>
+    <ProAchievementCard v-if="achievement && !isTourOpen" :id="achievement" @close="dismissAchievement"/>
   </teleport>
 </template>
 
@@ -16,6 +17,8 @@ import {useRoute} from 'vue-router';
 import {storeToRefs} from 'pinia';
 import ProHeader from '@/components/pro/ProHeader.vue';
 import ProTour from '@/components/pro/ProTour.vue';
+import ProAchievementCard from '@/components/pro/ProAchievementCard.vue';
+import {useProAchievements} from '@/composables/useProAchievements';
 import {useProKeysStore} from '@/store/proKeys';
 import {useProBillingStore} from '@/store/proBilling';
 import {safeGetItem, safeSetItem} from '@/utils/safeStorage';
@@ -29,6 +32,9 @@ const {isLoaded: keysLoaded} = storeToRefs(proKeysStore);
 const {isLoaded: billingLoaded} = storeToRefs(proBillingStore);
 
 const isTourOpen = ref(false);
+
+// Ачивки встают в очередь после тура: карточка показывается, когда тур закрыт.
+const {current: achievement, dismiss: dismissAchievement} = useProAchievements();
 
 const openTour = () => {
   isTourOpen.value = true;

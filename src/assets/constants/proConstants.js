@@ -37,3 +37,7 @@ export const INACTIVE_DAYS = 30;
 
 // Месячная квота Pro Basic (ГБ) - по ней считаем расход из остатка квоты keydesk.
 export const BASIC_QUOTA_GB = 100;
+
+// Фиксированная плата за PRO в месяц, евро. В продукте её пока нет (платят за
+// ключи), поэтому 0; нужна ачивкам «окупилось» / «в плюсе» (utils/proAchievements).
+export const PRO_SUBSCRIPTION_PRICE = 0;

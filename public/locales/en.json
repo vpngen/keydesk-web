@@ -1152,6 +1152,68 @@
       "createFailed": "Couldn't create the key - please try again",
       "saveFailed": "Couldn't save - please try again",
       "keyRef": "“{name}” ({user})"
+    },
+    "achievements": {
+      "label": "Achievement",
+      "button": "Nice",
+      "pro_start": {
+        "caption": "Yo, hustler",
+        "title": "That's it. You're PRO now 😎",
+        "body": "Paid keys, income tracking, and analytics are all ready to go.\nKeeping it legit. Keeping it chill.\nStart by issuing your first key and selling someone a ticket to a world without blocks.\nThe Boar approves"
+      },
+      "first_paid_key": {
+        "caption": "Let's get this hustle rolling",
+        "title": "Yo, your first paid key is ready!",
+        "body": "And so begins a mighty financial empire.\nSure, the empire is currently one paid key, but everyone starts somewhere :)\nNow log that income and keep the hustle rolling."
+      },
+      "first_income": {
+        "caption": "Grunts happily",
+        "title": "First income logged. The hustle is on!",
+        "body": "Congrats! We'll be talking triple digits before you know it.\nNow copy the key and send it to your user.\nThe hustle's rolling, the cash is flowing 😎"
+      },
+      "half_paid_off": {
+        "caption": "All good in the hood",
+        "title": "Half your subscription has already paid for itself!",
+        "body": "Congrats, you've already earned back half your subscription cost 🔥\nThe economy is booming, the people are cheering, and the Boar is happy :)\nBest of all, your brigade is relying less on other people's money and getting better at funding its own access to a free internet."
+      },
+      "paid_off": {
+        "caption": "Now we're talking",
+        "title": "PRO HAS PAID FOR ITSELF!",
+        "body": "Now that's how it's done. Your income has covered the subscription - your brigade is officially standing on its own feet, paying its way and helping people.\nThe Boar officially grants you permission to feel a little smug 🐗"
+      },
+      "in_profit": {
+        "caption": "We're talking triple digits",
+        "title": "Yo, your brigade is in the black!",
+        "body": "You're officially turning a profit!\nFirst profit in your pocket, business is picking up, and the Boar is grunting with satisfaction.\nKeep it going - this is just the start of something big!"
+      },
+      "keys_5": {
+        "caption": "Looking good. Payment upfront",
+        "title": "5 keys sold already!",
+        "body": "One key was an experiment. Five? Now you're making a serious play.\nMore keys mean more people with reliable access to a free internet.\nLooks like this hustle is really taking off. The Boar smells big things ahead."
+      },
+      "keys_10": {
+        "caption": "Any chance of a discount?",
+        "title": "10 paid keys already!",
+        "body": "Ten already? Now we're getting into the big leagues!\nTen keys mean ten connections to a free internet and a brigade learning to pay its own way.\nKeep this up and soon you can put on a serious face and call it a strategy, not a side hustle!"
+      }
+    },
+    "reactions": {
+      "label": "The Boar's take",
+      "trend_up": {
+        "caption": "All good in the hood",
+        "title": "All good in the hood",
+        "body": "Income's up, keys are flying off the shelf, more people are getting online. It's all looking good!\nThat rare moment when nothing needs fixing. It just works."
+      },
+      "trend_down": {
+        "caption": "Something ain't working",
+        "title": "Something ain't working",
+        "body": "The numbers have dipped a bit. It happens - no hustle goes straight up forever.\nWhat matters is that people still have access.\nSo no panic, no wild moves. Let's see where we can tighten a few screws and get things rolling again."
+      },
+      "not_paid_off": {
+        "caption": "Still in the red, but dressed for success",
+        "title": "Still in the red, but dressed for success!",
+        "body": "The subscription hasn't paid for itself yet. But no financial freak-outs! Your empire is already under construction.\nCheck how far you are from breaking even, make sure you've logged all your income, and think about who else could use a VPN key you can sell them.\nThe Boar knows: not every hustle takes off overnight. Just don't pack it in before it gets going."
+      }
     }
   }
 }
